@@ -6,10 +6,7 @@ import net.minestom.server.item.Material
 class HotbarItemsManager private constructor() {
 
     companion object {
-        val customItemMap: HashMap<Material, CustomItem>
-            get() {
-                return customItemMap
-            }
+        val customItemMap: HashMap<Material, CustomItem> = HashMap()
 
         private val mainMenuItem: MainMenuItem = registerItem(MainMenuItem())
         private val statsMenuItem: StatsMenuItem = registerItem(StatsMenuItem())
