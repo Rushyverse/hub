@@ -4,10 +4,10 @@ import fr.rushy.hub.command.GamemodeCommand
 import fr.rushy.hub.command.GiveCommand
 import fr.rushy.hub.command.KickCommand
 import fr.rushy.hub.command.StopCommand
-import fr.rushy.hub.listener.PlayerLoginListener
-import fr.rushy.hub.listener.PlayerMoveListener
-import fr.rushy.hub.listener.PlayerSpawnListener
-import fr.rushy.hub.listener.PlayerStartFlyingListener
+import fr.rushy.hub.listener.*
+import fr.rushy.hub.listener.item.PlayerDropItemListener
+import fr.rushy.hub.listener.item.PlayerItemClickListener
+import fr.rushy.hub.listener.item.PlayerSwapItemListener
 import fr.rushy.hub.world.StoneGenerator
 import net.minestom.server.MinecraftServer
 import net.minestom.server.entity.fakeplayer.FakePlayer
@@ -28,7 +28,7 @@ class Main {
             val instanceManager = MinecraftServer.getInstanceManager()
             val instanceContainer = instanceManager.createInstanceContainer()
             instanceContainer.setGenerator(StoneGenerator())
-            createFakePlayer()
+            createFakePlayer("§DFakePlayer", false)
 
             registerCommands()
 
@@ -37,17 +37,26 @@ class Main {
             globalEventHandler.addListener(PlayerLoginListener(instanceContainer))
             globalEventHandler.addListener(PlayerSpawnListener())
             globalEventHandler.addListener(PlayerMoveListener())
+            globalEventHandler.addListener(PlayerItemClickListener())
+            globalEventHandler.addListener(PlayerDropItemListener())
+            globalEventHandler.addListener(PlayerSwapItemListener())
+
 
             val port = args.getOrNull(0)?.toIntOrNull() ?: DEFAULT_PORT
             minecraftServer.start("0.0.0.0", port)
         }
 
-        fun createFakePlayer() {
+        fun createFakePlayer(name:String, inTabList:Boolean) {
+
+            if (name.length > 16) {
+                throw IllegalArgumentException("Name must be 16 characters or less")
+            }
+
             val option = FakePlayerOption().apply {
                 isRegistered = true
-                isInTabList = true
+                isInTabList = inTabList
             }
-            FakePlayer.initPlayer(UUID.randomUUID(), "Test", option) { fakePlayer ->
+            FakePlayer.initPlayer(UUID.randomUUID(), name, option) { fakePlayer ->
                 fakePlayer.setNoGravity(true)
                 fakePlayer.isAutoViewable = true
             }
