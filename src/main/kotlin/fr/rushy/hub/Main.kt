@@ -4,53 +4,73 @@ import fr.rushy.hub.command.GamemodeCommand
 import fr.rushy.hub.command.GiveCommand
 import fr.rushy.hub.command.KickCommand
 import fr.rushy.hub.command.StopCommand
+import fr.rushy.hub.configuration.Configuration
+import fr.rushy.hub.configuration.ServerConfiguration
 import fr.rushy.hub.listener.PlayerLoginListener
 import fr.rushy.hub.listener.PlayerMoveListener
 import fr.rushy.hub.listener.PlayerSpawnListener
 import fr.rushy.hub.listener.PlayerStartFlyingListener
-import fr.rushy.hub.world.StoneGenerator
+import mu.KotlinLogging
 import net.minestom.server.MinecraftServer
-import net.minestom.server.entity.fakeplayer.FakePlayer
-import net.minestom.server.entity.fakeplayer.FakePlayerOption
-import java.util.*
+import net.minestom.server.event.GlobalEventHandler
+import net.minestom.server.instance.AnvilLoader
+import net.minestom.server.instance.InstanceContainer
+import java.io.File
 
+private val logger = KotlinLogging.logger { }
 
-// The main class is only for the example.
 class Main {
 
     companion object {
 
-        private const val DEFAULT_PORT = 25565
-
         @JvmStatic
         fun main(args: Array<String>) {
+            val config = loadConfiguration(args.firstOrNull())
+            val serverConfig = config.server
+
             val minecraftServer = MinecraftServer.init()
             val instanceManager = MinecraftServer.getInstanceManager()
             val instanceContainer = instanceManager.createInstanceContainer()
-            instanceContainer.setGenerator(StoneGenerator())
-            createFakePlayer()
+
+            loadWorld(serverConfig, instanceContainer)
 
             registerCommands()
 
             val globalEventHandler = MinecraftServer.getGlobalEventHandler()
+            addListeners(globalEventHandler, instanceContainer)
+
+            minecraftServer.start("0.0.0.0", serverConfig.port)
+        }
+
+        private fun loadWorld(
+            serverConfig: ServerConfiguration,
+            instanceContainer: InstanceContainer
+        ) {
+            val anvilWorld = File(serverConfig.world)
+            if (!anvilWorld.exists()) {
+                error("World ${anvilWorld.absolutePath} does not exist")
+            }
+
+            logger.info { "Loading world ${anvilWorld.absolutePath}" }
+            instanceContainer.chunkLoader = AnvilLoader(anvilWorld.toPath())
+        }
+
+        private fun loadConfiguration(configFile: String?): Configuration {
+            val configurationFile = Configuration.getOrCreateConfigFile(configFile)
+            logger.info { "Loading configuration from $configurationFile" }
+            val config = Configuration.readConfigurationFile(configurationFile)
+            logger.info { "Configuration loaded" }
+            return config
+        }
+
+        private fun addListeners(
+            globalEventHandler: GlobalEventHandler,
+            instanceContainer: InstanceContainer
+        ) {
             globalEventHandler.addListener(PlayerStartFlyingListener())
             globalEventHandler.addListener(PlayerLoginListener(instanceContainer))
             globalEventHandler.addListener(PlayerSpawnListener())
             globalEventHandler.addListener(PlayerMoveListener())
-
-            val port = args.getOrNull(0)?.toIntOrNull() ?: DEFAULT_PORT
-            minecraftServer.start("0.0.0.0", port)
-        }
-
-        fun createFakePlayer() {
-            val option = FakePlayerOption().apply {
-                isRegistered = true
-                isInTabList = true
-            }
-            FakePlayer.initPlayer(UUID.randomUUID(), "Test", option) { fakePlayer ->
-                fakePlayer.setNoGravity(true)
-                fakePlayer.isAutoViewable = true
-            }
         }
 
         /**
