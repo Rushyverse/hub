@@ -34,7 +34,7 @@ The configuration is generated automatically when you execute the server for the
 The format used is [HOCON](https://github.com/lightbend/config#using-hocon-the-json-superset).
 
 When you execute the server, it will load the configuration named `server.conf`.
-However, you can define another configuration file by using the following command:
+However, you can define another configuration file to use with the following command:
 
 ```bash
 java -jar hub.jar /path/to/config/file.conf
