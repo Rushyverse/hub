@@ -17,6 +17,11 @@ import kotlin.test.*
 
 class ConfigurationTest {
 
+    @Test
+    fun `name of default configuration file is correct`() = runTest {
+        assertEquals("server.conf", Configuration.DEFAULT_CONFIG_FILE_NAME)
+    }
+
     @Nested
     inner class GetOrCreateConfigurationFile {
 
