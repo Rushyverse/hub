@@ -8,6 +8,7 @@ import net.minestom.server.item.Material
 class StatsMenuItem : CustomItem(Material.PLAYER_HEAD, "Statistiques") {
 
     override fun onClick(player: Player) {
-        player.openInventory(MenuManager().getStatsMenu(player))
+        val menuManager = MenuManager(player)
+        player.openInventory(menuManager.getStatsMenu())
     }
 }

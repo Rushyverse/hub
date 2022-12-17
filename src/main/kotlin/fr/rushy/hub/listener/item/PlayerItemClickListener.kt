@@ -1,6 +1,5 @@
 package fr.rushy.hub.listener.item
 
-import fr.rushy.hub.items.CustomItem
 import fr.rushy.hub.items.hotbar.HotbarItemsManager
 import net.minestom.server.event.EventListener
 import net.minestom.server.event.player.PlayerUseItemEvent
@@ -16,11 +15,11 @@ class PlayerItemClickListener : EventListener<PlayerUseItemEvent> {
         val item = event.itemStack
 
         val customItemMap = HotbarItemsManager.customItemMap
-        val customItem = customItemMap[item.material()]
+        val clickable = customItemMap[item.material()]
 
-        if (customItem != null) {
+        if (clickable != null) {
             event.isCancelled = true
-            customItem.onClick(player)
+            clickable.onClick(player)
         }
 
         return EventListener.Result.SUCCESS

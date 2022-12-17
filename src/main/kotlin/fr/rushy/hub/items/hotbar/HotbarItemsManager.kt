@@ -1,44 +1,27 @@
 package fr.rushy.hub.items.hotbar
 
+import fr.rushy.hub.items.Clickable
 import fr.rushy.hub.items.CustomItem
 import net.minestom.server.item.Material
 
-class HotbarItemsManager private constructor() {
+object HotbarItemsManager {
 
-    companion object {
-        val customItemMap: HashMap<Material, CustomItem> = HashMap()
+    val customItemMap: MutableMap<Material, Clickable> = mutableMapOf()
 
-        private val mainMenuItem: MainMenuItem = registerItem(MainMenuItem())
-        private val statsMenuItem: StatsMenuItem = registerItem(StatsMenuItem())
-        private val cosmeticsMenuItem: CosmeticsMenuItem = registerItem(CosmeticsMenuItem())
+    val mainMenuItem: MainMenuItem = registerClickableOfItem(MainMenuItem())
+    val statsMenuItem: StatsMenuItem = registerClickableOfItem(StatsMenuItem())
+    val cosmeticsMenuItem: CosmeticsMenuItem = registerClickableOfItem(CosmeticsMenuItem())
 
-        fun getItems(): List<CustomItem> {
-            return customItemMap.values.toList()
-        }
+    /**
+     * Get a registered Clickable from the Material.
+     * It is important to note that each Material can only be associated with one Clickable for more coherence.
+     */
+    fun getClickableFromMaterial(material: Material): Clickable? {
+        return customItemMap[material]
+    }
 
-        fun getMainMenuItem(): MainMenuItem {
-            return mainMenuItem
-        }
-
-        fun getStatsMenuItem(): StatsMenuItem {
-            return statsMenuItem
-        }
-
-        fun getCosmeticsMenuItem(): CosmeticsMenuItem {
-            return cosmeticsMenuItem
-        }
-
-        /**
-         * Get a registered CustomItem from the Material.
-         * It is important to note that each Material can only be associated with one CustomItem for more coherence.
-         */
-        fun getRegisteredFromMaterial(material: Material): CustomItem? {
-            return customItemMap[material]
-        }
-
-        private fun <T : CustomItem> registerItem(item: T): T {
-            customItemMap[item.getMaterial()] = item
-            return item
-        }
+    private fun <T : CustomItem> registerClickableOfItem(item: T): T {
+        customItemMap[item.material] = item
+        return item
     }
 }

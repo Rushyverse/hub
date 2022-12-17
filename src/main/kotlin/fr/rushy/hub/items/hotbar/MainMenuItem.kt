@@ -8,6 +8,7 @@ import net.minestom.server.item.Material
 class MainMenuItem : CustomItem(Material.COMPASS, "Menu principal") {
 
     override fun onClick(player: Player) {
-        player.openInventory(MenuManager().getMainMenu(player))
+        val menuManager = MenuManager(player)
+        player.openInventory(menuManager.getMainMenu())
     }
 }

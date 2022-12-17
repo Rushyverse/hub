@@ -30,9 +30,11 @@ class PlayerSpawnListener : EventListener<PlayerSpawnEvent> {
         // Teleport and give items
         player.teleport(Pos(0.0,2.0,0.0))
 
-        player.inventory.setItemStack(3, HotbarItemsManager.getStatsMenuItem().toItem())
-        player.inventory.setItemStack(4, HotbarItemsManager.getMainMenuItem().toItem())
-        player.inventory.setItemStack(5, HotbarItemsManager.getCosmeticsMenuItem().toItem())
+        val inv = player.inventory
+
+        inv.setItemStack(3, HotbarItemsManager.statsMenuItem.toItem())
+        inv.setItemStack(4, HotbarItemsManager.mainMenuItem.toItem())
+        inv.setItemStack(5, HotbarItemsManager.cosmeticsMenuItem.toItem())
 
         return EventListener.Result.SUCCESS
     }

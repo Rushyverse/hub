@@ -8,6 +8,7 @@ import net.minestom.server.item.Material
 class CosmeticsMenuItem : CustomItem(Material.CARROT, "Cosmétiques") {
 
     override fun onClick(player: Player) {
-        player.openInventory(MenuManager().getCosmeticsMenu(player))
+        val menuManager = MenuManager(player)
+        player.openInventory(menuManager.getCosmeticsMenu())
     }
 }
