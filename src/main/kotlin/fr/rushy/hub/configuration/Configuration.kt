@@ -41,7 +41,7 @@ data class Configuration(
             if (filePath != null) {
                 val configFile = File(filePath)
                 if (!configFile.isFile) {
-                    throw FileNotFoundException("Config file $filePath does not exist or is not a regular file.")
+                    throw FileNotFoundException("Config file $filePath does not exist or is not a regular file")
                 }
                 return configFile
             }
