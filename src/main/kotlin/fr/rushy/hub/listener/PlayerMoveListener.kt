@@ -1,5 +1,7 @@
 package fr.rushy.hub.listener
 
+import net.minestom.server.entity.GameMode
+import net.minestom.server.entity.Player
 import net.minestom.server.event.EventListener
 import net.minestom.server.event.player.PlayerMoveEvent
 
@@ -10,7 +12,9 @@ class PlayerMoveListener : EventListener<PlayerMoveEvent> {
     }
 
     override fun run(event: PlayerMoveEvent): EventListener.Result {
-        event.player.isAllowFlying = event.player.isAllowFlying || event.isOnGround
+        event.player.getAcquirable<Player>().sync { player ->
+            player.isAllowFlying = player.gameMode == GameMode.CREATIVE || player.isAllowFlying || event.isOnGround
+        }
         return EventListener.Result.SUCCESS
     }
 }
