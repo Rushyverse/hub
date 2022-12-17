@@ -56,9 +56,9 @@ class Main {
         }
 
         private fun loadConfiguration(configFile: String?): Configuration {
-            val configurationFile = Configuration.getOrCreateConfigFile(configFile)
+            val configurationFile = Configuration.getOrCreateConfigurationFile(configFile)
             logger.info { "Loading configuration from $configurationFile" }
-            val config = Configuration.readConfigurationFile(configurationFile)
+            val config = Configuration.readHoconConfigurationFile(configurationFile)
             logger.info { "Configuration loaded" }
             return config
         }
