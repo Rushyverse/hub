@@ -15,6 +15,8 @@ import java.io.FileNotFoundException
 import java.util.*
 import kotlin.test.*
 
+private const val PROPERTY_USER_DIR = "user.dir"
+
 class ConfigurationTest {
 
     @Test
@@ -32,13 +34,13 @@ class ConfigurationTest {
 
         @BeforeTest
         fun onBefore() {
-            initCurrentDirectory = System.getProperty("user.dir")
-            System.setProperty("user.dir", tmpDirectory.absolutePath)
+            initCurrentDirectory = System.getProperty(PROPERTY_USER_DIR)
+            System.setProperty(PROPERTY_USER_DIR, tmpDirectory.absolutePath)
         }
 
         @AfterTest
         fun onAfter() {
-            System.setProperty("user.dir", initCurrentDirectory)
+            System.setProperty(PROPERTY_USER_DIR, initCurrentDirectory)
         }
 
         @Nested
