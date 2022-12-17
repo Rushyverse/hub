@@ -10,6 +10,7 @@ import fr.rushy.hub.listener.PlayerLoginListener
 import fr.rushy.hub.listener.PlayerMoveListener
 import fr.rushy.hub.listener.PlayerSpawnListener
 import fr.rushy.hub.listener.PlayerStartFlyingListener
+import fr.rushy.hub.utils.workingDirectory
 import mu.KotlinLogging
 import net.minestom.server.MinecraftServer
 import net.minestom.server.event.GlobalEventHandler
@@ -51,7 +52,7 @@ class Main {
             serverConfig: ServerConfiguration,
             instanceContainer: InstanceContainer
         ) {
-            val anvilWorld = File(serverConfig.world)
+            val anvilWorld = File(workingDirectory, serverConfig.world)
             if (!anvilWorld.isDirectory) {
                 throw FileSystemException(anvilWorld, null, "World ${anvilWorld.absolutePath} does not exist or is not a directory")
             }
