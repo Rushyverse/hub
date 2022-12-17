@@ -40,8 +40,8 @@ data class Configuration(
         fun getOrCreateConfigurationFile(filePath: String? = null): File {
             if (filePath != null) {
                 val configFile = File(filePath)
-                if (!configFile.exists()) {
-                    throw FileNotFoundException("Config file $filePath does not exist")
+                if (!configFile.isFile) {
+                    throw FileNotFoundException("Config file $filePath does not exist or is not a regular file.")
                 }
                 return configFile
             }

@@ -77,9 +77,16 @@ class ConfigurationTest {
         inner class GetNonExistingConfigurationFile {
 
             @Test
-            fun `should return the given configuration file`() = runTest {
+            fun `should throw exception if file not found`() = runTest {
                 assertThrows<FileNotFoundException> {
                     getOrCreateConfigurationFile(getRandomFileInTmpDirectory().absolutePath)
+                }
+            }
+
+            @Test
+            fun `should throw exception if file is not a regular file`() = runTest {
+                assertThrows<FileNotFoundException> {
+                    getOrCreateConfigurationFile(tmpDirectory.absolutePath)
                 }
             }
         }
@@ -87,7 +94,7 @@ class ConfigurationTest {
         @Nested
         inner class CreateDefaultConfiguration {
             @Test
-            fun `should create the configuration file if config file not found in the current directory`() = runTest {
+            fun `should create the config file if it's not found in the current directory`() = runTest {
                 val configurationFile = getOrCreateConfigurationFile()
                 assertTrue { configurationFile.isFile }
 
