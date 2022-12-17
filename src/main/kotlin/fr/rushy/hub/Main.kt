@@ -42,19 +42,29 @@ class Main {
             minecraftServer.start("0.0.0.0", serverConfig.port)
         }
 
+        /**
+         * With the [serverConfig], retrieve the file of the world and load it in the [instanceContainer].
+         * @param serverConfig Configuration of the minestom server.
+         * @param instanceContainer Instance container of the server.
+         */
         private fun loadWorld(
             serverConfig: ServerConfiguration,
             instanceContainer: InstanceContainer
         ) {
             val anvilWorld = File(serverConfig.world)
-            if (!anvilWorld.exists()) {
-                error("World ${anvilWorld.absolutePath} does not exist")
+            if (!anvilWorld.isDirectory) {
+                throw FileSystemException(anvilWorld, null, "World ${anvilWorld.absolutePath} does not exist or is not a directory")
             }
 
             logger.info { "Loading world ${anvilWorld.absolutePath}" }
             instanceContainer.chunkLoader = AnvilLoader(anvilWorld.toPath())
         }
 
+        /**
+         * Load the configuration using the file or the default config file.
+         * @param configFile Path of the configuration file.
+         * @return The configuration of the server.
+         */
         private fun loadConfiguration(configFile: String?): Configuration {
             val configurationFile = Configuration.getOrCreateConfigurationFile(configFile)
             logger.info { "Loading configuration from $configurationFile" }
@@ -63,6 +73,11 @@ class Main {
             return config
         }
 
+        /**
+         * Register all listeners of the server.
+         * @param globalEventHandler Event handler of the server.
+         * @param instanceContainer Instance container of the server.
+         */
         private fun addListeners(
             globalEventHandler: GlobalEventHandler,
             instanceContainer: InstanceContainer
