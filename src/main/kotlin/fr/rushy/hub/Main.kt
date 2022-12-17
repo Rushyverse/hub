@@ -6,6 +6,7 @@ import fr.rushy.hub.command.KickCommand
 import fr.rushy.hub.command.StopCommand
 import fr.rushy.hub.listener.*
 import fr.rushy.hub.listener.item.PlayerDropItemListener
+import fr.rushy.hub.listener.item.PlayerInventoryClickListener
 import fr.rushy.hub.listener.item.PlayerItemClickListener
 import fr.rushy.hub.listener.item.PlayerSwapItemListener
 import fr.rushy.hub.world.StoneGenerator
@@ -40,6 +41,8 @@ class Main {
             globalEventHandler.addListener(PlayerItemClickListener())
             globalEventHandler.addListener(PlayerDropItemListener())
             globalEventHandler.addListener(PlayerSwapItemListener())
+            globalEventHandler.addListener(PlayerInventoryClickListener())
+
 
 
             val port = args.getOrNull(0)?.toIntOrNull() ?: DEFAULT_PORT

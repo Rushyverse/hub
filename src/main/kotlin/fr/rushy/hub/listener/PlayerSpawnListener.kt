@@ -1,6 +1,7 @@
 package fr.rushy.hub.listener
 
 import fr.rushy.hub.items.hotbar.HotbarItemsManager
+import fr.rushy.hub.items.hotbar.lang.LangMenuItem
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minestom.server.coordinate.Pos
@@ -35,6 +36,8 @@ class PlayerSpawnListener : EventListener<PlayerSpawnEvent> {
         inv.setItemStack(3, HotbarItemsManager.statsMenuItem.toItem())
         inv.setItemStack(4, HotbarItemsManager.mainMenuItem.toItem())
         inv.setItemStack(5, HotbarItemsManager.cosmeticsMenuItem.toItem())
+
+        inv.setItemStack(22, LangMenuItem(player).toItem())
 
         return EventListener.Result.SUCCESS
     }
