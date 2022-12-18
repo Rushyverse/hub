@@ -5,6 +5,8 @@ import fr.rushy.hub.command.GiveCommand
 import fr.rushy.hub.command.KickCommand
 import fr.rushy.hub.command.StopCommand
 import fr.rushy.hub.listener.*
+import fr.rushy.hub.listener.block.PlayerBreakBlockListener
+import fr.rushy.hub.listener.block.PlayerPlaceBlockListener
 import fr.rushy.hub.listener.item.PlayerDropItemListener
 import fr.rushy.hub.listener.item.PlayerInventoryClickListener
 import fr.rushy.hub.listener.item.PlayerItemClickListener
@@ -42,8 +44,8 @@ class Main {
             globalEventHandler.addListener(PlayerDropItemListener())
             globalEventHandler.addListener(PlayerSwapItemListener())
             globalEventHandler.addListener(PlayerInventoryClickListener())
-
-
+            globalEventHandler.addListener(PlayerPlaceBlockListener())
+            globalEventHandler.addListener(PlayerBreakBlockListener())
 
             val port = args.getOrNull(0)?.toIntOrNull() ?: DEFAULT_PORT
             minecraftServer.start("0.0.0.0", port)
