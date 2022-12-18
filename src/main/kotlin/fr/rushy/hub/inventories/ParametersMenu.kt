@@ -74,23 +74,20 @@ class ParametersMenu(val player: Player) : Inventory(InventoryType.CHEST_1_ROW, 
         for (parameter in ParameterType.values()) {
             val item = createParameterItem(parameter, ParameterValue.ALWAYS)
 
+            val slot = addClickableItem(item) { player ->
+                val currentValue = ParameterValue.ALWAYS
+                val currentValIndex = parameter.acceptedValues.indexOf(currentValue)
+                val nextValIndex = currentValIndex + 1;
 
-            val slot = addClickableItem(item, object : Clickable {
-                override fun onClick(player: Player) {
-                    val currentValue = ParameterValue.ALWAYS
-                    val currentValIndex = parameter.acceptedValues.indexOf(currentValue)
-                    val nextValIndex = currentValIndex + 1;
-
-                    var nextValue: ParameterValue = if (nextValIndex == (parameter.acceptedValues.size - 1)) {
-                        parameter.acceptedValues[0]
-                    } else {
-                        parameter.acceptedValues[nextValIndex]
-                    }
-
-                    updatePlayerParameter(player, parameter, nextValue);
-                   //  setClickableItem(parameter.ordinal, createParameterItem(parameter, nextValue), this)
+                var nextValue: ParameterValue = if (nextValIndex == (parameter.acceptedValues.size - 1)) {
+                    parameter.acceptedValues[0]
+                } else {
+                    parameter.acceptedValues[nextValIndex]
                 }
-            })
+
+                updatePlayerParameter(player, parameter, nextValue);
+                //  setClickableItem(parameter.ordinal, createParameterItem(parameter, nextValue), this)
+            }
         }
 
         setCloseButton(8)

@@ -14,20 +14,11 @@ import net.minestom.server.tag.Tag
 class SocialMenu(val player: Player) : Inventory(InventoryType.CHEST_1_ROW, "Social") {
 
     init {
-
         val friendsItem = generateFriendsItem()
-        setClickableItem(0, friendsItem, object : Clickable {
-            override fun onClick(player: Player) {
-                player.openInventory(FriendsMenu(player))
-            }
-        })
+        setClickableItem(0, friendsItem) { it.openInventory(FriendsMenu(it, this)) }
 
         val guildsItem = generateGuildsItem()
-        setClickableItem(1, guildsItem, object : Clickable {
-            override fun onClick(player: Player) {
-                player.openInventory(GuildMenu(player))
-            }
-        })
+        setClickableItem(1, guildsItem) { it.openInventory(GuildMenu(it, this)) }
 
         setCloseButton(8)
     }
