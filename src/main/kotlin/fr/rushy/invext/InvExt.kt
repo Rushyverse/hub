@@ -9,38 +9,39 @@ import net.minestom.server.inventory.condition.InventoryConditionResult
 import net.minestom.server.item.ItemStack
 import net.minestom.server.item.Material
 
-// The system is built to handle click on items by slot.
 
+/**
+ * Cancel interactions on this inventory.
+ */
 fun Inventory.cancelInteractions() {
     this.addInventoryCondition { _, _, _, inventoryConditionResult: InventoryConditionResult ->
         inventoryConditionResult.isCancel = true
     }
 }
 
+/**
+ * Set a clickable ItemStack on the given slot.
+ */
 fun Inventory.setClickableItem(slot: Int, item: ItemStack, callback: Clickable) {
     this.setItemStack(slot, item)
     this.registerClickEvent(slot, callback)
 }
 
-private fun isSlotEmpty(inventory: Inventory, slot: Int): Boolean {
-    val item = inventory.getItemStack(slot);
-    return item == null || item.isAir
+fun Inventory.isSlotEmpty(slot: Int): Boolean {
+    return getItemStack(slot).isAir
 }
 
-fun Inventory.addClickableItem(item:ItemStack, callback: Clickable) : Int{
+fun Inventory.firstAvailableSlot(): Int {
+    return (0 until size).indexOfFirst { isSlotEmpty(it) }
+}
 
-    var slot = 0;
-    while (!isSlotEmpty(this, slot)) {
-        println("item in slot $slot is not null")
-        slot++
-    }
-
-    if (slot > 53) {
-        throw Exception("Inventory is full")
+fun Inventory.addClickableItem(item: ItemStack, callback: Clickable): Int? {
+    val slot = firstAvailableSlot()
+    if (slot == -1) {
+        return null
     }
 
     this.setClickableItem(slot, item, callback)
-
     return slot
 }
 
@@ -58,7 +59,7 @@ fun Inventory.registerClickEvent(slot: Int, callback: Clickable) {
 
 fun Inventory.setBackButton(slot: Int, backInventory: Inventory) {
     val backInvTitle = backInventory.title
-    val backItem = ItemStack.of(Material.ARROW, 1)
+    val backItem = ItemStack.of(Material.ARROW)
         .withDisplayName(
             Component.text("˿").color(NamedTextColor.GOLD).decoration(TextDecoration.ITALIC, false)
                 .decoration(TextDecoration.BOLD, true)
@@ -69,19 +70,12 @@ fun Inventory.setBackButton(slot: Int, backInventory: Inventory) {
                         .decoration(TextDecoration.BOLD, false)
                 )
         )
-    this.setClickableItem(slot, backItem, object : Clickable {
-        override fun onClick(player: Player) {
-            player.openInventory(backInventory)
-        }
-    })
+    setClickableItem(slot, backItem) { it.openInventory(backInventory) }
 }
 
 fun Inventory.setCloseButton(slot: Int) {
-    val closeItem = ItemStack.of(Material.BARRIER, 1)
+    val closeItem = ItemStack.of(Material.BARRIER)
         .withDisplayName(Component.text("❌").color(NamedTextColor.RED).decoration(TextDecoration.ITALIC, false))
-    this.setClickableItem(slot, closeItem, object : Clickable {
-        override fun onClick(player: Player) {
-            player.closeInventory()
-        }
-    })
+
+    setClickableItem(slot, closeItem) { it.closeInventory() }
 }

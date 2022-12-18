@@ -14,13 +14,8 @@ import net.minestom.server.item.ItemStack
  * @return The [Component] converted.
  */
 fun formatLoreUsingSplit(lore: String): List<Component> {
-    val list = mutableListOf<Component>()
-
-    lore.split("\n").forEach {
-        list.add(Component.text(it).color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false))
-    }
-
-    return list;
+    return lore.split("\n")
+        .map { Component.text(it).color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false) }
 }
 
 /**

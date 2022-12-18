@@ -12,7 +12,8 @@ import net.minestom.server.item.Material
 class StatsMenu(val player: Player) {
 
     fun get(): Inventory {
-        val inventory = Inventory(InventoryType.CHEST_1_ROW, MenuManager.Companion.MenuType.STATISTICS.title)
+        val title = "Menu des statistiques";
+        val inventory = Inventory(InventoryType.CHEST_1_ROW, title)
 
         val stats = arrayOf("Kills", "Deaths", "K/D", "Coins", "Level", "XP", "Rank")
 
@@ -26,9 +27,8 @@ class StatsMenu(val player: Player) {
 
     private fun createItemStackFromGame(game: String, stats: List<Component>) =
         ItemStack.of(Material.PAPER)
-            .withDisplayName(
-                createDisplayNameFromGame(game)
-            ).withLore(stats)
+            .withDisplayName(createDisplayNameFromGame(game))
+            .withLore(stats)
 
     private fun createDisplayNameFromGame(game: String) = Component.text(game)
         .color(NamedTextColor.AQUA)

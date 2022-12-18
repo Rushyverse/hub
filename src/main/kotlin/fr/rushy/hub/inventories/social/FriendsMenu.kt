@@ -9,7 +9,7 @@ import net.minestom.server.inventory.InventoryType
 import net.minestom.server.item.ItemStack
 import net.minestom.server.item.Material
 
-class FriendsMenu(val player: Player) : Inventory(InventoryType.CHEST_4_ROW, "Amis") {
+class FriendsMenu(val player: Player, val previousInventory: Inventory? = null) : Inventory(InventoryType.CHEST_4_ROW, "Amis") {
 
     init {
         setItemStack(
@@ -20,7 +20,9 @@ class FriendsMenu(val player: Player) : Inventory(InventoryType.CHEST_4_ROW, "Am
             )
         )
 
-        setBackButton(30, SocialMenu(player))
+        previousInventory?.let {
+            setBackButton(30, it)
+        }
         setCloseButton(32)
     }
 

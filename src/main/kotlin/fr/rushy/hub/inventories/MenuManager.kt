@@ -19,7 +19,7 @@ class MenuManager(val player: Player) {
             STATISTICS("Menu des statistiques"),
             COSMETICS("Menu des cosmétiques");
 
-            public fun getFromTitle(title: String): MenuType? {
+            fun getFromTitle(title: String): MenuType? {
                 for (menuType in values()) {
                     if (menuType.title.equals(title, true)) {
                         return menuType
@@ -27,23 +27,13 @@ class MenuManager(val player: Player) {
                 }
                 return null
             }
-
-            companion object {
-                fun getFromTitle(title: Component): MenuType = getFromTitle(title)
-            }
         }
 
     }
 
     fun getStatsMenu() : Inventory = StatsMenu(player).get()
 
-    fun getMainMenu(): Inventory {
-        val inventory = Inventory(InventoryType.CHEST_6_ROW, MenuType.MAIN.title)
-
-
-
-        return inventory
-    }
+    fun getMainMenu(): Inventory = MainMenu(player).get()
 
 
 
