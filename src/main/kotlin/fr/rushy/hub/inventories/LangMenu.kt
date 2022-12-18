@@ -1,5 +1,6 @@
 package fr.rushy.hub.inventories
 
+import fr.rushy.invext.setCloseButton
 import net.kyori.adventure.text.Component
 import net.minestom.server.entity.Player
 import net.minestom.server.inventory.Inventory
@@ -16,5 +17,7 @@ class LangMenu(val player: Player) : Inventory(InventoryType.CHEST_1_ROW, "Langu
             .withDisplayName(Component.text("English")))
         setItemStack(2, ItemStack.of(Material.RED_BANNER, 1)
             .withDisplayName(Component.text("Español")))
+
+        setCloseButton(8)
     }
 }
