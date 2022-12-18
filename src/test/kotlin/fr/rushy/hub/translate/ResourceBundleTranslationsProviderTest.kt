@@ -56,9 +56,12 @@ class ResourceBundleTranslationsProviderTest {
 
         @Test
         fun `should throw an exception if the bundle is not registered`() {
-            assertThrows<ResourceBundleNotRegisteredException> {
-                provider.get("test1", SupportedLanguage.ENGLISH.locale, BUNDLE_NAME)
+            val locale = SupportedLanguage.ENGLISH.locale
+            val ex = assertThrows<ResourceBundleNotRegisteredException> {
+                provider.get("test1", locale, BUNDLE_NAME)
             }
+            assertEquals(BUNDLE_NAME, ex.bundleName)
+            assertEquals(locale, ex.locale)
         }
 
         @Test
@@ -117,9 +120,12 @@ class ResourceBundleTranslationsProviderTest {
 
         @Test
         fun `should return the key if the bundle is not registered`() {
-            assertThrows<ResourceBundleNotRegisteredException> {
-                assertEquals("test1", provider.translate("test1", SupportedLanguage.ENGLISH.locale, BUNDLE_NAME))
+            val locale = SupportedLanguage.ENGLISH.locale
+            val ex = assertThrows<ResourceBundleNotRegisteredException> {
+                assertEquals("test1", provider.translate("test1", locale, BUNDLE_NAME))
             }
+            assertEquals(BUNDLE_NAME, ex.bundleName)
+            assertEquals(locale, ex.locale)
         }
 
         @Test
