@@ -2,22 +2,23 @@
 
 package fr.rushy.hub.configuration
 
+import fr.rushy.hub.AbstractTest
 import fr.rushy.hub.configuration.Configuration.Companion.getOrCreateConfigurationFile
+import fr.rushy.hub.utils.randomString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.MissingFieldException
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import java.io.FileNotFoundException
 import java.util.*
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
-private const val PROPERTY_USER_DIR = "user.dir"
-
-class ConfigurationTest {
+class ConfigurationTest : AbstractTest() {
 
     @Test
     fun `name of default configuration file is correct`() = runTest {
@@ -27,28 +28,12 @@ class ConfigurationTest {
     @Nested
     inner class GetOrCreateConfigurationFile {
 
-        @TempDir
-        lateinit var tmpDirectory: File
-
-        private lateinit var initCurrentDirectory: String
-
-        @BeforeTest
-        fun onBefore() {
-            initCurrentDirectory = System.getProperty(PROPERTY_USER_DIR)
-            System.setProperty(PROPERTY_USER_DIR, tmpDirectory.absolutePath)
-        }
-
-        @AfterTest
-        fun onAfter() {
-            System.setProperty(PROPERTY_USER_DIR, initCurrentDirectory)
-        }
-
         @Nested
         inner class GetExistingConfigurationFile {
 
             @Test
             fun `should return the given configuration file`() = runTest {
-                createConfigFileAndCheckIfFound("test") {
+                createConfigFileAndCheckIfFound(randomString()) {
                     getOrCreateConfigurationFile(it.absolutePath)
                 }
             }
@@ -61,7 +46,7 @@ class ConfigurationTest {
             }
 
             private inline fun createConfigFileAndCheckIfFound(fileName: String, block: (File) -> File) {
-                val configurationFile = File(tmpDirectory, fileName)
+                val configurationFile = fileOfTmpDirectory(fileName)
                 assertTrue { configurationFile.createNewFile() }
 
                 val content = UUID.randomUUID().toString()
@@ -98,7 +83,7 @@ class ConfigurationTest {
                 val configurationFile = getOrCreateConfigurationFile()
                 assertTrue { configurationFile.isFile }
 
-                val expectedConfigurationFile = File(tmpDirectory, Configuration.DEFAULT_CONFIG_FILE_NAME)
+                val expectedConfigurationFile = fileOfTmpDirectory(Configuration.DEFAULT_CONFIG_FILE_NAME)
                 assertEquals(expectedConfigurationFile, configurationFile)
 
                 inputStreamOfDefaultConfiguration().bufferedReader().use {
@@ -114,12 +99,7 @@ class ConfigurationTest {
                 val configurationFile = getOrCreateConfigurationFile()
 
                 val configuration = Configuration.readHoconConfigurationFile(configurationFile)
-                assertEquals(
-                    Configuration(
-                        ServerConfiguration(25565, "world")
-                    ),
-                    configuration
-                )
+                assertEquals(expectedDefaultConfiguration, configuration)
             }
 
             @Test
@@ -141,7 +121,7 @@ class ConfigurationTest {
             }
         }
 
-        private fun getRandomFileInTmpDirectory() = File(tmpDirectory, UUID.randomUUID().toString())
+        private fun getRandomFileInTmpDirectory() = fileOfTmpDirectory(randomString())
     }
 
     private fun inputStreamOfDefaultConfiguration() =
