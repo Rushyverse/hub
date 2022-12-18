@@ -1,6 +1,6 @@
 package fr.rushy.hub.items.hotbar
 
-import fr.rushy.hub.items.Clickable
+import fr.rushy.invext.Clickable
 import fr.rushy.hub.items.CustomItem
 import fr.rushy.hub.items.hotbar.top.LangMenuItem
 import fr.rushy.hub.items.hotbar.top.ParametersMenuItem
