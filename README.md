@@ -7,7 +7,7 @@ This project allows to turn-on a minecraft server as a lobby for a party server.
 The server is built using [Kotlin](https://kotlinlang.org/) and [Minestom](https://github.com/Minestom/Minestom).
 The version of tools used is specified in the [build.gradle.kts](build.gradle.kts) file.
 
-The entrypoint of the program is located [here](src/main/kotlin/fr/rushy/hub/Main.kt).
+The entrypoint of the program is located [here](src/main/kotlin/fr/rushy/hub/HubServer.kt).
 
 ## How to use
 

@@ -1,6 +1,7 @@
 package fr.rushy.hub.configuration
 
 import com.typesafe.config.ConfigFactory
+import fr.rushy.hub.utils.workingDirectory
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.hocon.Hocon
@@ -25,12 +26,6 @@ data class Configuration(
         const val DEFAULT_CONFIG_FILE_NAME = "server.conf"
 
         /**
-         * Get the current directory where is executed the program.
-         */
-        private val currentDirectory: File
-            get() = File(System.getProperty("user.dir"))
-
-        /**
          * Get the configuration file from the given path.
          * If the path is null, the default config file will be used.
          * If the default config file does not exist, it will be created with the default configuration from resources folder.
@@ -46,7 +41,7 @@ data class Configuration(
                 return configFile
             }
 
-            return getOrCreateDefaultConfigurationFile(currentDirectory)
+            return getOrCreateDefaultConfigurationFile(workingDirectory)
         }
 
         /**

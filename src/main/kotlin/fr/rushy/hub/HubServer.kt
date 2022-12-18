@@ -10,6 +10,7 @@ import fr.rushy.hub.listener.PlayerLoginListener
 import fr.rushy.hub.listener.PlayerMoveListener
 import fr.rushy.hub.listener.PlayerSpawnListener
 import fr.rushy.hub.listener.PlayerStartFlyingListener
+import fr.rushy.hub.utils.workingDirectory
 import fr.rushy.hub.translate.ResourceBundleTranslationsProvider
 import fr.rushy.hub.translate.TranslationsProvider
 import fr.rushy.hub.translate.registerResourceBundleForSupportedLocales
@@ -23,7 +24,7 @@ import java.util.*
 
 private val logger = KotlinLogging.logger { }
 
-class Main {
+class HubServer {
 
     companion object {
 
@@ -59,7 +60,7 @@ class Main {
             serverConfig: ServerConfiguration,
             instanceContainer: InstanceContainer
         ) {
-            val anvilWorld = File(serverConfig.world)
+            val anvilWorld = File(workingDirectory, serverConfig.world)
             if (!anvilWorld.isDirectory) {
                 throw FileSystemException(anvilWorld, null, "World ${anvilWorld.absolutePath} does not exist or is not a directory")
             }
