@@ -26,7 +26,7 @@ class HubServerTest : AbstractTest() {
     }
 
     @Nested
-    inner class CreateOrGetConfigurationFile {
+    inner class CreateOrGetConfiguration {
 
         @Test
         fun `should create a configuration file if it doesn't exist`() {
@@ -57,7 +57,7 @@ class HubServerTest : AbstractTest() {
     }
 
     @Nested
-    inner class ShouldUseConfiguration {
+    inner class UseConfiguration {
 
         @Test
         fun `should use configuration to turn on the server`() {
@@ -79,10 +79,10 @@ class HubServerTest : AbstractTest() {
     }
 
     @Nested
-    inner class ListenerLoaded {
+    inner class Listener {
 
         @Test
-        fun `should load the listener`() {
+        fun `should load the listeners`() {
             copyWorldInTmpDirectory()
             HubServer.main(emptyArray())
 
@@ -98,7 +98,7 @@ class HubServerTest : AbstractTest() {
     }
 
     @Nested
-    inner class CommandLoaded {
+    inner class Command {
 
         @Test
         fun `should load all commands`() {
