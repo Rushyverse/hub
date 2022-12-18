@@ -11,7 +11,6 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.MissingFieldException
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import java.io.FileNotFoundException
 import java.util.*
@@ -20,9 +19,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class ConfigurationTest : AbstractTest() {
-
-    @TempDir
-    override lateinit var tmpDirectory: File
 
     @Test
     fun `name of default configuration file is correct`() = runTest {

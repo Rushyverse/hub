@@ -5,7 +5,6 @@ import fr.rushy.hub.command.GiveCommand
 import fr.rushy.hub.command.KickCommand
 import fr.rushy.hub.command.StopCommand
 import fr.rushy.hub.configuration.Configuration
-import fr.rushy.hub.configuration.ServerConfiguration
 import fr.rushy.hub.listener.PlayerLoginListener
 import fr.rushy.hub.listener.PlayerMoveListener
 import fr.rushy.hub.listener.PlayerSpawnListener
@@ -15,15 +14,16 @@ import io.mockk.mockk
 import net.minestom.server.MinecraftServer
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.api.io.TempDir
-import java.io.File
 import java.io.IOException
 import kotlin.test.*
 
 class MainTest : AbstractTest() {
 
-    @TempDir
-    override lateinit var tmpDirectory: File
+    @AfterTest
+    override fun onAfter() {
+        super.onAfter()
+        MinecraftServer.stopCleanly()
+    }
 
     @Nested
     inner class CreateOrGetConfigurationFile {
@@ -45,9 +45,7 @@ class MainTest : AbstractTest() {
             val configurationFile = fileOfTmpDirectory(randomString())
             assertTrue { configurationFile.createNewFile() }
 
-            val configuration = expectedDefaultConfiguration.copy(
-                server = ServerConfiguration(25566, randomString())
-            )
+            val configuration = defaultConfigurationOnAvailablePort()
             configurationToHoconFile(configuration, configurationFile)
 
             val exception = assertThrows<FileSystemException> {
@@ -63,9 +61,7 @@ class MainTest : AbstractTest() {
 
         @Test
         fun `should use configuration to turn on the server`() {
-            val configuration = expectedDefaultConfiguration.copy(
-                server = ServerConfiguration(25566, randomString())
-            )
+            val configuration = defaultConfigurationOnAvailablePort()
             val configurationFile = fileOfTmpDirectory(randomString())
             configurationToHoconFile(configuration, configurationFile)
 
@@ -85,20 +81,20 @@ class MainTest : AbstractTest() {
     @Nested
     inner class ListenerLoaded {
 
-            @Test
-            fun `should load the listener`() {
-                copyWorldInTmpDirectory()
-                Main.main(emptyArray())
+        @Test
+        fun `should load the listener`() {
+            copyWorldInTmpDirectory()
+            Main.main(emptyArray())
 
-                val eventHandler = MinecraftServer.getGlobalEventHandler()
+            val eventHandler = MinecraftServer.getGlobalEventHandler()
 
-                sequenceOf(
-                    PlayerStartFlyingListener(),
-                    PlayerLoginListener(mockk()),
-                    PlayerSpawnListener(),
-                    PlayerMoveListener()
-                ).map { it.eventType() }.all { eventHandler.hasListener(it) }
-            }
+            sequenceOf(
+                PlayerStartFlyingListener(),
+                PlayerLoginListener(mockk()),
+                PlayerSpawnListener(),
+                PlayerMoveListener()
+            ).map { it.eventType() }.all { eventHandler.hasListener(it) }
+        }
     }
 
     @Nested
