@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.7.21"
-    kotlin("plugin.serialization") version "1.7.21"
+    kotlin("jvm") version "1.7.22"
+    kotlin("plugin.serialization") version "1.7.22"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     `maven-publish`
     application
@@ -16,7 +16,7 @@ repositories {
 dependencies {
     val minestomVersion = "809d9516b2"
     val loggingVersion = "3.0.4"
-    val mockkVersion = "1.13.2"
+    val mockkVersion = "1.13.3"
     val coroutinesCoreVersion = "1.6.4"
     val kotlinSerializationVersion = "1.4.1"
 
