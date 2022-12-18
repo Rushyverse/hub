@@ -20,7 +20,7 @@ import java.io.File
 
 private val logger = KotlinLogging.logger { }
 
-class Main {
+class HubServer {
 
     companion object {
 

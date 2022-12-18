@@ -17,7 +17,7 @@ import org.junit.jupiter.api.assertThrows
 import java.io.IOException
 import kotlin.test.*
 
-class MainTest : AbstractTest() {
+class HubServerTest : AbstractTest() {
 
     @AfterTest
     override fun onAfter() {
@@ -31,7 +31,7 @@ class MainTest : AbstractTest() {
         @Test
         fun `should create a configuration file if it doesn't exist`() {
             assertThrows<IOException> {
-                Main.main(emptyArray())
+                HubServer.main(emptyArray())
             }
             val configurationFile = fileOfTmpDirectory(Configuration.DEFAULT_CONFIG_FILE_NAME)
             assertTrue { configurationFile.isFile }
@@ -49,7 +49,7 @@ class MainTest : AbstractTest() {
             configurationToHoconFile(configuration, configurationFile)
 
             val exception = assertThrows<FileSystemException> {
-                Main.main(arrayOf(configurationFile.absolutePath))
+                HubServer.main(arrayOf(configurationFile.absolutePath))
             }
             assertEquals(configuration.server.world, exception.file.name)
         }
@@ -67,7 +67,7 @@ class MainTest : AbstractTest() {
 
             copyWorldInTmpDirectory(configuration)
 
-            Main.main(arrayOf(configurationFile.absolutePath))
+            HubServer.main(arrayOf(configurationFile.absolutePath))
 
             // If no exception is thrown, the world is loaded
             assertTrue { MinecraftServer.isStarted() }
@@ -84,7 +84,7 @@ class MainTest : AbstractTest() {
         @Test
         fun `should load the listener`() {
             copyWorldInTmpDirectory()
-            Main.main(emptyArray())
+            HubServer.main(emptyArray())
 
             val eventHandler = MinecraftServer.getGlobalEventHandler()
 
@@ -103,7 +103,7 @@ class MainTest : AbstractTest() {
         @Test
         fun `should load all commands`() {
             copyWorldInTmpDirectory()
-            Main.main(emptyArray())
+            HubServer.main(emptyArray())
 
             val commandManager = MinecraftServer.getCommandManager()
             assertContentEquals(
