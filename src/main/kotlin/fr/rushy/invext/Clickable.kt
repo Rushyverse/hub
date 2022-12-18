@@ -1,4 +1,4 @@
-package fr.rushy.hub.items
+package fr.rushy.invext
 
 import net.minestom.server.entity.Player
 
