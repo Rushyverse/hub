@@ -39,6 +39,16 @@ class ResourceBundleTranslationsProviderTest {
                 assertEquals("${displayName}_value_2", provider.get("test2", it.locale, BUNDLE_NAME))
             }
         }
+
+        @Test
+        fun `should load multiple resource bundles`() {
+            val secondBundleName = "test_bundle_2"
+            val locale = SupportedLanguage.ENGLISH.locale
+            provider.registerResourceBundle(BUNDLE_NAME, locale, ResourceBundle::getBundle)
+            provider.registerResourceBundle(secondBundleName, locale, ResourceBundle::getBundle)
+            assertEquals("english_value_1", provider.get("test1", locale, BUNDLE_NAME))
+            assertEquals("English value", provider.get("simple_value", locale, secondBundleName))
+        }
     }
 
     @Nested
