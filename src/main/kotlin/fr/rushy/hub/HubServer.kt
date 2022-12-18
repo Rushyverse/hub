@@ -11,18 +11,24 @@ import fr.rushy.hub.listener.PlayerMoveListener
 import fr.rushy.hub.listener.PlayerSpawnListener
 import fr.rushy.hub.listener.PlayerStartFlyingListener
 import fr.rushy.hub.utils.workingDirectory
+import fr.rushy.hub.translate.ResourceBundleTranslationsProvider
+import fr.rushy.hub.translate.TranslationsProvider
+import fr.rushy.hub.translate.registerResourceBundleForSupportedLocales
 import mu.KotlinLogging
 import net.minestom.server.MinecraftServer
 import net.minestom.server.event.GlobalEventHandler
 import net.minestom.server.instance.AnvilLoader
 import net.minestom.server.instance.InstanceContainer
 import java.io.File
+import java.util.*
 
 private val logger = KotlinLogging.logger { }
 
 class HubServer {
 
     companion object {
+
+        const val BUNDLE_HUB = "hub"
 
         @JvmStatic
         fun main(args: Array<String>) {
@@ -34,6 +40,8 @@ class HubServer {
             val instanceContainer = instanceManager.createInstanceContainer()
 
             loadWorld(serverConfig, instanceContainer)
+
+            val translationsProvider = createTranslationsProvider()
 
             registerCommands()
 
@@ -59,6 +67,16 @@ class HubServer {
 
             logger.info { "Loading world ${anvilWorld.absolutePath}" }
             instanceContainer.chunkLoader = AnvilLoader(anvilWorld.toPath())
+        }
+
+        /**
+         * Create a translation provider to provide translations for the [supported languages][fr.rushy.hub.translate.SupportedLanguage].
+         * @return New translation provider.
+         */
+        private fun createTranslationsProvider(): TranslationsProvider {
+            return ResourceBundleTranslationsProvider().apply {
+                registerResourceBundleForSupportedLocales(BUNDLE_HUB, ResourceBundle::getBundle)
+            }
         }
 
         /**
