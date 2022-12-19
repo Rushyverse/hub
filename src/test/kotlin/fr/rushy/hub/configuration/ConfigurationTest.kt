@@ -106,7 +106,7 @@ class ConfigurationTest : AbstractTest() {
             @Test
             fun `should throw exception if file not found`() = runTest {
                 assertThrows<MissingFieldException> {
-                    Configuration.readHoconConfigurationFile(getRandomFileInTmpDirectory())
+                    Configuration.readHoconConfigurationFile<HubConfiguration>(getRandomFileInTmpDirectory())
                 }
             }
 
@@ -117,7 +117,7 @@ class ConfigurationTest : AbstractTest() {
                 file.writeText("server { }")
 
                 assertThrows<MissingFieldException> {
-                    Configuration.readHoconConfigurationFile(file)
+                    Configuration.readHoconConfigurationFile<HubConfiguration>(file)
                 }
             }
         }
