@@ -228,6 +228,6 @@ gradle-app.setting
 # End of https://www.toptal.com/developers/gitignore/api/intellij,eclipse,kotlin,gradle
 
 # In case of someone execute the server in IDE
-*.conf
-world/
-extensions/
+/*.conf
+/world/
+/extensions/
