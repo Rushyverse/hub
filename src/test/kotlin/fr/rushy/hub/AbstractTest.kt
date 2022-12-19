@@ -9,9 +9,11 @@ import java.io.File
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 
-private const val PROPERTY_USER_DIR = "user.dir"
-
 abstract class AbstractTest {
+
+    companion object {
+        private const val PROPERTY_USER_DIR = "user.dir"
+    }
 
     @TempDir
     lateinit var tmpDirectory: File
