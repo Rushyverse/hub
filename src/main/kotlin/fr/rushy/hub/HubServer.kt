@@ -1,95 +1,35 @@
 package fr.rushy.hub
 
-import fr.rushy.hub.command.GamemodeCommand
-import fr.rushy.hub.command.GiveCommand
-import fr.rushy.hub.command.KickCommand
-import fr.rushy.hub.command.StopCommand
-import fr.rushy.hub.configuration.Configuration
-import fr.rushy.hub.configuration.ServerConfiguration
+import fr.rushy.api.RushyServer
+import fr.rushy.api.configuration.Configuration
+import fr.rushy.hub.configuration.HubConfiguration
 import fr.rushy.hub.listener.PlayerLoginListener
 import fr.rushy.hub.listener.PlayerMoveListener
 import fr.rushy.hub.listener.PlayerSpawnListener
 import fr.rushy.hub.listener.PlayerStartFlyingListener
-import fr.rushy.hub.utils.workingDirectory
-import fr.rushy.hub.translate.ResourceBundleTranslationsProvider
-import fr.rushy.hub.translate.TranslationsProvider
-import fr.rushy.hub.translate.registerResourceBundleForSupportedLocales
 import mu.KotlinLogging
 import net.minestom.server.MinecraftServer
 import net.minestom.server.event.GlobalEventHandler
-import net.minestom.server.instance.AnvilLoader
 import net.minestom.server.instance.InstanceContainer
-import java.io.File
-import java.util.*
 
 private val logger = KotlinLogging.logger { }
 
 class HubServer {
 
-    companion object {
+    companion object : RushyServer() {
 
         const val BUNDLE_HUB = "hub"
 
         @JvmStatic
-        fun main(args: Array<String>) {
-            val config = loadConfiguration(args.firstOrNull())
-            val serverConfig = config.server
+        override fun main(args: Array<String>) {
+            start<HubConfiguration> {
+                val translationsProvider = createTranslationsProvider(listOf(BUNDLE_HUB))
 
-            val minecraftServer = MinecraftServer.init()
-            val instanceManager = MinecraftServer.getInstanceManager()
-            val instanceContainer = instanceManager.createInstanceContainer()
+                registerCommands()
 
-            loadWorld(serverConfig, instanceContainer)
-
-            val translationsProvider = createTranslationsProvider()
-
-            registerCommands()
-
-            val globalEventHandler = MinecraftServer.getGlobalEventHandler()
-            addListeners(globalEventHandler, instanceContainer)
-
-            minecraftServer.start("0.0.0.0", serverConfig.port)
-        }
-
-        /**
-         * With the [serverConfig], retrieve the file of the world and load it in the [instanceContainer].
-         * @param serverConfig Configuration of the minestom server.
-         * @param instanceContainer Instance container of the server.
-         */
-        private fun loadWorld(
-            serverConfig: ServerConfiguration,
-            instanceContainer: InstanceContainer
-        ) {
-            val anvilWorld = File(workingDirectory, serverConfig.world)
-            if (!anvilWorld.isDirectory) {
-                throw FileSystemException(anvilWorld, null, "World ${anvilWorld.absolutePath} does not exist or is not a directory")
+                val globalEventHandler = MinecraftServer.getGlobalEventHandler()
+                addListeners(globalEventHandler, it)
             }
-
-            logger.info { "Loading world ${anvilWorld.absolutePath}" }
-            instanceContainer.chunkLoader = AnvilLoader(anvilWorld.toPath())
-        }
-
-        /**
-         * Create a translation provider to provide translations for the [supported languages][fr.rushy.hub.translate.SupportedLanguage].
-         * @return New translation provider.
-         */
-        private fun createTranslationsProvider(): TranslationsProvider {
-            return ResourceBundleTranslationsProvider().apply {
-                registerResourceBundleForSupportedLocales(BUNDLE_HUB, ResourceBundle::getBundle)
-            }
-        }
-
-        /**
-         * Load the configuration using the file or the default config file.
-         * @param configFile Path of the configuration file.
-         * @return The configuration of the server.
-         */
-        private fun loadConfiguration(configFile: String?): Configuration {
-            val configurationFile = Configuration.getOrCreateConfigurationFile(configFile)
-            logger.info { "Loading configuration from $configurationFile" }
-            val config = Configuration.readHoconConfigurationFile(configurationFile)
-            logger.info { "Configuration loaded" }
-            return config
         }
 
         /**
@@ -105,17 +45,6 @@ class HubServer {
             globalEventHandler.addListener(PlayerLoginListener(instanceContainer))
             globalEventHandler.addListener(PlayerSpawnListener())
             globalEventHandler.addListener(PlayerMoveListener())
-        }
-
-        /**
-         * Register all commands.
-         */
-        private fun registerCommands() {
-            val commandManager = MinecraftServer.getCommandManager()
-            commandManager.register(StopCommand())
-            commandManager.register(KickCommand())
-            commandManager.register(GiveCommand())
-            commandManager.register(GamemodeCommand())
         }
     }
 }

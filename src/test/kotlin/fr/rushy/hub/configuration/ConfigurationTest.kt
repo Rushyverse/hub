@@ -2,8 +2,9 @@
 
 package fr.rushy.hub.configuration
 
+import fr.rushy.api.configuration.Configuration
+import fr.rushy.api.configuration.Configuration.Companion.getOrCreateConfigurationFile
 import fr.rushy.hub.AbstractTest
-import fr.rushy.hub.configuration.Configuration.Companion.getOrCreateConfigurationFile
 import fr.rushy.hub.utils.randomString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -98,7 +99,7 @@ class ConfigurationTest : AbstractTest() {
             fun `should create default configuration and read it`() = runTest {
                 val configurationFile = getOrCreateConfigurationFile()
 
-                val configuration = Configuration.readHoconConfigurationFile(configurationFile)
+                val configuration = Configuration.readHoconConfigurationFile<HubConfiguration>(configurationFile)
                 assertEquals(expectedDefaultConfiguration, configuration)
             }
 

@@ -1,10 +1,11 @@
 package fr.rushy.hub
 
-import fr.rushy.hub.command.GamemodeCommand
-import fr.rushy.hub.command.GiveCommand
-import fr.rushy.hub.command.KickCommand
-import fr.rushy.hub.command.StopCommand
-import fr.rushy.hub.configuration.Configuration
+import fr.rushy.api.command.GamemodeCommand
+import fr.rushy.api.command.GiveCommand
+import fr.rushy.api.command.KickCommand
+import fr.rushy.api.command.StopCommand
+import fr.rushy.api.configuration.Configuration
+import fr.rushy.hub.configuration.HubConfiguration
 import fr.rushy.hub.listener.PlayerLoginListener
 import fr.rushy.hub.listener.PlayerMoveListener
 import fr.rushy.hub.listener.PlayerSpawnListener
@@ -36,7 +37,7 @@ class HubServerTest : AbstractTest() {
             val configurationFile = fileOfTmpDirectory(Configuration.DEFAULT_CONFIG_FILE_NAME)
             assertTrue { configurationFile.isFile }
 
-            val configuration = Configuration.readHoconConfigurationFile(configurationFile)
+            val configuration = Configuration.readHoconConfigurationFile<HubConfiguration>(configurationFile)
             assertEquals(expectedDefaultConfiguration, configuration)
         }
 

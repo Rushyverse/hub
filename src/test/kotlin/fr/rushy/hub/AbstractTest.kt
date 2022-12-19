@@ -1,7 +1,7 @@
 package fr.rushy.hub
 
-import fr.rushy.hub.configuration.Configuration
-import fr.rushy.hub.configuration.ServerConfiguration
+import fr.rushy.api.configuration.ServerConfiguration
+import fr.rushy.hub.configuration.HubConfiguration
 import fr.rushy.hub.utils.getAvailablePort
 import kotlinx.serialization.hocon.Hocon
 import org.junit.jupiter.api.io.TempDir
@@ -18,8 +18,8 @@ abstract class AbstractTest {
 
     private lateinit var initCurrentDirectory: String
 
-    protected val expectedDefaultConfiguration: Configuration
-        get() = Configuration(
+    protected val expectedDefaultConfiguration: HubConfiguration
+        get() = HubConfiguration(
             ServerConfiguration(25565, "world")
         )
 
@@ -36,10 +36,10 @@ abstract class AbstractTest {
 
     protected fun fileOfTmpDirectory(fileName: String) = File(tmpDirectory, fileName)
 
-    protected fun configurationToHocon(configuration: Configuration) =
-        Hocon.encodeToConfig(Configuration.serializer(), configuration)
+    protected fun configurationToHocon(configuration: HubConfiguration) =
+        Hocon.encodeToConfig(HubConfiguration.serializer(), configuration)
 
-    protected fun configurationToHoconFile(configuration: Configuration, file: File) =
+    protected fun configurationToHoconFile(configuration: HubConfiguration, file: File) =
         file.writeText(configurationToHocon(configuration).root().render())
 
     protected fun copyFolderFromResourcesToFolder(folderName: String, destination: File) {
@@ -48,7 +48,7 @@ abstract class AbstractTest {
     }
 
     protected fun copyWorldInTmpDirectory(
-        configuration: Configuration = defaultConfigurationOnAvailablePort()
+        configuration: HubConfiguration = defaultConfigurationOnAvailablePort()
     ) {
         val worldFile = fileOfTmpDirectory(configuration.server.world)
         copyFolderFromResourcesToFolder("world", worldFile)
