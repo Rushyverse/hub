@@ -1,9 +1,6 @@
 package fr.rushy.hub
 
-import fr.rushy.hub.command.GamemodeCommand
-import fr.rushy.hub.command.GiveCommand
-import fr.rushy.hub.command.KickCommand
-import fr.rushy.hub.command.StopCommand
+import fr.rushy.hub.command.*
 import fr.rushy.hub.configuration.Configuration
 import fr.rushy.hub.configuration.ServerConfiguration
 import fr.rushy.hub.listener.PlayerLoginListener
@@ -116,6 +113,7 @@ class HubServer {
             commandManager.register(KickCommand())
             commandManager.register(GiveCommand())
             commandManager.register(GamemodeCommand())
+            commandManager.register(PigCommand())
         }
     }
 }
