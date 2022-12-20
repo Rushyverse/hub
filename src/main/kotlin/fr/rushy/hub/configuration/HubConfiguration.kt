@@ -1,7 +1,8 @@
 package fr.rushy.hub.configuration
 
-import fr.rushy.api.configuration.Configuration
-import fr.rushy.api.configuration.ServerConfiguration
+import fr.rushy.api.configuration.IConfiguration
+import fr.rushy.api.configuration.IServerConfiguration
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
@@ -11,5 +12,13 @@ import kotlinx.serialization.Serializable
 @Suppress("PROVIDED_RUNTIME_TOO_LOW") // https://github.com/Kotlin/kotlinx.serialization/issues/993
 @Serializable
 data class HubConfiguration(
+    @SerialName("server")
     override val server: ServerConfiguration
-) : Configuration
+) : IConfiguration
+
+@Suppress("PROVIDED_RUNTIME_TOO_LOW")
+@Serializable
+data class ServerConfiguration(
+    override val port: Int,
+    override val world: String
+) : IServerConfiguration

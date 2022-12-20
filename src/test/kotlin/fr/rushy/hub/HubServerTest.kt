@@ -4,7 +4,7 @@ import fr.rushy.api.command.GamemodeCommand
 import fr.rushy.api.command.GiveCommand
 import fr.rushy.api.command.KickCommand
 import fr.rushy.api.command.StopCommand
-import fr.rushy.api.configuration.Configuration
+import fr.rushy.api.configuration.IConfiguration
 import fr.rushy.hub.configuration.HubConfiguration
 import fr.rushy.hub.listener.PlayerLoginListener
 import fr.rushy.hub.listener.PlayerMoveListener
@@ -34,10 +34,10 @@ class HubServerTest : AbstractTest() {
             assertThrows<IOException> {
                 HubServer.main(emptyArray())
             }
-            val configurationFile = fileOfTmpDirectory(Configuration.DEFAULT_CONFIG_FILE_NAME)
+            val configurationFile = fileOfTmpDirectory(IConfiguration.DEFAULT_CONFIG_FILE_NAME)
             assertTrue { configurationFile.isFile }
 
-            val configuration = Configuration.readHoconConfigurationFile<HubConfiguration>(configurationFile)
+            val configuration = IConfiguration.readHoconConfigurationFile<HubConfiguration>(configurationFile)
             assertEquals(expectedDefaultConfiguration, configuration)
         }
 

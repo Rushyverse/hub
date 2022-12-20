@@ -1,7 +1,7 @@
 package fr.rushy.hub
 
-import fr.rushy.api.configuration.ServerConfiguration
 import fr.rushy.hub.configuration.HubConfiguration
+import fr.rushy.hub.configuration.ServerConfiguration
 import fr.rushy.hub.utils.getAvailablePort
 import kotlinx.serialization.hocon.Hocon
 import org.junit.jupiter.api.io.TempDir
