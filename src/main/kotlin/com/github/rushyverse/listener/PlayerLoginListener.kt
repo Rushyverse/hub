@@ -1,4 +1,4 @@
-package fr.rushy.hub.listener
+package com.github.rushyverse.listener
 
 import com.github.rushyverse.api.command.GamemodeCommand
 import com.github.rushyverse.api.command.GiveCommand

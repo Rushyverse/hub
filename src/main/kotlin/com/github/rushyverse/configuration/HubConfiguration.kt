@@ -1,4 +1,4 @@
-package fr.rushy.hub.configuration
+package com.github.rushyverse.configuration
 
 import com.github.rushyverse.api.configuration.*
 import kotlinx.serialization.SerialName
