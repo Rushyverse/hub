@@ -1,10 +1,10 @@
 package fr.rushy.hub
 
-import fr.rushy.api.command.GamemodeCommand
-import fr.rushy.api.command.GiveCommand
-import fr.rushy.api.command.KickCommand
-import fr.rushy.api.command.StopCommand
-import fr.rushy.api.configuration.IConfiguration
+import com.github.rushyverse.api.command.GamemodeCommand
+import com.github.rushyverse.api.command.GiveCommand
+import com.github.rushyverse.api.command.KickCommand
+import com.github.rushyverse.api.command.StopCommand
+import com.github.rushyverse.api.configuration.IConfiguration
 import fr.rushy.hub.configuration.HubConfiguration
 import fr.rushy.hub.listener.PlayerLoginListener
 import fr.rushy.hub.listener.PlayerMoveListener
@@ -12,6 +12,7 @@ import fr.rushy.hub.listener.PlayerSpawnListener
 import fr.rushy.hub.listener.PlayerStartFlyingListener
 import fr.rushy.hub.utils.randomString
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import net.minestom.server.MinecraftServer
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.assertThrows
@@ -30,9 +31,9 @@ class HubServerTest : AbstractTest() {
     inner class CreateOrGetConfiguration {
 
         @Test
-        fun `should create a configuration file if it doesn't exist`() {
+        fun `should create a configuration file if it doesn't exist`() = runTest {
             assertThrows<IOException> {
-                HubServer.main(emptyArray())
+                HubServer().start()
             }
             val configurationFile = fileOfTmpDirectory(IConfiguration.DEFAULT_CONFIG_FILE_NAME)
             assertTrue { configurationFile.isFile }
@@ -42,7 +43,7 @@ class HubServerTest : AbstractTest() {
         }
 
         @Test
-        fun `should use the configuration file if exists`() {
+        fun `should use the configuration file if exists`() = runTest {
             val configurationFile = fileOfTmpDirectory(randomString())
             assertTrue { configurationFile.createNewFile() }
 
@@ -50,7 +51,7 @@ class HubServerTest : AbstractTest() {
             configurationToHoconFile(configuration, configurationFile)
 
             val exception = assertThrows<FileSystemException> {
-                HubServer.main(arrayOf(configurationFile.absolutePath))
+                HubServer(configurationFile.absolutePath).start()
             }
             assertEquals(configuration.server.world, exception.file.name)
         }
@@ -61,14 +62,14 @@ class HubServerTest : AbstractTest() {
     inner class UseConfiguration {
 
         @Test
-        fun `should use configuration to turn on the server`() {
+        fun `should use configuration to turn on the server`() = runTest {
             val configuration = defaultConfigurationOnAvailablePort()
             val configurationFile = fileOfTmpDirectory(randomString())
             configurationToHoconFile(configuration, configurationFile)
 
             copyWorldInTmpDirectory(configuration)
 
-            HubServer.main(arrayOf(configurationFile.absolutePath))
+            HubServer(configurationFile.absolutePath).start()
 
             // If no exception is thrown, the world is loaded
             assertTrue { MinecraftServer.isStarted() }
@@ -83,9 +84,9 @@ class HubServerTest : AbstractTest() {
     inner class Listener {
 
         @Test
-        fun `should load the listeners`() {
+        fun `should load the listeners`() = runTest {
             copyWorldInTmpDirectory()
-            HubServer.main(emptyArray())
+            HubServer().start()
 
             val eventHandler = MinecraftServer.getGlobalEventHandler()
 
@@ -102,9 +103,9 @@ class HubServerTest : AbstractTest() {
     inner class Command {
 
         @Test
-        fun `should load all commands`() {
+        fun `should load all commands`() = runTest {
             copyWorldInTmpDirectory()
-            HubServer.main(emptyArray())
+            HubServer().start()
 
             val commandManager = MinecraftServer.getCommandManager()
             assertContentEquals(

@@ -1,5 +1,8 @@
 package fr.rushy.hub
 
+import com.github.rushyverse.api.configuration.BungeeCordConfiguration
+import com.github.rushyverse.api.configuration.IConfiguration
+import com.github.rushyverse.api.configuration.VelocityConfiguration
 import fr.rushy.hub.configuration.HubConfiguration
 import fr.rushy.hub.configuration.ServerConfiguration
 import fr.rushy.hub.utils.getAvailablePort
@@ -13,6 +16,7 @@ abstract class AbstractTest {
 
     companion object {
         private const val PROPERTY_USER_DIR = "user.dir"
+        const val DEFAULT_WORLD = "world"
     }
 
     @TempDir
@@ -22,7 +26,13 @@ abstract class AbstractTest {
 
     protected val expectedDefaultConfiguration: HubConfiguration
         get() = HubConfiguration(
-            ServerConfiguration(25565, "world")
+            ServerConfiguration(
+                25565,
+                DEFAULT_WORLD,
+                false,
+                BungeeCordConfiguration(false, ""),
+                VelocityConfiguration(false, "")
+            )
         )
 
     @BeforeTest
@@ -41,7 +51,10 @@ abstract class AbstractTest {
     protected fun configurationToHocon(configuration: HubConfiguration) =
         Hocon.encodeToConfig(HubConfiguration.serializer(), configuration)
 
-    protected fun configurationToHoconFile(configuration: HubConfiguration, file: File) =
+    protected fun configurationToHoconFile(
+        configuration: HubConfiguration,
+        file: File = fileOfTmpDirectory(IConfiguration.DEFAULT_CONFIG_FILE_NAME)
+    ) =
         file.writeText(configurationToHocon(configuration).root().render())
 
     protected fun copyFolderFromResourcesToFolder(folderName: String, destination: File) {
@@ -53,7 +66,7 @@ abstract class AbstractTest {
         configuration: HubConfiguration = defaultConfigurationOnAvailablePort()
     ) {
         val worldFile = fileOfTmpDirectory(configuration.server.world)
-        copyFolderFromResourcesToFolder("world", worldFile)
+        copyFolderFromResourcesToFolder(DEFAULT_WORLD, worldFile)
     }
 
     protected fun defaultConfigurationOnAvailablePort() = expectedDefaultConfiguration.let {

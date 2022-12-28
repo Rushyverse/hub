@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.7.22"
-    kotlin("plugin.serialization") version "1.7.22"
+    kotlin("jvm") version "1.8.0"
+    kotlin("plugin.serialization") version "1.8.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     application
 }
@@ -18,7 +18,7 @@ dependencies {
     val mockkVersion = "1.13.3"
     val coroutinesCoreVersion = "1.6.4"
 
-    api("fr.rushy:api:1.0.0")
+    implementation("com.github.Rushyverse:api:v1.2.0")
 
     testImplementation(kotlin("test-junit5"))
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesCoreVersion")
@@ -56,5 +56,5 @@ tasks {
 }
 
 application {
-    mainClass.set("fr.rushy.hub.HubServer")
+    mainClass.set("fr.rushy.hub.HubServerKt")
 }

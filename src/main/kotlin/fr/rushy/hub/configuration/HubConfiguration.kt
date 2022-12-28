@@ -1,7 +1,6 @@
 package fr.rushy.hub.configuration
 
-import fr.rushy.api.configuration.IConfiguration
-import fr.rushy.api.configuration.IServerConfiguration
+import com.github.rushyverse.api.configuration.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -20,5 +19,8 @@ data class HubConfiguration(
 @Serializable
 data class ServerConfiguration(
     override val port: Int,
-    override val world: String
+    override val world: String,
+    override val onlineMode: Boolean,
+    override val bungeeCord: BungeeCordConfiguration,
+    override val velocity: VelocityConfiguration
 ) : IServerConfiguration
