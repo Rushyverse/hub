@@ -1,6 +1,9 @@
 package fr.rushy.hub
 
-import fr.rushy.hub.configuration.Configuration
+import com.github.rushyverse.api.configuration.BungeeCordConfiguration
+import com.github.rushyverse.api.configuration.IConfiguration
+import com.github.rushyverse.api.configuration.VelocityConfiguration
+import fr.rushy.hub.configuration.HubConfiguration
 import fr.rushy.hub.configuration.ServerConfiguration
 import fr.rushy.hub.utils.getAvailablePort
 import kotlinx.serialization.hocon.Hocon
@@ -9,18 +12,27 @@ import java.io.File
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 
-private const val PROPERTY_USER_DIR = "user.dir"
-
 abstract class AbstractTest {
+
+    companion object {
+        private const val PROPERTY_USER_DIR = "user.dir"
+        const val DEFAULT_WORLD = "world"
+    }
 
     @TempDir
     lateinit var tmpDirectory: File
 
     private lateinit var initCurrentDirectory: String
 
-    protected val expectedDefaultConfiguration: Configuration
-        get() = Configuration(
-            ServerConfiguration(25565, "world")
+    protected val expectedDefaultConfiguration: HubConfiguration
+        get() = HubConfiguration(
+            ServerConfiguration(
+                25565,
+                DEFAULT_WORLD,
+                false,
+                BungeeCordConfiguration(false, ""),
+                VelocityConfiguration(false, "")
+            )
         )
 
     @BeforeTest
@@ -36,10 +48,13 @@ abstract class AbstractTest {
 
     protected fun fileOfTmpDirectory(fileName: String) = File(tmpDirectory, fileName)
 
-    protected fun configurationToHocon(configuration: Configuration) =
-        Hocon.encodeToConfig(Configuration.serializer(), configuration)
+    protected fun configurationToHocon(configuration: HubConfiguration) =
+        Hocon.encodeToConfig(HubConfiguration.serializer(), configuration)
 
-    protected fun configurationToHoconFile(configuration: Configuration, file: File) =
+    protected fun configurationToHoconFile(
+        configuration: HubConfiguration,
+        file: File = fileOfTmpDirectory(IConfiguration.DEFAULT_CONFIG_FILE_NAME)
+    ) =
         file.writeText(configurationToHocon(configuration).root().render())
 
     protected fun copyFolderFromResourcesToFolder(folderName: String, destination: File) {
@@ -48,10 +63,10 @@ abstract class AbstractTest {
     }
 
     protected fun copyWorldInTmpDirectory(
-        configuration: Configuration = defaultConfigurationOnAvailablePort()
+        configuration: HubConfiguration = defaultConfigurationOnAvailablePort()
     ) {
         val worldFile = fileOfTmpDirectory(configuration.server.world)
-        copyFolderFromResourcesToFolder("world", worldFile)
+        copyFolderFromResourcesToFolder(DEFAULT_WORLD, worldFile)
     }
 
     protected fun defaultConfigurationOnAvailablePort() = expectedDefaultConfiguration.let {
