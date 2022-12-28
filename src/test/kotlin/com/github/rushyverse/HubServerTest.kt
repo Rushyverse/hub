@@ -1,16 +1,16 @@
-package fr.rushy.hub
+package com.github.rushyverse
 
 import com.github.rushyverse.api.command.GamemodeCommand
 import com.github.rushyverse.api.command.GiveCommand
 import com.github.rushyverse.api.command.KickCommand
 import com.github.rushyverse.api.command.StopCommand
 import com.github.rushyverse.api.configuration.IConfiguration
-import fr.rushy.hub.configuration.HubConfiguration
-import fr.rushy.hub.listener.PlayerLoginListener
-import fr.rushy.hub.listener.PlayerMoveListener
-import fr.rushy.hub.listener.PlayerSpawnListener
-import fr.rushy.hub.listener.PlayerStartFlyingListener
-import fr.rushy.hub.utils.randomString
+import com.github.rushyverse.configuration.HubConfiguration
+import com.github.rushyverse.listener.PlayerLoginListener
+import com.github.rushyverse.listener.PlayerMoveListener
+import com.github.rushyverse.listener.PlayerSpawnListener
+import com.github.rushyverse.listener.PlayerStartFlyingListener
+import com.github.rushyverse.utils.randomString
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import net.minestom.server.MinecraftServer

@@ -56,5 +56,5 @@ tasks {
 }
 
 application {
-    mainClass.set("fr.rushy.hub.HubServerKt")
+    mainClass.set("com.github.rushyverse.HubServerKt")
 }

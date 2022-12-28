@@ -1,11 +1,11 @@
-package fr.rushy.hub
+package com.github.rushyverse
 
 import com.github.rushyverse.api.RushyServer
-import fr.rushy.hub.configuration.HubConfiguration
-import fr.rushy.hub.listener.PlayerLoginListener
-import fr.rushy.hub.listener.PlayerMoveListener
-import fr.rushy.hub.listener.PlayerSpawnListener
-import fr.rushy.hub.listener.PlayerStartFlyingListener
+import com.github.rushyverse.configuration.HubConfiguration
+import com.github.rushyverse.listener.PlayerLoginListener
+import com.github.rushyverse.listener.PlayerMoveListener
+import com.github.rushyverse.listener.PlayerSpawnListener
+import com.github.rushyverse.listener.PlayerStartFlyingListener
 import net.minestom.server.MinecraftServer
 import net.minestom.server.event.GlobalEventHandler
 import net.minestom.server.instance.InstanceContainer
@@ -22,7 +22,9 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
 
     override suspend fun start() {
         start<HubConfiguration>(configuration) {
-            val translationsProvider = createTranslationsProvider(listOf(API.BUNDLE_API, BUNDLE_HUB))
+            val translationsProvider = createTranslationsProvider(listOf(API.BUNDLE_API,
+                BUNDLE_HUB
+            ))
 
             API.registerCommands()
 

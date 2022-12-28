@@ -1,4 +1,4 @@
-package fr.rushy.hub.listener
+package com.github.rushyverse.listener
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
