@@ -19,7 +19,7 @@ dependencies {
     val mockkVersion = "1.13.3"
     val coroutinesCoreVersion = "1.6.4"
 
-    implementation("com.github.Rushyverse:api:8098b72660")
+    implementation("com.github.Rushyverse:api:feat~lore_split-SNAPSHOT")
     implementation("com.ibm.icu:icu4j:72.1")
 
     implementation("net.worldseed.multipart:WorldSeedEntityEngine:6.0.2")
