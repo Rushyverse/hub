@@ -1,4 +1,4 @@
-package fr.rushy.hub
+package com.github.rushyverse.hub
 
 import kotlin.test.Test
 

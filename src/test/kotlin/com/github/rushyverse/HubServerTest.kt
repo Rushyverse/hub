@@ -5,11 +5,12 @@ import com.github.rushyverse.api.command.GiveCommand
 import com.github.rushyverse.api.command.KickCommand
 import com.github.rushyverse.api.command.StopCommand
 import com.github.rushyverse.api.configuration.IConfiguration
-import com.github.rushyverse.configuration.HubConfiguration
-import com.github.rushyverse.listener.PlayerLoginListener
-import com.github.rushyverse.listener.PlayerMoveListener
-import com.github.rushyverse.listener.PlayerSpawnListener
-import com.github.rushyverse.listener.PlayerStartFlyingListener
+import com.github.rushyverse.hub.configuration.HubConfiguration
+import com.github.rushyverse.hub.HubServer
+import com.github.rushyverse.hub.listener.PlayerLoginListener
+import com.github.rushyverse.hub.listener.PlayerMoveListener
+import com.github.rushyverse.hub.listener.PlayerSpawnListener
+import com.github.rushyverse.hub.listener.PlayerStartFlyingListener
 import com.github.rushyverse.utils.randomString
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -93,7 +94,7 @@ class HubServerTest : AbstractTest() {
             sequenceOf(
                 PlayerStartFlyingListener(),
                 PlayerLoginListener(mockk()),
-                PlayerSpawnListener(),
+                PlayerSpawnListener(mockk()),
                 PlayerMoveListener()
             ).map { it.eventType() }.all { eventHandler.hasListener(it) }
         }

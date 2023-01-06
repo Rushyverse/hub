@@ -3,8 +3,8 @@ package com.github.rushyverse
 import com.github.rushyverse.api.configuration.BungeeCordConfiguration
 import com.github.rushyverse.api.configuration.IConfiguration
 import com.github.rushyverse.api.configuration.VelocityConfiguration
-import com.github.rushyverse.configuration.HubConfiguration
-import com.github.rushyverse.configuration.ServerConfiguration
+import com.github.rushyverse.hub.configuration.HubConfiguration
+import com.github.rushyverse.hub.configuration.ServerConfiguration
 import com.github.rushyverse.utils.getAvailablePort
 import kotlinx.serialization.hocon.Hocon
 import org.junit.jupiter.api.io.TempDir
