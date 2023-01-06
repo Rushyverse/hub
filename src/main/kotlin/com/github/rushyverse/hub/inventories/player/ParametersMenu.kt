@@ -1,6 +1,10 @@
-package fr.rushy.hub.inventories
+package com.github.rushyverse.hub.inventories.player
 
-import fr.rushy.invext.*
+import com.github.rushyverse.api.extension.addItemStack
+import com.github.rushyverse.api.extension.setCloseButton
+import com.github.rushyverse.api.translation.TranslationsProvider
+import com.github.rushyverse.hub.HubServer
+import com.github.rushyverse.hub.inventories.IMenu
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -9,8 +13,13 @@ import net.minestom.server.inventory.Inventory
 import net.minestom.server.inventory.InventoryType
 import net.minestom.server.item.ItemStack
 import net.minestom.server.item.Material
+import java.util.*
 
-class ParametersMenu(val player: Player) : Inventory(InventoryType.CHEST_1_ROW, "Paramètres utilisateur") {
+class ParametersMenu(
+    private val translationsProvider: TranslationsProvider,
+    private val locale: Locale,
+    val player: Player
+) : IMenu {
 
     /**
      * Enum to store all the parameters and their corresponding material and allowed values
@@ -67,30 +76,31 @@ class ParametersMenu(val player: Player) : Inventory(InventoryType.CHEST_1_ROW, 
         ONLY_GUILD_TEAMMATES("Membres de la guilde uniquement", NamedTextColor.LIGHT_PURPLE);
     }
 
-    init {
-
+    override fun build(): Inventory {
+        val title = translationsProvider.translate("parameters_menu_title", locale, HubServer.BUNDLE_HUB)
+        val inv = Inventory(InventoryType.CHEST_1_ROW, title)
 
         // For each parameter, create an item and add it to the inventory
         for (parameter in ParameterType.values()) {
             val item = createParameterItem(parameter, ParameterValue.ALWAYS)
 
-            val slot = addClickableItem(item) { player ->
+            inv.addItemStack(item) { player, _, _, _ ->
                 val currentValue = ParameterValue.ALWAYS
                 val currentValIndex = parameter.acceptedValues.indexOf(currentValue)
                 val nextValIndex = currentValIndex + 1;
 
-                var nextValue: ParameterValue = if (nextValIndex == (parameter.acceptedValues.size - 1)) {
+                val nextValue: ParameterValue = if (nextValIndex == (parameter.acceptedValues.size - 1)) {
                     parameter.acceptedValues[0]
                 } else {
                     parameter.acceptedValues[nextValIndex]
                 }
 
                 updatePlayerParameter(player, parameter, nextValue);
-                //  setClickableItem(parameter.ordinal, createParameterItem(parameter, nextValue), this)
             }
         }
 
-        setCloseButton(8)
+        inv.setCloseButton(8)
+        return inv
     }
 
     private fun formatLore(type: ParameterType, currentValue: ParameterValue): List<Component> {
@@ -106,24 +116,23 @@ class ParametersMenu(val player: Player) : Inventory(InventoryType.CHEST_1_ROW, 
         return loreList;
     }
 
-    private fun updateItemLore(item: ItemStack, type: ParameterType, newValue: ParameterValue) {
-        val loreList = formatLore(type, newValue)
-    }
-
     private fun updatePlayerParameter(
         player: Player,
-        parameter: ParametersMenu.ParameterType,
-        nextValue: ParametersMenu.ParameterValue
+        parameter: ParameterType,
+        nextValue: ParameterValue
     ) {
         player.sendMessage(Component.text("(§ETODO§F) Parameter ${parameter.parameterName} updated to ${nextValue.name}"))
     }
 
-    fun createParameterItem(parameter: ParameterType, value: ParameterValue): ItemStack {
+    private fun createParameterItem(parameter: ParameterType, value: ParameterValue): ItemStack {
 
         val material = parameter.material
         val loreList = formatLore(parameter, value)
 
-        return ItemStack.of(material, value.ordinal + 1)
-            .withDisplayName(Component.text(parameter.parameterName)).withLore(loreList)
+        return ItemStack.builder(material)
+            .amount(value.ordinal + 1)
+            .displayName(Component.text(parameter.parameterName))
+            .lore(loreList)
+            .build()
     }
 }

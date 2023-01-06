@@ -1,5 +1,8 @@
-package fr.rushy.hub.inventories
+package com.github.rushyverse.hub.inventories.player
 
+import com.github.rushyverse.api.translation.TranslationsProvider
+import com.github.rushyverse.hub.HubServer
+import com.github.rushyverse.hub.inventories.IMenu
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -8,11 +11,16 @@ import net.minestom.server.inventory.Inventory
 import net.minestom.server.inventory.InventoryType
 import net.minestom.server.item.ItemStack
 import net.minestom.server.item.Material
+import java.util.*
 
-class StatsMenu(val player: Player) {
+class StatsMenu(
+    private val translationsProvider: TranslationsProvider,
+    private val locale: Locale,
+    val player: Player
+) : IMenu {
 
-    fun get(): Inventory {
-        val title = "Menu des statistiques";
+    override fun build(): Inventory {
+        val title = translationsProvider.translate("stats_menu_title", locale, HubServer.BUNDLE_HUB)
         val inventory = Inventory(InventoryType.CHEST_1_ROW, title)
 
         val stats = arrayOf("Kills", "Deaths", "K/D", "Coins", "Level", "XP", "Rank")
@@ -26,9 +34,10 @@ class StatsMenu(val player: Player) {
     }
 
     private fun createItemStackFromGame(game: String, stats: List<Component>) =
-        ItemStack.of(Material.PAPER)
-            .withDisplayName(createDisplayNameFromGame(game))
-            .withLore(stats)
+        ItemStack.builder(Material.PAPER)
+            .displayName(createDisplayNameFromGame(game))
+            .lore(stats)
+            .build()
 
     private fun createDisplayNameFromGame(game: String) = Component.text(game)
         .color(NamedTextColor.AQUA)
