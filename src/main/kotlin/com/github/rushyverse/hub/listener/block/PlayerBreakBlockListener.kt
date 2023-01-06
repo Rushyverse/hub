@@ -1,4 +1,4 @@
-package fr.rushy.hub.listener.block
+package com.github.rushyverse.hub.listener.block
 
 import net.minestom.server.entity.GameMode
 import net.minestom.server.event.EventListener

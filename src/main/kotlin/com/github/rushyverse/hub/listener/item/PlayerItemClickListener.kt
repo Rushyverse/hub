@@ -1,8 +1,9 @@
-package fr.rushy.hub.listener.item
+package com.github.rushyverse.hub.listener.item
 
-import fr.rushy.hub.items.hotbar.HotbarItemsManager
 import net.minestom.server.event.EventListener
 import net.minestom.server.event.player.PlayerUseItemEvent
+import net.minestom.server.inventory.click.ClickType
+import net.minestom.server.inventory.condition.InventoryConditionResult
 
 class PlayerItemClickListener : EventListener<PlayerUseItemEvent> {
 
@@ -13,13 +14,12 @@ class PlayerItemClickListener : EventListener<PlayerUseItemEvent> {
     override fun run(event: PlayerUseItemEvent): EventListener.Result {
         val player = event.player
         val item = event.itemStack
+        val slot = player.heldSlot.toInt()
 
-        val customItemMap = HotbarItemsManager.customItemMap
-        val clickable = customItemMap[item.material()]
-
-        if (clickable != null) {
-            event.isCancelled = true
-            clickable.onClick(player)
+        player.inventory.inventoryConditions.forEach {
+            val result = InventoryConditionResult(item, null)
+            it.accept(player, slot, ClickType.RIGHT_CLICK, result)
+            event.isCancelled = result.isCancel
         }
 
         return EventListener.Result.SUCCESS
