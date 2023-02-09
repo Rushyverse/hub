@@ -15,11 +15,13 @@ repositories {
 }
 
 dependencies {
-    val minestomVersion = "809d9516b2"
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    val minestomVersion = "aebf72de90"
     val mockkVersion = "1.13.3"
     val coroutinesCoreVersion = "1.6.4"
 
-    implementation("com.github.Rushyverse:api:feat~lore_split-SNAPSHOT")
+    implementation("com.github.Rushyverse:core:c75a7ccc9f")
+    implementation("com.github.Rushyverse:api:5c29c90fe5")
     implementation("com.ibm.icu:icu4j:72.1")
 
     implementation("net.worldseed.multipart:WorldSeedEntityEngine:6.0.2")
