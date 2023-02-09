@@ -21,7 +21,7 @@ class LeaderboardMenu(
     private val game: String
 ) : IMenu {
 
-    override fun build(): Inventory {
+    override suspend fun build(): Inventory {
         val title =
             translationsProvider.translate("leaderboard_menu_title", locale, HubServer.BUNDLE_HUB, arrayOf(game))
         val inv = Inventory(InventoryType.CHEST_4_ROW, title)

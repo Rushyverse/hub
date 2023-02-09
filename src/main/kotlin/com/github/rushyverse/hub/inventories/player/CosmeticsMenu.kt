@@ -16,7 +16,7 @@ class CosmeticsMenu(
     val player: Player
 ) : IMenu {
 
-    override fun build(): Inventory {
+    override suspend fun build(): Inventory {
         val title = translationsProvider.translate("cosmetics_menu_title", locale, HubServer.BUNDLE_HUB)
         val inventory = Inventory(InventoryType.CHEST_1_ROW, title)
 

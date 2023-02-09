@@ -3,9 +3,11 @@ package com.github.rushyverse.hub.inventories.social
 import com.github.rushyverse.api.extension.setCloseButton
 import com.github.rushyverse.api.extension.setItemStack
 import com.github.rushyverse.api.translation.TranslationsProvider
+import com.github.rushyverse.core.data.FriendService
 import com.github.rushyverse.hub.HubServer
 import com.github.rushyverse.hub.HubServer.Companion.BUNDLE_HUB
 import com.github.rushyverse.hub.inventories.IMenu
+import io.github.universeproject.kotlinmojangapi.MojangAPI
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -18,20 +20,27 @@ import net.minestom.server.item.Material
 import java.util.*
 
 class SocialMenu(
+    private val friendService: FriendService,
+    private val mojangAPI: MojangAPI,
     private val translationsProvider: TranslationsProvider,
     private val locale: Locale,
     val player: Player
 ) : IMenu {
 
-    override fun build(): Inventory {
-        val title = translationsProvider.translate("social_menu_title", locale, HubServer.BUNDLE_HUB)
+
+
+    override suspend fun build(): Inventory {
+        val title = translationsProvider.translate("social_menu_title", locale, BUNDLE_HUB)
         val inv = Inventory(InventoryType.CHEST_1_ROW, title)
+
+        val friendInv = FriendsMenu(friendService, mojangAPI, translationsProvider, locale, player, inv).build()
         inv.setItemStack(0, generateFriendsItem()) { player, _, _, _ ->
-            player.openInventory(FriendsMenu(translationsProvider, locale, player, inv).build())
+            player.openInventory(friendInv)
         }
 
+        val guildInv = GuildMenu(translationsProvider, locale, player, inv).build()
         inv.setItemStack(1, generateGuildsItem()) { player, _, _, _ ->
-            player.openInventory(GuildMenu(translationsProvider, locale, player, inv).build())
+            player.openInventory(guildInv)
         }
 
         inv.setCloseButton(8)
