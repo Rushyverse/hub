@@ -3,10 +3,11 @@ package com.github.rushyverse.hub
 import com.github.rushyverse.api.RushyServer
 import com.github.rushyverse.api.translation.TranslationsProvider
 import com.github.rushyverse.core.cache.CacheClient
-import com.github.rushyverse.core.data.FriendCacheService
-import com.github.rushyverse.core.data.FriendService
+import com.github.rushyverse.core.data.*
 import com.github.rushyverse.core.supplier.database.DatabaseSupplierServices
 import com.github.rushyverse.core.supplier.database.IDatabaseEntitySupplier
+import com.github.rushyverse.core.supplier.http.HttpSupplierServices
+import com.github.rushyverse.core.supplier.http.IHttpEntitySupplier
 import com.github.rushyverse.hub.command.EmoteCommand
 import com.github.rushyverse.hub.configuration.HubConfiguration
 import com.github.rushyverse.hub.database.friends.FriendServiceDatabase
@@ -21,7 +22,6 @@ import com.github.rushyverse.hub.listener.item.PlayerDropItemListener
 import com.github.rushyverse.hub.listener.item.PlayerInventoryClickListener
 import com.github.rushyverse.hub.listener.item.PlayerItemClickListener
 import com.github.rushyverse.hub.listener.item.PlayerSwapItemListener
-import io.github.universeproject.kotlinmojangapi.MojangAPI
 import io.github.universeproject.kotlinmojangapi.MojangAPIImpl
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
@@ -44,7 +44,7 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
     }
 
     lateinit var friendService: FriendService private set
-    lateinit var mojangAPI: MojangAPI private set
+    lateinit var mojangService: MojangService private set
 
     override suspend fun start() {
         start<HubConfiguration>(configuration) {
@@ -57,13 +57,17 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
 
             // Database
             val cacheClient = createCacheClient()
-            val services = DatabaseSupplierServices(
+            val databaseSupplierServices = DatabaseSupplierServices(
                 FriendCacheService(cacheClient) to FriendServiceDatabase(),
             )
-            friendService = FriendService(IDatabaseEntitySupplier.cacheWithCachingDatabaseFallback(services))
-            // cacheWithCachingDatabaseFallback(services)); - Gives the wanted results but in x2 duplication
-
-            mojangAPI = MojangAPIImpl(createHttpClient())
+            val httpSupplierServices = HttpSupplierServices(
+                MojangAPIImpl(createHttpClient()),
+                cacheClient
+            )
+            friendService =
+                FriendService(IDatabaseEntitySupplier.cacheWithCachingDatabaseFallback(databaseSupplierServices))
+            mojangService =
+                MojangService(IHttpEntitySupplier.cacheWithCachingRestFallback(httpSupplierServices))
 
             API.registerCommands()
 
@@ -107,7 +111,7 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
         globalEventHandler.addListener(
             PlayerSpawnListener(
                 translationsProvider,
-                HotbarItemsManager(friendService, mojangAPI, translationsProvider)
+                HotbarItemsManager(friendService, mojangService, translationsProvider)
             )
         )
         globalEventHandler.addListener(PlayerMoveListener())

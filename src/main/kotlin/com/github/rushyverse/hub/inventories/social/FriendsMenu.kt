@@ -5,9 +5,9 @@ import com.github.rushyverse.api.extension.setPreviousButton
 import com.github.rushyverse.api.extension.withoutItalic
 import com.github.rushyverse.api.translation.TranslationsProvider
 import com.github.rushyverse.core.data.FriendService
+import com.github.rushyverse.core.data.MojangService
 import com.github.rushyverse.hub.HubServer.Companion.BUNDLE_HUB
 import com.github.rushyverse.hub.inventories.IMenu
-import io.github.universeproject.kotlinmojangapi.MojangAPI
 import mu.KotlinLogging
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -23,7 +23,7 @@ import java.util.*
 
 class FriendsMenu(
     private val friendService: FriendService,
-    private val mojangAPI: MojangAPI,
+    private val mojangService: MojangService,
     private val translationsProvider: TranslationsProvider,
     private val locale: Locale,
     val player: Player,
@@ -49,16 +49,23 @@ class FriendsMenu(
     }
 
     private suspend fun buildFriendHead(uuid: UUID): ItemStack {
+        val profileSkin = mojangService.getSkinById(uuid.toString())
 
-        val profileId = mojangAPI.getName(uuid.toString())
-        val playerName: String = profileId?.name ?: uuid.toString()
 
+        val playerName: String = (profileSkin?.name ?: uuid.toString())
         val connectionStatus: Boolean = false // TODO()
 
         LoggerFactory.getLogger(this.javaClass)
             .info("BuildFriendHead(): $playerName")
 
-        val headItem = ItemStack.builder(Material.PLAYER_HEAD)
+        val headMeta = PlayerHeadMeta.Builder().skullOwner(uuid)
+        if (profileSkin != null) {
+            val textures = profileSkin.getTexturesProperty().value
+            val signature = profileSkin.signature
+            headMeta.playerSkin(PlayerSkin(textures, signature))
+        }
+
+        return ItemStack.builder(Material.PLAYER_HEAD)
             .displayName(
                 Component.text(playerName).color(NamedTextColor.GREEN).withoutItalic()
             )
@@ -70,18 +77,7 @@ class FriendsMenu(
                     )
                 ).color(NamedTextColor.GRAY)
             )
+            .meta(headMeta.build())
             .build()
-
-        val mojangSkin = mojangAPI.getSkin(uuid.toString())
-        if (mojangSkin != null) {
-            val texture = mojangSkin.getTexturesProperty().value
-            val signature = mojangSkin.signature
-            val skin = PlayerSkin(mojangSkin.getTexturesProperty().value, mojangSkin.signature)
-            val meta = PlayerHeadMeta.Builder().playerSkin(skin)
-            meta.skullOwner(uuid)
-
-            headItem.withMeta { meta }
-        }
-        return headItem
     }
 }

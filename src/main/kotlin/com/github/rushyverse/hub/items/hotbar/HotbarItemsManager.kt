@@ -6,6 +6,7 @@ import com.github.rushyverse.api.item.InventoryConditionSuspend
 import com.github.rushyverse.api.item.asNative
 import com.github.rushyverse.api.translation.TranslationsProvider
 import com.github.rushyverse.core.data.FriendService
+import com.github.rushyverse.core.data.MojangService
 import com.github.rushyverse.hub.HubServer
 import com.github.rushyverse.hub.inventories.game.MainMenu
 import com.github.rushyverse.hub.inventories.player.CosmeticsMenu
@@ -13,7 +14,6 @@ import com.github.rushyverse.hub.inventories.player.LangMenu
 import com.github.rushyverse.hub.inventories.player.ParametersMenu
 import com.github.rushyverse.hub.inventories.player.StatsMenu
 import com.github.rushyverse.hub.inventories.social.SocialMenu
-import io.github.universeproject.kotlinmojangapi.MojangAPI
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minestom.server.entity.Player
@@ -26,7 +26,7 @@ import java.util.*
 
 class HotbarItemsManager(
     val friendService: FriendService,
-    val mojangAPI: MojangAPI,
+    val mojangService: MojangService,
     val translationsProvider: TranslationsProvider
 ) {
 
@@ -120,7 +120,7 @@ class HotbarItemsManager(
             val menu =
                 SocialMenu(
                     friendService,
-                    mojangAPI,
+                    mojangService,
                     translationsProvider,
                     locale,
                     player
