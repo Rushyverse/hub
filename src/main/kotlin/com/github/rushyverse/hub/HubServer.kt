@@ -8,7 +8,6 @@ import com.github.rushyverse.core.supplier.database.DatabaseSupplierServices
 import com.github.rushyverse.core.supplier.database.IDatabaseEntitySupplier
 import com.github.rushyverse.core.supplier.http.HttpSupplierServices
 import com.github.rushyverse.core.supplier.http.IHttpEntitySupplier
-import com.github.rushyverse.hub.command.EmoteCommand
 import com.github.rushyverse.hub.configuration.HubConfiguration
 import com.github.rushyverse.hub.database.friends.FriendServiceDatabase
 import com.github.rushyverse.hub.items.hotbar.HotbarItemsManager
@@ -70,11 +69,10 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
                 MojangService(IHttpEntitySupplier.cacheWithCachingRestFallback(httpSupplierServices))
 
             API.registerCommands()
+            addCommands()
 
             val globalEventHandler = MinecraftServer.getGlobalEventHandler()
             addListeners(globalEventHandler, it, translationsProvider)
-
-            addCommands()
 
             MinecraftServer.setBrandName("Rushyverse")
 
@@ -128,6 +126,5 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
      */
     private fun addCommands() {
         val commandManager = MinecraftServer.getCommandManager()
-        commandManager.register(EmoteCommand())
     }
 }
