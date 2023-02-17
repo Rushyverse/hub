@@ -38,6 +38,7 @@ class PlayerSpawnListener(val translationsProvider: TranslationsProvider, privat
 
         val menu = hotbarItemsManager.createMenuItemWithHandler(locale)
         inv.setItemStack(4, menu.first, handler = menu.second)
+        player.setHeldItemSlot(4)
 
         val stats = hotbarItemsManager.createStatsItemWithHandler(locale, player)
         inv.setItemStack(5, stats.first, handler = stats.second)
