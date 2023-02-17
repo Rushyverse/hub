@@ -1,7 +1,7 @@
 package com.github.rushyverse.hub.inventories.game
 
 import com.github.rushyverse.api.extension.setCloseButton
-import com.github.rushyverse.api.extension.setItemStack
+import com.github.rushyverse.api.extension.setItemStackSuspend
 import com.github.rushyverse.api.translation.TranslationsProvider
 import com.github.rushyverse.hub.HubServer
 import com.github.rushyverse.hub.inventories.IMenu
@@ -17,7 +17,7 @@ import java.util.*
 
 class MainMenu(private val translationsProvider: TranslationsProvider, private val locale: Locale) : IMenu {
 
-    override fun build(): Inventory {
+    override suspend fun build(): Inventory {
         val title = translationsProvider.translate("main_menu_title", locale, HubServer.BUNDLE_HUB)
         val inventory = Inventory(InventoryType.CHEST_6_ROW, title)
 
@@ -29,8 +29,9 @@ class MainMenu(private val translationsProvider: TranslationsProvider, private v
         sequenceOf("RTF", "RushZone", "MineralContest", "PvPBox", "BedWars").forEach {
             val game = it
             val item = buildGameItem(game, materials.get(index))
-            inventory.setItemStack(slot, item) { player, _, _, _ ->
-                player.openInventory(GameMenu(translationsProvider, locale, player, game).build())
+            inventory.setItemStackSuspend(slot, item) { player, _, _, _ ->
+                val menu = GameMenu(translationsProvider, locale, player, game).build()
+                player.openInventory(menu)
             }
             slot++
             index++

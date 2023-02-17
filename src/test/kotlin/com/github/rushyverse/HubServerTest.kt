@@ -94,7 +94,7 @@ class HubServerTest : AbstractTest() {
             sequenceOf(
                 PlayerStartFlyingListener(),
                 PlayerLoginListener(mockk()),
-                PlayerSpawnListener(mockk()),
+                PlayerSpawnListener(mockk(), mockk()),
                 PlayerMoveListener()
             ).map { it.eventType() }.all { eventHandler.hasListener(it) }
         }
@@ -105,6 +105,7 @@ class HubServerTest : AbstractTest() {
 
         @Test
         fun `should load all commands`() = runTest {
+            // Needed for avoid any crashes, otherwise, CommandManager will be null or empty.
             copyWorldInTmpDirectory()
             HubServer().start()
 
@@ -112,10 +113,12 @@ class HubServerTest : AbstractTest() {
             assertContentEquals(
                 commandManager.commands.asSequence().map { it::class.java }.sortedBy { it.simpleName }.toList(),
                 sequenceOf(
+                    // API COMMANDS registered in HubServer
                     StopCommand::class.java,
                     KickCommand::class.java,
                     GiveCommand::class.java,
                     GamemodeCommand::class.java
+                    // HUB COMMANDS
                 ).sortedBy { it.simpleName }.toList()
             )
         }

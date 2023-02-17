@@ -20,7 +20,7 @@ class GuildMenu(
     private val previousInventory: Inventory? = null
 ) : IMenu {
 
-    override fun build(): Inventory {
+    override suspend fun build(): Inventory {
         val title = translationsProvider.translate("guild_menu_title", locale, HubServer.BUNDLE_HUB)
         val inv = Inventory(InventoryType.CHEST_4_ROW, title)
         inv.setItemStack(

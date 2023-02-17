@@ -1,9 +1,10 @@
 package com.github.rushyverse.hub.inventories.social
 
 import com.github.rushyverse.api.extension.setCloseButton
-import com.github.rushyverse.api.extension.setItemStack
+import com.github.rushyverse.api.extension.setItemStackSuspend
 import com.github.rushyverse.api.translation.TranslationsProvider
-import com.github.rushyverse.hub.HubServer
+import com.github.rushyverse.core.data.FriendService
+import com.github.rushyverse.core.data.MojangService
 import com.github.rushyverse.hub.HubServer.Companion.BUNDLE_HUB
 import com.github.rushyverse.hub.inventories.IMenu
 import net.kyori.adventure.text.Component
@@ -18,20 +19,27 @@ import net.minestom.server.item.Material
 import java.util.*
 
 class SocialMenu(
+    private val friendService: FriendService,
+    private val mojangService: MojangService,
     private val translationsProvider: TranslationsProvider,
     private val locale: Locale,
     val player: Player
 ) : IMenu {
 
-    override fun build(): Inventory {
-        val title = translationsProvider.translate("social_menu_title", locale, HubServer.BUNDLE_HUB)
+
+
+    override suspend fun build(): Inventory {
+        val title = translationsProvider.translate("social_menu_title", locale, BUNDLE_HUB)
         val inv = Inventory(InventoryType.CHEST_1_ROW, title)
-        inv.setItemStack(0, generateFriendsItem()) { player, _, _, _ ->
-            player.openInventory(FriendsMenu(translationsProvider, locale, player, inv).build())
+
+        val friendInv = FriendsMenu(friendService, mojangService, translationsProvider, locale, player, inv)
+        inv.setItemStackSuspend(0, generateFriendsItem()) { player, _, _, _ ->
+            player.openInventory(friendInv.build())
         }
 
-        inv.setItemStack(1, generateGuildsItem()) { player, _, _, _ ->
-            player.openInventory(GuildMenu(translationsProvider, locale, player, inv).build())
+        val guildInv = GuildMenu(translationsProvider, locale, player, inv)
+        inv.setItemStackSuspend(1, generateGuildsItem()) { player, _, _, _ ->
+            player.openInventory(guildInv.build())
         }
 
         inv.setCloseButton(8)

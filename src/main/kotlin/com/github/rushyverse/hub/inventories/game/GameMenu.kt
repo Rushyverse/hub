@@ -24,7 +24,7 @@ class GameMenu(
     private val game: String
 ) : IMenu {
 
-    override fun build(): Inventory {
+    override suspend fun build(): Inventory {
         val title = translationsProvider.translate("game_menu_title_of", locale, HubServer.BUNDLE_HUB, arrayOf(game))
         val inventory = Inventory(InventoryType.CHEST_6_ROW, title)
 
@@ -50,7 +50,8 @@ class GameMenu(
 
         val leaderboardItem = getLeaderboardItem()
         inventory.setItemStack(2, leaderboardItem) { player, _, _, _ ->
-            player.openInventory(LeaderboardMenu(translationsProvider, locale, player, game).build())
+            val menu = LeaderboardMenu(translationsProvider, locale, player, game)
+            suspend { menu.build() }.apply { player::openInventory }
         }
 
         inventory.setCloseButton(41)

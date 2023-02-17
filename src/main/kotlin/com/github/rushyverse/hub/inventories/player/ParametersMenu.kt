@@ -76,7 +76,7 @@ class ParametersMenu(
         ONLY_GUILD_TEAMMATES("Membres de la guilde uniquement", NamedTextColor.LIGHT_PURPLE);
     }
 
-    override fun build(): Inventory {
+    override suspend fun build(): Inventory {
         val title = translationsProvider.translate("parameters_menu_title", locale, HubServer.BUNDLE_HUB)
         val inv = Inventory(InventoryType.CHEST_1_ROW, title)
 

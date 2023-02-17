@@ -2,14 +2,16 @@ package com.github.rushyverse.hub.inventories.game
 
 import com.github.rushyverse.api.translation.ResourceBundleTranslationsProvider
 import com.github.rushyverse.api.translation.SupportedLanguage
-import com.github.rushyverse.hub.HubServer
+import com.github.rushyverse.hub.HubServer.Companion.BUNDLE_HUB
 import com.github.rushyverse.utils.randomString
 import io.mockk.justRun
 import io.mockk.spyk
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import net.kyori.adventure.inventory.Book
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextDecoration
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.inventory.InventoryType
 import net.minestom.server.inventory.click.ClickType
@@ -30,7 +32,7 @@ class GameMenuTest {
     inner class TranslatedTitle {
 
         @Test
-        fun `should build the inventory with translated english title`(env: Env) {
+        fun `should build the inventory with translated english title`(env: Env) = runTest {
             val game = randomString()
             assertTitleTranslateInventory(
                 env,
@@ -41,7 +43,7 @@ class GameMenuTest {
         }
 
         @Test
-        fun `should build the inventory with translated french title`(env: Env) {
+        fun `should build the inventory with translated french title`(env: Env) = runTest {
             val game = randomString()
             assertTitleTranslateInventory(
                 env,
@@ -51,7 +53,12 @@ class GameMenuTest {
             )
         }
 
-        private fun assertTitleTranslateInventory(env: Env, locale: Locale, game: String, expectedTitle: String) {
+        private suspend fun assertTitleTranslateInventory(
+            env: Env,
+            locale: Locale,
+            game: String,
+            expectedTitle: String
+        ) {
             val menu = createMenuWithEnvInstances(env, locale, game)
             val inventory = menu.build()
             assertEquals(Component.text(expectedTitle), inventory.title)
@@ -63,7 +70,7 @@ class GameMenuTest {
     inner class InventoryTypeTest {
 
         @Test
-        fun `should be a 6 row chest inventory`(env: Env) {
+        fun `should be a 6 row chest inventory`(env: Env) = runTest {
             val menu = createMenuWithEnvInstances(env)
             val inventory = menu.build()
             assertEquals(InventoryType.CHEST_6_ROW, inventory.inventoryType)
@@ -79,15 +86,16 @@ class GameMenuTest {
             private val expectedSlot = 6
 
             @Test
-            fun `should be on the slot 6`(env: Env) {
+            fun `should be on the slot 6`(env: Env) = runTest {
+                val locale = SupportedLanguage.ENGLISH.locale
                 val menu = createMenuWithEnvInstances(env)
                 val inventory = menu.build()
                 val item = inventory.getItemStack(expectedSlot)
-                assertEquals(createExpectedItem(), item)
+                assertEquals(createExpectedItem(locale), item)
             }
 
             @Test
-            fun `should be open the submit proposal book for the player`(env: Env) {
+            fun `should be open the submit proposal book for the player`(env: Env) = runTest {
                 val game = randomString()
                 val menu = createMenuWithEnvInstances(env, game = game)
                 val player = menu.player
@@ -107,20 +115,37 @@ class GameMenuTest {
                 verify(exactly = 1) { playerSpy.openBook(expectedBook) }
             }
 
-            private fun createExpectedItem(): ItemStack {
-                val item = ItemStack.of(Material.PAPER)
+            private fun createExpectedItem(
+                locale: Locale = SupportedLanguage.ENGLISH.locale,
+            ): ItemStack {
+
+                val translationsProvider = createTranslationsProvider(locale)
+
+                return ItemStack.of(Material.PAPER)
                     .withDisplayName(
-                        Component.text("Proposer une idée").color(NamedTextColor.GREEN)
+                        Component.text(translationsProvider.get("game_menu_item_submit_proposal", locale, BUNDLE_HUB))
+                            .color(NamedTextColor.GREEN)
+                            .decoration(TextDecoration.BOLD, true)
+                            .decoration(TextDecoration.ITALIC, false)
                     ).withLore(
                         listOf(
-                            Component.text("Cliquez pour proposer une idée\nconcernant ce jeu")
+                            Component.text(
+                                translationsProvider.get(
+                                    "game_menu_item_submit_proposal_lore",
+                                    locale,
+                                    BUNDLE_HUB
+                                ), NamedTextColor.GRAY
+                            )
                         )
-                    )
-                return item;
+                    );
             }
         }
+    }
 
-
+    private fun createTranslationsProvider(locale: Locale): ResourceBundleTranslationsProvider {
+        return ResourceBundleTranslationsProvider().apply {
+            registerResourceBundle(BUNDLE_HUB, locale, ResourceBundle::getBundle)
+        };
     }
 
     private fun createMenuWithEnvInstances(
@@ -130,10 +155,8 @@ class GameMenuTest {
     ): GameMenu {
         val instance = env.createFlatInstance()
         val player = env.createPlayer(instance, Pos.ZERO)
+        val translationsProvider = createTranslationsProvider(locale)
 
-        val translationsProvider = ResourceBundleTranslationsProvider().apply {
-            registerResourceBundle(HubServer.BUNDLE_HUB, locale, ResourceBundle::getBundle)
-        }
         return GameMenu(translationsProvider, locale, player, game)
     }
 }

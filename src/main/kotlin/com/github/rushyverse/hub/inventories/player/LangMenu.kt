@@ -20,7 +20,7 @@ import java.util.*
 class LangMenu(private val translationsProvider: TranslationsProvider, private val locale: Locale, val player: Player) :
     IMenu {
 
-    override fun build(): Inventory {
+    override suspend fun build(): Inventory {
         val inv = Inventory(
             InventoryType.CHEST_1_ROW,
             translationsProvider.translate("lang_menu_title", locale, BUNDLE_HUB)

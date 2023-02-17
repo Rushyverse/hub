@@ -2,8 +2,14 @@ package com.github.rushyverse.hub
 
 import com.github.rushyverse.api.RushyServer
 import com.github.rushyverse.api.translation.TranslationsProvider
-import com.github.rushyverse.hub.command.EmoteCommand
+import com.github.rushyverse.core.cache.CacheClient
+import com.github.rushyverse.core.data.*
+import com.github.rushyverse.core.supplier.database.DatabaseSupplierServices
+import com.github.rushyverse.core.supplier.database.IDatabaseEntitySupplier
+import com.github.rushyverse.core.supplier.http.HttpSupplierServices
+import com.github.rushyverse.core.supplier.http.IHttpEntitySupplier
 import com.github.rushyverse.hub.configuration.HubConfiguration
+import com.github.rushyverse.hub.database.friends.FriendServiceDatabase
 import com.github.rushyverse.hub.items.hotbar.HotbarItemsManager
 import com.github.rushyverse.hub.listener.PlayerLoginListener
 import com.github.rushyverse.hub.listener.PlayerMoveListener
@@ -15,6 +21,13 @@ import com.github.rushyverse.hub.listener.item.PlayerDropItemListener
 import com.github.rushyverse.hub.listener.item.PlayerInventoryClickListener
 import com.github.rushyverse.hub.listener.item.PlayerItemClickListener
 import com.github.rushyverse.hub.listener.item.PlayerSwapItemListener
+import io.github.universeproject.kotlinmojangapi.MojangAPIImpl
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.serialization.kotlinx.json.*
+import io.lettuce.core.RedisURI
+import kotlinx.serialization.json.Json
 import net.minestom.server.MinecraftServer
 import net.minestom.server.event.GlobalEventHandler
 import net.minestom.server.instance.InstanceContainer
@@ -29,6 +42,9 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
         const val BUNDLE_HUB = "hub"
     }
 
+    lateinit var friendService: FriendService private set
+    lateinit var mojangService: MojangService private set
+
     override suspend fun start() {
         start<HubConfiguration>(configuration) {
             val translationsProvider = createTranslationsProvider(
@@ -38,14 +54,44 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
                 )
             )
 
+            // Database
+            val cacheClient = createCacheClient()
+            val databaseSupplierServices = DatabaseSupplierServices(
+                FriendCacheService(cacheClient) to FriendServiceDatabase(),
+            )
+            val httpSupplierServices = HttpSupplierServices(
+                MojangAPIImpl(createHttpClient()),
+                cacheClient
+            )
+            friendService =
+                FriendService(IDatabaseEntitySupplier.cacheWithCachingDatabaseFallback(databaseSupplierServices))
+            mojangService =
+                MojangService(IHttpEntitySupplier.cacheWithCachingRestFallback(httpSupplierServices))
+
             API.registerCommands()
+            addCommands()
 
             val globalEventHandler = MinecraftServer.getGlobalEventHandler()
             addListeners(globalEventHandler, it, translationsProvider)
 
-            addCommands()
-
             MinecraftServer.setBrandName("Rushyverse")
+
+
+        }
+    }
+
+    suspend fun createCacheClient(): CacheClient {
+        return CacheClient {
+            uri = RedisURI.create("redis://default:redispw@localhost:49153")
+        }
+    }
+
+    fun createHttpClient(): HttpClient {
+        return HttpClient(CIO) {
+            expectSuccess = true
+            install(ContentNegotiation) {
+                json(Json { ignoreUnknownKeys = true })
+            }
         }
     }
 
@@ -60,7 +106,12 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
     ) {
         globalEventHandler.addListener(PlayerStartFlyingListener())
         globalEventHandler.addListener(PlayerLoginListener(instanceContainer))
-        globalEventHandler.addListener(PlayerSpawnListener(translationsProvider, HotbarItemsManager(translationsProvider)))
+        globalEventHandler.addListener(
+            PlayerSpawnListener(
+                translationsProvider,
+                HotbarItemsManager(friendService, mojangService, translationsProvider)
+            )
+        )
         globalEventHandler.addListener(PlayerMoveListener())
         globalEventHandler.addListener(PlayerItemClickListener())
         globalEventHandler.addListener(PlayerDropItemListener())
@@ -75,6 +126,5 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
      */
     private fun addCommands() {
         val commandManager = MinecraftServer.getCommandManager()
-        commandManager.register(EmoteCommand())
     }
 }
