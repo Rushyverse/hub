@@ -1,5 +1,6 @@
 package com.github.rushyverse.hub.inventories.social
 
+import com.github.rushyverse.api.extension.formattedLore
 import com.github.rushyverse.api.extension.setCloseButton
 import com.github.rushyverse.api.extension.setItemStackSuspend
 import com.github.rushyverse.api.translation.TranslationsProvider
@@ -13,7 +14,6 @@ import net.kyori.adventure.text.format.TextDecoration
 import net.minestom.server.entity.Player
 import net.minestom.server.inventory.Inventory
 import net.minestom.server.inventory.InventoryType
-import net.minestom.server.item.ItemHideFlag
 import net.minestom.server.item.ItemStack
 import net.minestom.server.item.Material
 import java.util.*
@@ -56,12 +56,12 @@ class SocialMenu(
         Material.WRITTEN_BOOK,
         translationsProvider.translate("social_menu_friends_item", locale, BUNDLE_HUB),
         translationsProvider.translate("social_menu_friends_item_lore", locale, BUNDLE_HUB)
-    ).withMeta { it.hideFlag(ItemHideFlag.HIDE_ATTRIBUTES) }
+    )
 
     private fun createItem(material: Material, name: String, description: String): ItemStack {
         return ItemStack.builder(material)
             .displayName(Component.text(name).color(NamedTextColor.AQUA).decoration(TextDecoration.ITALIC, false))
-            .lore(Component.text(description, NamedTextColor.GRAY))
+            .formattedLore(description, 30)
             .build()
     }
 
