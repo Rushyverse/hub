@@ -24,7 +24,7 @@ dependencies {
     implementation("com.github.Rushyverse:api:5c29c90fe5")
     implementation("com.ibm.icu:icu4j:72.1")
 
-    implementation("net.worldseed.multipart:WorldSeedEntityEngine:6.0.2")
+
 
     testImplementation(kotlin("test-junit5"))
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesCoreVersion")
