@@ -53,7 +53,7 @@ class FriendsMenu(
 
 
         val playerName: String = (profileSkin?.name ?: uuid.toString())
-        val connectionStatus: Boolean = false // TODO()
+        val connectionStatus = false // TODO()
 
         LoggerFactory.getLogger(this.javaClass)
             .info("BuildFriendHead(): $playerName")
@@ -63,13 +63,8 @@ class FriendsMenu(
             val textures = profileSkin.getTexturesProperty().value
             val signature = profileSkin.signature
             headMeta.playerSkin(PlayerSkin(textures, signature))
-        }
-
-        return ItemStack.builder(Material.PLAYER_HEAD)
-            .displayName(
-                Component.text(playerName).color(NamedTextColor.GREEN).withoutItalic()
-            )
-            .lore(
+            headMeta.displayName(Component.text(playerName).color(NamedTextColor.GREEN).withoutItalic())
+            headMeta.lore(
                 Component.text(
                     translationsProvider.translate(
                         if (connectionStatus) "friends_menu_online" else "friends_menu_offline",
@@ -77,6 +72,9 @@ class FriendsMenu(
                     )
                 ).color(NamedTextColor.GRAY)
             )
+        }
+
+        return ItemStack.builder(Material.PLAYER_HEAD)
             .meta(headMeta.build())
             .build()
     }
