@@ -54,5 +54,8 @@ class PlayerSpawnListener(val translationsProvider: TranslationsProvider, privat
 
         val social = hotbarItemsManager.createSocialItemWithHandler(locale)
         inv.setItemStack(24, social.first, handler = social.second)
+
+        val loyalty = hotbarItemsManager.createLoyaltyItemWithHandler(locale)
+        inv.setItemStack(26, loyalty.first, handler = loyalty.second)
     }
 }
