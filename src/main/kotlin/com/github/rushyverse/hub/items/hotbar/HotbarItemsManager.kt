@@ -9,10 +9,7 @@ import com.github.rushyverse.core.data.FriendService
 import com.github.rushyverse.core.data.MojangService
 import com.github.rushyverse.hub.HubServer
 import com.github.rushyverse.hub.inventories.game.MainMenu
-import com.github.rushyverse.hub.inventories.player.CosmeticsMenu
-import com.github.rushyverse.hub.inventories.player.LangMenu
-import com.github.rushyverse.hub.inventories.player.ParametersMenu
-import com.github.rushyverse.hub.inventories.player.StatsMenu
+import com.github.rushyverse.hub.inventories.player.*
 import com.github.rushyverse.hub.inventories.social.SocialMenu
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -121,6 +118,28 @@ class HotbarItemsManager(
                 SocialMenu(
                     friendService,
                     mojangService,
+                    translationsProvider,
+                    locale,
+                    player
+                ).build()
+            player.openInventory(menu)
+        }.asNative()
+
+        return pairItemToInvCondition
+    }
+
+    fun createLoyaltyItemWithHandler(locale: Locale): Pair<ItemStack, InventoryCondition> {
+        val item = ItemStack.builder(Material.CHEST)
+            .displayName(
+                Component.text(
+                    translationsProvider.translate("loyalty_item_name", locale, HubServer.BUNDLE_HUB),
+                    NamedTextColor.YELLOW
+                ).withoutItalic()
+            ).build()
+
+        val pairItemToInvCondition = item to InventoryConditionSuspend { player: Player, _, _, _ ->
+            val menu =
+                LoyaltyProgramMenu(
                     translationsProvider,
                     locale,
                     player
