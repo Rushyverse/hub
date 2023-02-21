@@ -29,6 +29,7 @@ import io.ktor.serialization.kotlinx.json.*
 import io.lettuce.core.RedisURI
 import kotlinx.serialization.json.Json
 import net.minestom.server.MinecraftServer
+import net.minestom.server.coordinate.Pos
 import net.minestom.server.event.GlobalEventHandler
 import net.minestom.server.instance.InstanceContainer
 
@@ -40,6 +41,8 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
 
     companion object {
         const val BUNDLE_HUB = "hub"
+        const val limitY = 65.0 // Below this limit, player is killed
+        val spawnPoint = Pos(0.0, 100.0, 0.0)
     }
 
     lateinit var friendService: FriendService private set
@@ -109,10 +112,11 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
         globalEventHandler.addListener(
             PlayerSpawnListener(
                 translationsProvider,
-                HotbarItemsManager(friendService, mojangService, translationsProvider)
+                HotbarItemsManager(friendService, mojangService, translationsProvider),
+                spawnPoint
             )
         )
-        globalEventHandler.addListener(PlayerMoveListener())
+        globalEventHandler.addListener(PlayerMoveListener(limitY, spawnPoint))
         globalEventHandler.addListener(PlayerItemClickListener())
         globalEventHandler.addListener(PlayerDropItemListener())
         globalEventHandler.addListener(PlayerSwapItemListener())

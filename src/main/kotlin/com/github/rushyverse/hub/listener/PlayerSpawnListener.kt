@@ -10,7 +10,11 @@ import net.minestom.server.entity.Player
 import net.minestom.server.event.EventListener
 import net.minestom.server.event.player.PlayerSpawnEvent
 
-class PlayerSpawnListener(val translationsProvider: TranslationsProvider, private val hotbarItemsManager: HotbarItemsManager) : EventListener<PlayerSpawnEvent> {
+class PlayerSpawnListener(
+    private val translationsProvider: TranslationsProvider,
+    private val hotbarItemsManager: HotbarItemsManager,
+    private val spawnPoint : Pos,
+) : EventListener<PlayerSpawnEvent> {
 
     override fun eventType(): Class<PlayerSpawnEvent> {
         return PlayerSpawnEvent::class.java
@@ -25,7 +29,7 @@ class PlayerSpawnListener(val translationsProvider: TranslationsProvider, privat
         scoreboard.addViewer(player)
 
         // Teleport and give items
-        player.teleport(Pos(0.0, 100.0, 0.0))
+        player.teleport(spawnPoint)
 
         giveItems(player)
 
