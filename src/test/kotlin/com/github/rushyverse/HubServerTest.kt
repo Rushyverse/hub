@@ -11,6 +11,12 @@ import com.github.rushyverse.hub.listener.PlayerLoginListener
 import com.github.rushyverse.hub.listener.PlayerMoveListener
 import com.github.rushyverse.hub.listener.PlayerSpawnListener
 import com.github.rushyverse.hub.listener.PlayerStartFlyingListener
+import com.github.rushyverse.hub.listener.block.PlayerBreakBlockListener
+import com.github.rushyverse.hub.listener.block.PlayerPlaceBlockListener
+import com.github.rushyverse.hub.listener.item.PlayerDropItemListener
+import com.github.rushyverse.hub.listener.item.PlayerInventoryClickListener
+import com.github.rushyverse.hub.listener.item.PlayerItemClickListener
+import com.github.rushyverse.hub.listener.item.PlayerSwapItemListener
 import com.github.rushyverse.utils.randomString
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -90,12 +96,20 @@ class HubServerTest : AbstractTest() {
             HubServer().start()
 
             val eventHandler = MinecraftServer.getGlobalEventHandler()
+            val spawnPoint = HubServer.spawnPoint
+            val limitY = HubServer.limitY
 
             sequenceOf(
                 PlayerStartFlyingListener(),
                 PlayerLoginListener(mockk()),
-                PlayerSpawnListener(mockk(), mockk()),
-                PlayerMoveListener()
+                PlayerSpawnListener(mockk(), mockk(), spawnPoint),
+                PlayerMoveListener(limitY, spawnPoint),
+                PlayerItemClickListener(),
+                PlayerDropItemListener(),
+                PlayerSwapItemListener(),
+                PlayerInventoryClickListener(),
+                PlayerPlaceBlockListener(),
+                PlayerBreakBlockListener()
             ).map { it.eventType() }.all { eventHandler.hasListener(it) }
         }
     }
