@@ -92,12 +92,14 @@ class HubServerTest : AbstractTest() {
             HubServer().start()
 
             val eventHandler = MinecraftServer.getGlobalEventHandler()
+            val configuration = defaultConfigurationOnAvailablePort()
+            val area = configuration.area
 
             sequenceOf(
                 PlayerStartFlyingListener(),
                 PlayerLoginListener(mockk()),
-                PlayerSpawnListener(),
-                PlayerMoveListener()
+                PlayerSpawnListener(area.spawnPoint),
+                PlayerMoveListener(area)
             ).map { it.eventType() }.all { eventHandler.hasListener(it) }
         }
     }
