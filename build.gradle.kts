@@ -18,7 +18,7 @@ dependencies {
     val mockkVersion = "1.13.3"
     val coroutinesCoreVersion = "1.6.4"
 
-    implementation("com.github.Rushyverse:api:v1.2.0")
+    implementation("com.github.Rushyverse:api:1.3.0")
 
     testImplementation(kotlin("test-junit5"))
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesCoreVersion")
