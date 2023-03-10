@@ -19,6 +19,7 @@ dependencies {
     val coroutinesCoreVersion = "1.6.4"
 
     implementation("com.github.Rushyverse:api:v1.4.1")
+    implementation("net.kyori:adventure-text-minimessage:4.12.0")
 
     testImplementation(kotlin("test-junit5"))
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesCoreVersion")
