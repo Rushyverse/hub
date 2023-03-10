@@ -21,7 +21,7 @@ dependencies {
     val coroutinesCoreVersion = "1.6.4"
 
     implementation("com.github.Rushyverse:core:644fc1b6cc")
-    implementation("com.github.Rushyverse:api:5c29c90fe5")
+    implementation("com.github.Rushyverse:api:main-SNAPSHOT")
     implementation("com.ibm.icu:icu4j:72.1")
 
 
