@@ -2,11 +2,14 @@ package com.github.rushyverse
 
 import com.github.rushyverse.api.configuration.BungeeCordConfiguration
 import com.github.rushyverse.api.configuration.IConfiguration
+import com.github.rushyverse.api.configuration.IConfigurationReader
 import com.github.rushyverse.api.configuration.VelocityConfiguration
+import com.github.rushyverse.hub.configuration.AreaConfiguration
 import com.github.rushyverse.hub.configuration.HubConfiguration
 import com.github.rushyverse.hub.configuration.ServerConfiguration
 import com.github.rushyverse.utils.getAvailablePort
 import kotlinx.serialization.hocon.Hocon
+import net.minestom.server.coordinate.Pos
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import kotlin.test.AfterTest
@@ -30,8 +33,12 @@ abstract class AbstractTest {
                 25565,
                 DEFAULT_WORLD,
                 false,
-                BungeeCordConfiguration(false, ""),
+                BungeeCordConfiguration(false, emptySet()),
                 VelocityConfiguration(false, "")
+            ),
+            AreaConfiguration(
+                65.0,
+                Pos(0.0, 100.0, 0.0)
             )
         )
 
@@ -53,7 +60,7 @@ abstract class AbstractTest {
 
     protected fun configurationToHoconFile(
         configuration: HubConfiguration,
-        file: File = fileOfTmpDirectory(IConfiguration.DEFAULT_CONFIG_FILE_NAME)
+        file: File = fileOfTmpDirectory(IConfigurationReader.DEFAULT_CONFIG_FILE_NAME)
     ) =
         file.writeText(configurationToHocon(configuration).root().render())
 

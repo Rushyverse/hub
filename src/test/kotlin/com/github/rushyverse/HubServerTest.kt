@@ -4,7 +4,9 @@ import com.github.rushyverse.api.command.GamemodeCommand
 import com.github.rushyverse.api.command.GiveCommand
 import com.github.rushyverse.api.command.KickCommand
 import com.github.rushyverse.api.command.StopCommand
-import com.github.rushyverse.api.configuration.IConfiguration
+import com.github.rushyverse.api.configuration.HoconConfigurationReader
+import com.github.rushyverse.api.configuration.IConfigurationReader
+import com.github.rushyverse.api.configuration.readConfigurationFile
 import com.github.rushyverse.hub.configuration.HubConfiguration
 import com.github.rushyverse.hub.HubServer
 import com.github.rushyverse.hub.listener.PlayerLoginListener
@@ -42,10 +44,10 @@ class HubServerTest : AbstractTest() {
             assertThrows<IOException> {
                 HubServer().start()
             }
-            val configurationFile = fileOfTmpDirectory(IConfiguration.DEFAULT_CONFIG_FILE_NAME)
+            val configurationFile = fileOfTmpDirectory(IConfigurationReader.DEFAULT_CONFIG_FILE_NAME)
             assertTrue { configurationFile.isFile }
 
-            val configuration = IConfiguration.readHoconConfigurationFile<HubConfiguration>(configurationFile)
+            val configuration = HoconConfigurationReader().readConfigurationFile<HubConfiguration>(configurationFile)
             assertEquals(expectedDefaultConfiguration, configuration)
         }
 
