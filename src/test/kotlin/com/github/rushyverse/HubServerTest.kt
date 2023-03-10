@@ -98,8 +98,10 @@ class HubServerTest : AbstractTest() {
             HubServer().start()
 
             val eventHandler = MinecraftServer.getGlobalEventHandler()
-            val spawnPoint = HubServer.spawnPoint
-            val limitY = HubServer.limitY
+            val configuration = defaultConfigurationOnAvailablePort()
+            val areaConfig = configuration.area
+            val spawnPoint = areaConfig.spawnPoint
+            val limitY = areaConfig.limitY
 
             sequenceOf(
                 PlayerStartFlyingListener(),
