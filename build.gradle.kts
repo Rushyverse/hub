@@ -35,6 +35,7 @@ kotlin {
             }
         }
     }
+    jvmToolchain(17)
 }
 
 tasks {
