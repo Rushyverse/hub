@@ -1,8 +1,10 @@
 package com.github.rushyverse
 
 import com.github.rushyverse.api.RushyServer
+import com.github.rushyverse.api.translation.TranslationsProvider
 import com.github.rushyverse.configuration.AreaConfiguration
 import com.github.rushyverse.configuration.HubConfiguration
+import com.github.rushyverse.configuration.ScoreboardConfiguration
 import com.github.rushyverse.listener.PlayerLoginListener
 import com.github.rushyverse.listener.PlayerMoveListener
 import com.github.rushyverse.listener.PlayerSpawnListener
@@ -33,7 +35,7 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
             API.registerCommands()
 
             val globalEventHandler = MinecraftServer.getGlobalEventHandler()
-            addListeners(globalEventHandler, it, area)
+            addListeners(globalEventHandler, it, translationsProvider, area, scoreboard)
         }
     }
 
@@ -45,11 +47,13 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
     private fun addListeners(
         globalEventHandler: GlobalEventHandler,
         instanceContainer: InstanceContainer,
-        area: AreaConfiguration
+        translationsProvider: TranslationsProvider,
+        area: AreaConfiguration,
+        scoreboard: ScoreboardConfiguration
     ) {
         globalEventHandler.addListener(PlayerStartFlyingListener())
         globalEventHandler.addListener(PlayerLoginListener(instanceContainer))
-        globalEventHandler.addListener(PlayerSpawnListener(area.spawnPoint))
+        globalEventHandler.addListener(PlayerSpawnListener(translationsProvider, area.spawnPoint, scoreboard))
         globalEventHandler.addListener(PlayerMoveListener(area))
     }
 
