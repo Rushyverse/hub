@@ -1,7 +1,7 @@
 package com.github.rushyverse
 
 import com.github.rushyverse.api.configuration.BungeeCordConfiguration
-import com.github.rushyverse.api.configuration.IConfiguration
+import com.github.rushyverse.api.configuration.IConfigurationReader
 import com.github.rushyverse.api.configuration.VelocityConfiguration
 import com.github.rushyverse.configuration.HubConfiguration
 import com.github.rushyverse.configuration.ServerConfiguration
@@ -30,9 +30,9 @@ abstract class AbstractTest {
                 25565,
                 DEFAULT_WORLD,
                 false,
-                BungeeCordConfiguration(false, ""),
+                BungeeCordConfiguration(false, emptySet()),
                 VelocityConfiguration(false, "")
-            )
+            ),
         )
 
     @BeforeTest
@@ -53,7 +53,7 @@ abstract class AbstractTest {
 
     protected fun configurationToHoconFile(
         configuration: HubConfiguration,
-        file: File = fileOfTmpDirectory(IConfiguration.DEFAULT_CONFIG_FILE_NAME)
+        file: File = fileOfTmpDirectory(IConfigurationReader.DEFAULT_CONFIG_FILE_NAME)
     ) =
         file.writeText(configurationToHocon(configuration).root().render())
 
