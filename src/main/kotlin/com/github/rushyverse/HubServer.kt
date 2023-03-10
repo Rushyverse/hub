@@ -1,6 +1,7 @@
 package com.github.rushyverse
 
 import com.github.rushyverse.api.RushyServer
+import com.github.rushyverse.configuration.AreaConfiguration
 import com.github.rushyverse.configuration.HubConfiguration
 import com.github.rushyverse.listener.PlayerLoginListener
 import com.github.rushyverse.listener.PlayerMoveListener
@@ -22,14 +23,17 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
 
     override suspend fun start() {
         start<HubConfiguration>(configuration) {
-            val translationsProvider = createTranslationsProvider(listOf(API.BUNDLE_API,
-                BUNDLE_HUB
-            ))
+            val translationsProvider = createTranslationsProvider(
+                listOf(
+                    API.BUNDLE_API,
+                    BUNDLE_HUB
+                )
+            )
 
             API.registerCommands()
 
             val globalEventHandler = MinecraftServer.getGlobalEventHandler()
-            addListeners(globalEventHandler, it)
+            addListeners(globalEventHandler, it, area)
         }
     }
 
@@ -40,12 +44,13 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
      */
     private fun addListeners(
         globalEventHandler: GlobalEventHandler,
-        instanceContainer: InstanceContainer
+        instanceContainer: InstanceContainer,
+        area: AreaConfiguration
     ) {
         globalEventHandler.addListener(PlayerStartFlyingListener())
         globalEventHandler.addListener(PlayerLoginListener(instanceContainer))
-        globalEventHandler.addListener(PlayerSpawnListener())
-        globalEventHandler.addListener(PlayerMoveListener())
+        globalEventHandler.addListener(PlayerSpawnListener(area.spawnPoint))
+        globalEventHandler.addListener(PlayerMoveListener(area))
     }
 
 }
