@@ -41,8 +41,6 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
 
     companion object {
         const val BUNDLE_HUB = "hub"
-        const val limitY = 65.0 // Below this limit, player is killed
-        val spawnPoint = Pos(0.0, 100.0, 0.0)
     }
 
     lateinit var friendService: FriendService private set
@@ -74,8 +72,11 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
             API.registerCommands()
             addCommands()
 
+            val spawnPoint = area.spawnPoint
+            val limitY = area.limitY
+
             val globalEventHandler = MinecraftServer.getGlobalEventHandler()
-            addListeners(globalEventHandler, it, translationsProvider)
+            addListeners(globalEventHandler, it, translationsProvider, spawnPoint, limitY)
 
             MinecraftServer.setBrandName("Rushyverse")
 
@@ -105,7 +106,9 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
      */
     private fun addListeners(
         globalEventHandler: GlobalEventHandler,
-        instanceContainer: InstanceContainer, translationsProvider: TranslationsProvider
+        instanceContainer: InstanceContainer, translationsProvider: TranslationsProvider,
+        spawnPoint:Pos,
+        limitY: Double
     ) {
         globalEventHandler.addListener(PlayerStartFlyingListener())
         globalEventHandler.addListener(PlayerLoginListener(instanceContainer))
