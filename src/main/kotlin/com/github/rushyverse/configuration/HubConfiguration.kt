@@ -49,5 +49,6 @@ data class AreaConfiguration(
  */
 @Serializable
 data class ScoreboardConfiguration(
+    val title: String,
     val lines: List<String>,
 )
