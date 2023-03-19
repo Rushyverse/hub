@@ -20,6 +20,16 @@ class HubScoreboard(
     private val player: Player
 ) : Sidebar(Component.empty()) {
 
+    var title: Component = Component.empty()
+        private set
+
+    private var lastLineNumber = 0
+
+    override fun setTitle(title: Component) {
+        super.setTitle(title)
+        this.title = title
+    }
+
     init {
         update()
     }
