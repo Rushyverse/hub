@@ -18,6 +18,8 @@ data class HubConfiguration(
     override val server: ServerConfiguration,
     @SerialName("area")
     val area: AreaConfiguration,
+    @SerialName("scoreboard")
+    val scoreboard: ScoreboardConfiguration,
 ) : IConfiguration
 
 @Suppress("PROVIDED_RUNTIME_TOO_LOW")
@@ -40,4 +42,13 @@ data class AreaConfiguration(
     val limitY: Double,
     @Serializable(with = PosSerializer::class)
     val spawnPoint: Pos
+)
+
+/**
+ * Scoreboard configuration to define its content.
+ */
+@Serializable
+data class ScoreboardConfiguration(
+    val title: String,
+    val lines: List<String>,
 )

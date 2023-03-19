@@ -5,6 +5,7 @@ import com.github.rushyverse.api.configuration.IConfigurationReader
 import com.github.rushyverse.api.configuration.VelocityConfiguration
 import com.github.rushyverse.configuration.AreaConfiguration
 import com.github.rushyverse.configuration.HubConfiguration
+import com.github.rushyverse.configuration.ScoreboardConfiguration
 import com.github.rushyverse.configuration.ServerConfiguration
 import com.github.rushyverse.utils.getAvailablePort
 import kotlinx.serialization.hocon.Hocon
@@ -38,6 +39,18 @@ abstract class AbstractTest {
             AreaConfiguration(
                 65.0,
                 Pos(0.0, 100.0, 0.0)
+            ),
+            ScoreboardConfiguration(
+                "<light_purple><bold>Rushyverse</light_purple>",
+                listOf(
+                    "", // Empty line
+                    "<white><prestige_translate_name>:</white> <gold><prestige_level_translate_name></gold>",
+                    "<white><experience_translate_name>:</white> <green><experience></green>",
+                    "", // Empty line
+                    "<white><tokens_translate_name>:</white> <yellow><tokens>",
+                    "", // Empty line
+                    "<white><friends_translate_name>:</white> <green><friends></green>"
+                )
             )
         )
 
