@@ -7,12 +7,12 @@ import com.github.rushyverse.ext.asMiniComponent
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.*
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 import org.junit.jupiter.params.provider.ValueSource
-import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class HubScoreboardTest : AbstractTest() {
 
@@ -51,12 +51,29 @@ class HubScoreboardTest : AbstractTest() {
     }
 
     @Nested
+    @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
     inner class Lines {
 
         @Test
-        fun `does the lines number matches with the configuration`() = runTest {
+        @Order(0)
+        fun `scoreboard has more than 0 lines`() = runTest {
+            val conf = defaultConfigurationOnAvailablePort()
+            assertTrue(conf.scoreboard.lines.isNotEmpty())
+        }
+
+        @Test
+        @Order(1)
+        fun `scoreboard has less than 16 lines`() = runTest {
+            val conf = defaultConfigurationOnAvailablePort()
+            assertTrue(conf.scoreboard.lines.size < 16)
+        }
+
+        @Test
+        @Order(2)
+        fun `does the lines number matches with the configuration after creation`() = runTest {
             val conf = defaultConfigurationOnAvailablePort()
             val scoreboardConfig = conf.scoreboard
+            val confLineSize = scoreboardConfig.lines.size
 
             val scoreboard = HubScoreboard(
                 scoreboardConfig,
@@ -66,13 +83,13 @@ class HubScoreboardTest : AbstractTest() {
             )
 
             val scoreboardLineSize = scoreboard.lines.size
-            val confLineSize = scoreboardConfig.lines.size
 
             assertEquals(scoreboardLineSize, confLineSize)
         }
 
         @ParameterizedTest
         @EnumSource(SupportedLanguage::class)
+        @Order(3)
         fun `has every line been translated`(language: SupportedLanguage) = runTest {
             val conf = expectedDefaultConfiguration.copy(
                 scoreboard = expectedDefaultConfiguration.scoreboard.copy(
