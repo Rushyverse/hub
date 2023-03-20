@@ -93,4 +93,32 @@ class HubPlayerTest : AbstractTest() {
 
         assertEquals(50.0, player.experience)
     }
+
+    @Test
+    fun `should set and get friends`() {
+        val uuid = UUID.randomUUID()
+        val username = "testPlayer"
+        val playerConnection = mockk<PlayerConnection>(relaxed = true)
+        val player = HubPlayer(uuid, username, playerConnection)
+
+        val setOfFriends = setOf(UUID.randomUUID(), UUID.randomUUID())
+
+        player.friends = setOfFriends
+
+        assertEquals(setOfFriends, player.friends)
+    }
+
+    @Test
+    fun `should set and get guildID`() {
+        val uuid = UUID.randomUUID()
+        val username = "testPlayer"
+        val playerConnection = mockk<PlayerConnection>(relaxed = true)
+        val player = HubPlayer(uuid, username, playerConnection)
+
+        val guildID = 1111L
+
+        player.guildID = guildID
+
+        assertEquals(guildID, player.guildID)
+    }
 }
