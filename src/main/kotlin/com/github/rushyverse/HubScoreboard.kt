@@ -32,7 +32,7 @@ class HubScoreboard(
     }
 
     fun update() {
-        val locale = player.locale
+        val locale = player.locale!!
 
         setTitle(config.title.asMiniComponent())
 
