@@ -1,8 +1,8 @@
 package com.github.rushyverse.listener
 
+import com.github.rushyverse.HubPlayer
 import com.github.rushyverse.HubScoreboard
 import com.github.rushyverse.api.extension.sync
-import com.github.rushyverse.api.translation.SupportedLanguage
 import com.github.rushyverse.api.translation.TranslationsProvider
 import com.github.rushyverse.configuration.ScoreboardConfiguration
 import net.minestom.server.coordinate.Pos
@@ -20,14 +20,13 @@ class PlayerSpawnListener(
     }
 
     override fun run(event: PlayerSpawnEvent): EventListener.Result {
-        val player = event.player
+        val player = event.player as HubPlayer
 
         player.sync {
             teleport(spawnPoint)
             HubScoreboard(
                 scoreboardConfig,
                 translationsProvider,
-                SupportedLanguage.ENGLISH.locale,
                 player
             )
             .addViewer(this)
