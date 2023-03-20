@@ -1,6 +1,7 @@
 package com.github.rushyverse
 
 import com.github.rushyverse.api.RushyServer
+import com.github.rushyverse.api.translation.SupportedLanguage
 import com.github.rushyverse.api.translation.TranslationsProvider
 import com.github.rushyverse.configuration.AreaConfiguration
 import com.github.rushyverse.configuration.HubConfiguration
@@ -35,9 +36,9 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
             API.registerCommands()
 
             MinecraftServer.getConnectionManager().setPlayerProvider { uuid, username, connection ->
-                HubPlayer(
-                    uuid, username, connection
-                )
+                HubPlayer(uuid, username, connection).apply {
+                    setLocale(SupportedLanguage.ENGLISH)
+                }
             }
 
             val globalEventHandler = MinecraftServer.getGlobalEventHandler()
