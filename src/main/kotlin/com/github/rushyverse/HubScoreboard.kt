@@ -7,17 +7,14 @@ import com.github.rushyverse.ext.asMiniComponent
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
-import net.minestom.server.entity.Player
 import net.minestom.server.scoreboard.Sidebar
-import java.util.*
 
 infix fun String.replaceBy(replace: String): TagResolver = Placeholder.unparsed(this, replace)
 
 class HubScoreboard(
     private val config: ScoreboardConfiguration,
     private val translationsProvider: TranslationsProvider,
-    private val locale: Locale,
-    private val player: Player
+    private val player: HubPlayer
 ) : Sidebar(Component.empty()) {
 
     var title: Component = Component.empty()
@@ -35,10 +32,7 @@ class HubScoreboard(
     }
 
     fun update() {
-        val tokens = 42;
-        val prestige = 0
-        val experience = 21
-        val onlineFriends = 3
+        val locale = player.locale!!
 
         setTitle(config.title.asMiniComponent())
 
@@ -57,22 +51,21 @@ class HubScoreboard(
                 "prestige.level",
                 locale,
                 BUNDLE_HUB,
-                arrayOf(prestige)
+                arrayOf(player.prestige)
             ),
-            "experience" replaceBy "$experience",
+            "experience" replaceBy "${player.experience}",
             "experience_translate_name" replaceBy translationsProvider.translate(
                 "scoreboard.experience",
                 locale,
                 BUNDLE_HUB,
-                arrayOf(experience)
             ),
-            "tokens" replaceBy "$tokens",
+            "tokens" replaceBy "${player.tokens}",
             "tokens_translate_name" replaceBy translationsProvider.translate(
                 "scoreboard.tokens",
                 locale,
                 BUNDLE_HUB
             ),
-            "friends" replaceBy "$onlineFriends",
+            "friends" replaceBy "0",
             "friends_translate_name" replaceBy translationsProvider.translate("scoreboard.friends", locale, BUNDLE_HUB)
         )
 
