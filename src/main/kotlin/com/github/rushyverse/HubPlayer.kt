@@ -16,5 +16,6 @@ class HubPlayer(
     var prestige: Int = 0,
     var tokens: Int = 0,
     var experience: Double = 0.0,
-    var friends: Set<UUID> = emptySet()
+    var friends: Set<UUID> = emptySet(),
+    var guildID: Long = 0
 ) : Player(uuid, username, playerConnection)
