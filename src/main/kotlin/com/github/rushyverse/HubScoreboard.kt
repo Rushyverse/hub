@@ -32,7 +32,7 @@ class HubScoreboard(
     }
 
     fun update() {
-        val locale = player.locale!!
+        val locale = player.locale
 
         setTitle(config.title.asMiniComponent())
 
@@ -70,7 +70,6 @@ class HubScoreboard(
         )
 
         val lines = config.lines.asReversed().mapIndexed { index, content ->
-            println("Read config line $index: $content")
             ScoreboardLine(index.toString(), content.asMiniComponent(*tagResolvers), index)
         }
         setLines(lines)
