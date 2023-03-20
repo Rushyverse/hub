@@ -34,6 +34,12 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
 
             API.registerCommands()
 
+            MinecraftServer.getConnectionManager().setPlayerProvider { uuid, username, connection ->
+                HubPlayer(
+                    uuid, username, connection
+                )
+            }
+
             val globalEventHandler = MinecraftServer.getGlobalEventHandler()
             addListeners(globalEventHandler, it, translationsProvider, area, scoreboard)
         }
