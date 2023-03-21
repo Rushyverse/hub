@@ -41,8 +41,7 @@ class HubScoreboardTest : AbstractTest() {
             val scoreboard = HubScoreboard(
                 scoreboardConfig,
                 mockk(relaxed = true),
-                SupportedLanguage.ENGLISH.locale,
-                mockk()
+                mockk(relaxed = true)
             )
 
             assertEquals(scoreboard.title, scoreboardConfig.title.asMiniComponent())
@@ -78,8 +77,7 @@ class HubScoreboardTest : AbstractTest() {
             val scoreboard = HubScoreboard(
                 scoreboardConfig,
                 mockk(relaxed = true),
-                SupportedLanguage.ENGLISH.locale,
-                mockk()
+                mockk(relaxed = true)
             )
 
             val scoreboardLineSize = scoreboard.lines.size
@@ -111,11 +109,13 @@ class HubScoreboardTest : AbstractTest() {
                 translationsProvider.translate("scoreboard.tokens", locale, HubServer.BUNDLE_HUB)
             } returns "Tokens"
 
+            val player = mockk<HubPlayer>(relaxed = true)
+            every { player.locale } returns locale
+
             val scoreboard = HubScoreboard(
                 scoreboardConfig,
                 translationsProvider,
-                locale,
-                mockk()
+                player
             )
 
             // Verify if the current lines has been translated
