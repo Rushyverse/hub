@@ -18,6 +18,7 @@ dependencies {
     val mockkVersion = "1.13.4"
     val coroutinesCoreVersion = "1.6.4"
 
+    implementation("com.github.Rushyverse:core:4ac304f18b")
     implementation("com.github.Rushyverse:api:v1.4.1")
     implementation("net.kyori:adventure-text-minimessage:4.13.0")
 
