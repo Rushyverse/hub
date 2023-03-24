@@ -4,12 +4,15 @@ import com.github.rushyverse.api.RushyServer
 import com.github.rushyverse.api.translation.SupportedLanguage
 import com.github.rushyverse.api.translation.TranslationsProvider
 import com.github.rushyverse.configuration.AreaConfiguration
+import com.github.rushyverse.configuration.CacheConfiguration
 import com.github.rushyverse.configuration.HubConfiguration
 import com.github.rushyverse.configuration.ScoreboardConfiguration
+import com.github.rushyverse.core.cache.CacheClient
 import com.github.rushyverse.listener.PlayerLoginListener
 import com.github.rushyverse.listener.PlayerMoveListener
 import com.github.rushyverse.listener.PlayerSpawnListener
 import com.github.rushyverse.listener.PlayerStartFlyingListener
+import io.lettuce.core.RedisURI
 import net.minestom.server.MinecraftServer
 import net.minestom.server.event.GlobalEventHandler
 import net.minestom.server.instance.InstanceContainer
@@ -33,6 +36,9 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
                 )
             )
 
+            // Cache client
+            val cacheClient = createCacheClient(cache)
+
             API.registerCommands()
 
             MinecraftServer.getConnectionManager().setPlayerProvider { uuid, username, connection ->
@@ -45,6 +51,13 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
             addListeners(globalEventHandler, it, translationsProvider, area, scoreboard)
         }
     }
+
+    suspend fun createCacheClient(configuration: CacheConfiguration): CacheClient {
+        return CacheClient {
+            uri = RedisURI.create(configuration.uri)
+        }
+    }
+
 
     /**
      * Register all listeners of the server.
