@@ -16,6 +16,8 @@ import net.minestom.server.coordinate.Pos
 data class HubConfiguration(
     @SerialName("server")
     override val server: ServerConfiguration,
+    @SerialName("cache")
+    val cache: CacheConfiguration,
     @SerialName("area")
     val area: AreaConfiguration,
     @SerialName("scoreboard")
@@ -31,6 +33,16 @@ data class ServerConfiguration(
     override val bungeeCord: BungeeCordConfiguration,
     override val velocity: VelocityConfiguration
 ) : IServerConfiguration
+
+/**
+ * Cache configuration using redis.
+ * @property uri The URI of the redis server.
+ */
+@Suppress("PROVIDED_RUNTIME_TOO_LOW")
+@Serializable
+data class CacheConfiguration(
+    val uri: String
+)
 
 /**
  * Area configuration for positions and values.
