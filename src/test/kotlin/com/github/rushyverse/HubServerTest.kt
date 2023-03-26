@@ -8,6 +8,7 @@ import com.github.rushyverse.api.configuration.HoconConfigurationReader
 import com.github.rushyverse.api.configuration.IConfigurationReader
 import com.github.rushyverse.api.configuration.readConfigurationFile
 import com.github.rushyverse.configuration.HubConfiguration
+import com.github.rushyverse.inventories.HotbarItems
 import com.github.rushyverse.listener.PlayerLoginListener
 import com.github.rushyverse.listener.PlayerMoveListener
 import com.github.rushyverse.listener.PlayerSpawnListener
@@ -97,9 +98,11 @@ class HubServerTest : AbstractTest() {
             sequenceOf(
                 PlayerStartFlyingListener(),
                 PlayerLoginListener(mockk()),
-                PlayerSpawnListener(mockk(), mockk(), mockk()),
-                PlayerMoveListener(area)
+                PlayerSpawnListener(mockk(), mockk(), mockk(), mockk()),
+                PlayerMoveListener(area),
             ).map { it.eventType() }.all { eventHandler.hasListener(it) }
+
+            sequenceOf(HotbarItems.listeners()).map { it.eventType }.all { eventHandler.hasListener(it) }
         }
     }
 
