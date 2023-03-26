@@ -8,6 +8,7 @@ import com.github.rushyverse.configuration.CacheConfiguration
 import com.github.rushyverse.configuration.HubConfiguration
 import com.github.rushyverse.configuration.ScoreboardConfiguration
 import com.github.rushyverse.core.cache.CacheClient
+import com.github.rushyverse.inventories.HotbarItems
 import com.github.rushyverse.listener.PlayerLoginListener
 import com.github.rushyverse.listener.PlayerMoveListener
 import com.github.rushyverse.listener.PlayerSpawnListener
@@ -58,7 +59,6 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
         }
     }
 
-
     /**
      * Register all listeners of the server.
      * @param globalEventHandler Event handler of the server.
@@ -73,7 +73,14 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
     ) {
         globalEventHandler.addListener(PlayerStartFlyingListener())
         globalEventHandler.addListener(PlayerLoginListener(instanceContainer))
-        globalEventHandler.addListener(PlayerSpawnListener(translationsProvider, area.spawnPoint, scoreboard))
+        globalEventHandler.addListener(
+            PlayerSpawnListener(
+                translationsProvider,
+                area.spawnPoint,
+                scoreboard,
+                HotbarItems(translationsProvider)
+            )
+        )
         globalEventHandler.addListener(PlayerMoveListener(area))
     }
 
