@@ -82,6 +82,7 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
             )
         )
         globalEventHandler.addListener(PlayerMoveListener(area))
+        globalEventHandler.addChild(HotbarItems.listeners())
     }
 
 }
