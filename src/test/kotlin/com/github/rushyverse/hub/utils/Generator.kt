@@ -1,4 +1,4 @@
-package com.github.rushyverse.utils
+package com.github.rushyverse.hub.utils
 
 import java.net.ServerSocket
 import java.util.*

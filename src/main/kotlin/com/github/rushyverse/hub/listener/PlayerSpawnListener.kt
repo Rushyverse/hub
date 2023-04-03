@@ -1,11 +1,11 @@
-package com.github.rushyverse.listener
+package com.github.rushyverse.hub.listener
 
-import com.github.rushyverse.HubPlayer
-import com.github.rushyverse.HubScoreboard
+import com.github.rushyverse.hub.HubPlayer
+import com.github.rushyverse.hub.HubScoreboard
 import com.github.rushyverse.api.extension.sync
 import com.github.rushyverse.api.translation.TranslationsProvider
-import com.github.rushyverse.configuration.ScoreboardConfiguration
-import com.github.rushyverse.inventories.HotbarItems
+import com.github.rushyverse.hub.configuration.ScoreboardConfiguration
+import com.github.rushyverse.hub.inventories.HotbarItems
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.minestom.server.coordinate.Pos

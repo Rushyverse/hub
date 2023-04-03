@@ -1,9 +1,9 @@
-package com.github.rushyverse
+package com.github.rushyverse.hub
 
-import com.github.rushyverse.HubServer.Companion.BUNDLE_HUB
+import com.github.rushyverse.hub.HubServer.Companion.BUNDLE_HUB
 import com.github.rushyverse.api.translation.TranslationsProvider
-import com.github.rushyverse.configuration.ScoreboardConfiguration
-import com.github.rushyverse.ext.asMiniComponent
+import com.github.rushyverse.hub.configuration.ScoreboardConfiguration
+import com.github.rushyverse.hub.ext.asMiniComponent
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver

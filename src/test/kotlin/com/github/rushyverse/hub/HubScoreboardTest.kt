@@ -1,9 +1,9 @@
-package com.github.rushyverse
+package com.github.rushyverse.hub
 
 import com.github.rushyverse.api.extension.toText
 import com.github.rushyverse.api.translation.SupportedLanguage
 import com.github.rushyverse.api.translation.TranslationsProvider
-import com.github.rushyverse.ext.asMiniComponent
+import com.github.rushyverse.hub.ext.asMiniComponent
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest

@@ -1,4 +1,4 @@
-package com.github.rushyverse.configuration
+package com.github.rushyverse.hub.configuration
 
 import com.github.rushyverse.api.configuration.*
 import com.github.rushyverse.api.serializer.PosSerializer

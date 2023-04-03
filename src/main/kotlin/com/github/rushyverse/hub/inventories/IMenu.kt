@@ -1,4 +1,4 @@
-package com.github.rushyverse.inventories
+package com.github.rushyverse.hub.inventories
 
 import net.minestom.server.inventory.Inventory
 

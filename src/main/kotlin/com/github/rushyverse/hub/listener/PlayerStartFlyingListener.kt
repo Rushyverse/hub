@@ -1,4 +1,4 @@
-package com.github.rushyverse.listener
+package com.github.rushyverse.hub.listener
 
 import net.minestom.server.entity.GameMode
 import net.minestom.server.entity.Player

@@ -1,6 +1,6 @@
-package com.github.rushyverse.listener
+package com.github.rushyverse.hub.listener
 
-import com.github.rushyverse.configuration.AreaConfiguration
+import com.github.rushyverse.hub.configuration.AreaConfiguration
 import net.minestom.server.entity.GameMode
 import net.minestom.server.entity.Player
 import net.minestom.server.event.EventListener
