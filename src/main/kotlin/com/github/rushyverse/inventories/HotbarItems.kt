@@ -59,9 +59,6 @@ class HotbarItems(
 
     companion object {
 
-        fun setItemWithHandler(inv: PlayerInventory, slot: Int, itemWithHandler: Pair<ItemStack, InventoryCondition>) =
-            inv.setItemStack(slot, itemWithHandler.first, handler = itemWithHandler.second)
-
         fun listeners(): EventNode<PlayerEvent> = EventNode
             .type("hotbar-listeners", EventFilter.PLAYER)
             .apply {
@@ -177,4 +174,11 @@ class HotbarItems(
             }
         }.asNative()
     }
+
+    private fun setItemWithHandler(
+        inv: PlayerInventory,
+        slot: Int,
+        itemWithHandler: Pair<ItemStack, InventoryCondition>
+    ) =
+        inv.setItemStack(slot, itemWithHandler.first, handler = itemWithHandler.second)
 }
