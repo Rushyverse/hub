@@ -1,4 +1,4 @@
-package com.github.rushyverse
+package com.github.rushyverse.hub
 
 import com.github.rushyverse.api.translation.SupportedLanguage
 import net.minestom.server.entity.Player

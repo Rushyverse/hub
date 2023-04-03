@@ -1,7 +1,7 @@
-package com.github.rushyverse.inventories
+package com.github.rushyverse.hub.inventories
 
-import com.github.rushyverse.HubPlayer
-import com.github.rushyverse.HubServer
+import com.github.rushyverse.hub.HubPlayer
+import com.github.rushyverse.hub.HubServer
 import com.github.rushyverse.api.extension.setItemStack
 import com.github.rushyverse.api.extension.withBold
 import com.github.rushyverse.api.extension.withoutItalic

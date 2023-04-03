@@ -1,8 +1,8 @@
-package com.github.rushyverse.inventories
+package com.github.rushyverse.hub.inventories
 
-import com.github.rushyverse.AbstractTest
-import com.github.rushyverse.HubPlayer
-import com.github.rushyverse.HubServer.Companion.BUNDLE_HUB
+import com.github.rushyverse.hub.AbstractTest
+import com.github.rushyverse.hub.HubPlayer
+import com.github.rushyverse.hub.HubServer.Companion.BUNDLE_HUB
 import com.github.rushyverse.api.extension.withoutDecorations
 import com.github.rushyverse.api.translation.ResourceBundleTranslationsProvider
 import com.github.rushyverse.api.translation.SupportedLanguage

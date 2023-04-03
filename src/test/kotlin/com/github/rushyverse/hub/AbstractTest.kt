@@ -1,10 +1,12 @@
-package com.github.rushyverse
+package com.github.rushyverse.hub
 
+import com.github.hub.configuration.*
 import com.github.rushyverse.api.configuration.BungeeCordConfiguration
 import com.github.rushyverse.api.configuration.IConfigurationReader
 import com.github.rushyverse.api.configuration.VelocityConfiguration
 import com.github.rushyverse.configuration.*
-import com.github.rushyverse.utils.getAvailablePort
+import com.github.rushyverse.hub.utils.getAvailablePort
+import com.github.rushyverse.hub.configuration.*
 import kotlinx.serialization.hocon.Hocon
 import net.minestom.server.coordinate.Pos
 import org.junit.jupiter.api.io.TempDir

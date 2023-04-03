@@ -1,4 +1,4 @@
-package com.github.rushyverse.ext
+package com.github.rushyverse.hub.ext
 
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver

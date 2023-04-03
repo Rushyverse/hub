@@ -1,18 +1,18 @@
-package com.github.rushyverse
+package com.github.rushyverse.hub
 
 import com.github.rushyverse.api.RushyServer
 import com.github.rushyverse.api.translation.SupportedLanguage
 import com.github.rushyverse.api.translation.TranslationsProvider
-import com.github.rushyverse.configuration.AreaConfiguration
-import com.github.rushyverse.configuration.CacheConfiguration
-import com.github.rushyverse.configuration.HubConfiguration
-import com.github.rushyverse.configuration.ScoreboardConfiguration
+import com.github.rushyverse.hub.configuration.AreaConfiguration
+import com.github.rushyverse.hub.configuration.CacheConfiguration
+import com.github.rushyverse.hub.configuration.HubConfiguration
+import com.github.rushyverse.hub.configuration.ScoreboardConfiguration
 import com.github.rushyverse.core.cache.CacheClient
-import com.github.rushyverse.inventories.HotbarItems
-import com.github.rushyverse.listener.PlayerLoginListener
-import com.github.rushyverse.listener.PlayerMoveListener
-import com.github.rushyverse.listener.PlayerSpawnListener
-import com.github.rushyverse.listener.PlayerStartFlyingListener
+import com.github.rushyverse.hub.inventories.HotbarItems
+import com.github.rushyverse.hub.listener.PlayerLoginListener
+import com.github.rushyverse.hub.listener.PlayerMoveListener
+import com.github.rushyverse.hub.listener.PlayerSpawnListener
+import com.github.rushyverse.hub.listener.PlayerStartFlyingListener
 import io.lettuce.core.RedisURI
 import net.minestom.server.MinecraftServer
 import net.minestom.server.event.GlobalEventHandler
@@ -33,7 +33,7 @@ class HubServer(private val configuration: String? = null) : RushyServer() {
             val translationsProvider = createTranslationsProvider(
                 listOf(
                     API.BUNDLE_API,
-                    BUNDLE_HUB
+                    com.github.rushyverse.hub.HubServer.BUNDLE_HUB
                 )
             )
 

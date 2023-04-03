@@ -1,4 +1,4 @@
-package com.github.rushyverse
+package com.github.rushyverse.hub
 
 import com.github.rushyverse.api.command.GamemodeCommand
 import com.github.rushyverse.api.command.GiveCommand
@@ -7,13 +7,13 @@ import com.github.rushyverse.api.command.StopCommand
 import com.github.rushyverse.api.configuration.HoconConfigurationReader
 import com.github.rushyverse.api.configuration.IConfigurationReader
 import com.github.rushyverse.api.configuration.readConfigurationFile
-import com.github.rushyverse.configuration.HubConfiguration
-import com.github.rushyverse.inventories.HotbarItems
-import com.github.rushyverse.listener.PlayerLoginListener
-import com.github.rushyverse.listener.PlayerMoveListener
-import com.github.rushyverse.listener.PlayerSpawnListener
-import com.github.rushyverse.listener.PlayerStartFlyingListener
-import com.github.rushyverse.utils.randomString
+import com.github.rushyverse.hub.configuration.HubConfiguration
+import com.github.rushyverse.hub.inventories.HotbarItems
+import com.github.rushyverse.hub.listener.PlayerLoginListener
+import com.github.rushyverse.hub.listener.PlayerMoveListener
+import com.github.rushyverse.hub.listener.PlayerSpawnListener
+import com.github.rushyverse.hub.listener.PlayerStartFlyingListener
+import com.github.rushyverse.hub.utils.randomString
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import net.minestom.server.MinecraftServer
