@@ -20,7 +20,7 @@ dependencies {
 
     implementation("com.github.Rushyverse:core:4ac304f18b")
     implementation("com.github.Rushyverse:api:v1.4.1")
-    implementation("net.kyori:adventure-text-minimessage:4.13.0")
+    implementation("net.kyori:adventure-text-minimessage:4.13.1")
 
     testImplementation(kotlin("test-junit5"))
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesCoreVersion")
