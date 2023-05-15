@@ -16,7 +16,7 @@ repositories {
 dependencies {
     val minestomVersion = "aebf72de90"
     val mockkVersion = "1.13.5"
-    val coroutinesCoreVersion = "1.6.4"
+    val coroutinesCoreVersion = "1.7.1"
 
     implementation("com.github.Rushyverse:core:4ac304f18b")
     implementation("com.github.Rushyverse:api:v1.4.1")
