@@ -1,0 +1,7 @@
+name: hub
+version: 1.0
+author: Quentixx
+api-version: 1.19
+main: com.github.rushyverse.hub.Hub
+depend:
+  - paper-api

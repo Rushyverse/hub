@@ -1,0 +1,78 @@
+hotbar:
+  navigator-item:
+    type: COMPASS
+    name: hotbar.navigator.item.name
+    description: hotbar.navigator.item.description
+    hotbar-slot: 4
+games-menu:
+  # Data provider allows you to synchronize the needed data for games menus.
+  data-provider:
+    # API mode will use local API plugin to receive messages from others plugins in the same server.
+    api-mode: true
+    # Not implemented
+    # Will use BungeeCord to receive messages from servers.
+    plugin-message:
+      message: rtf|<gameID>|
+      enabled: false
+    # Not implemented
+    # Will use Redis to receive messages from servers.
+    redis-message:
+      message: rtf|
+      enabled: false
+  games:
+    rtf:
+      icon:
+        type: RED_WOOL
+        name: RushTheFlag
+        description: games.menu.icon.rtf.description
+        menu-slot: 20
+      on-click-game:
+        # Var args: <gameID> - it is defined by amount of the game icon
+        #           <player> - it is defined by the player name
+        run-command:
+          command: rtf spectate <gameID>
+          enabled: true
+        # Not implemented
+        plugin-message:
+          message: rtf|<gameID>|<player>|join
+          enabled: false
+        # Not implemented
+        redis-message:
+          message: rtf|<gameID>|<player>|join
+          enabled: false
+    fightbox:
+      icon:
+        type: IRON_SWORD
+        name: FightBox
+        description: games.menu.icon.fightbox.description
+        menu-slot: 22
+      on-click-game:
+        run-command:
+          command: fightbox join
+          enabled: true
+        # Not implemented
+        plugin-message:
+          message: fightbox
+          enabled: false
+        # Not implemented
+        redis-message:
+          message: fightbox
+          enabled: false
+    survival:
+      icon:
+        type: STONE_PICKAXE
+        name: Survival
+        description: games.menu.icon.survival.description
+        menu-slot: 24
+      on-click-game:
+        run-command:
+          command: survival join
+          enabled: true
+        # Not implemented
+        plugin-message:
+          message: survival
+          enabled: false
+        # Not implemented
+        redis-message:
+          message: survival
+          enabled: false
