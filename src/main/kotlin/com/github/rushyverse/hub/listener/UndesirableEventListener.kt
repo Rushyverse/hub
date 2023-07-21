@@ -1,8 +1,8 @@
 package com.github.rushyverse.hub.listener
 
+import com.github.rushyverse.api.extension.event.cancel
+import com.github.rushyverse.api.extension.event.cancelIf
 import com.github.rushyverse.hub.Hub
-import com.github.rushyverse.hub.extension.cancel
-import com.github.rushyverse.hub.extension.cancelIf
 import org.bukkit.event.EventHandler
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
