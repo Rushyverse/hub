@@ -5,11 +5,6 @@ import kotlinx.coroutines.CoroutineScope
 import java.util.*
 
 class ClientHub(
-    pluginId: String,
     uuid: UUID, scope:
     CoroutineScope
-) : Client(pluginId, uuid, scope) {
-
-
-
-}
+) : Client(uuid, scope)

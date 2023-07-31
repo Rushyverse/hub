@@ -79,7 +79,7 @@ class Hub(
     private fun createYamlReader(): IFileReader {
         val yaml = Yaml(
             serializersModule = SerializersModule {
-                contextual(LocationSerializer())
+                contextual(LocationSerializer)
             }
         )
         return YamlFileReader(this, yaml)
@@ -101,7 +101,7 @@ class Hub(
     }
 
     override fun createClient(player: Player): Client {
-        return ClientHub(id, player.uniqueId, scope + SupervisorJob(scope.coroutineContext.job))
+        return ClientHub(player.uniqueId, scope + SupervisorJob(scope.coroutineContext.job))
     }
 
     private fun sendHotbarItems(inv: PlayerInventory) {
