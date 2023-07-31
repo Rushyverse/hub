@@ -5,10 +5,14 @@ import com.github.rushyverse.hub.client.ClientHub
 import com.github.rushyverse.hub.gui.commons.GUI
 import com.github.rushyverse.api.koin.inject
 import com.github.rushyverse.api.player.ClientManager
+import org.bukkit.block.BlockFace
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
+import org.bukkit.event.block.Action
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.inventory.PlayerInventory
 
 class GUIListener(
     override val plugin: Hub,
