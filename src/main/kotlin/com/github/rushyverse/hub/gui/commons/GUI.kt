@@ -32,7 +32,6 @@ abstract class GUI(
     }
 
     fun sync() {
-        println("Syncind GUI: $titleKey")
         for (viewer in viewers) {
             applyItems(viewer, viewer.requirePlayer().openInventory.topInventory)
         }

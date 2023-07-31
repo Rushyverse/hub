@@ -23,6 +23,12 @@ class GameGUI(
     val dataProvider: SharedGameData
 ) : GUI(config.gameType, 54) {
 
+    init {
+        dataProvider.subscribeOnChange {
+            super.sync()
+        }
+    }
+
     override fun applyItems(client: Client, inv: Inventory) {
 
         inv.setItem(1, leaderBoardItem())

@@ -31,6 +31,10 @@ class NavigatorGUI(
         config.games.forEach {
             gamesGUIs[it.gameType] = GameGUI(it, dataProvider)
         }
+
+        dataProvider.subscribeOnChange {
+            super.sync()
+        }
     }
 
     override fun applyItems(client: Client, inv: Inventory) {
@@ -49,7 +53,7 @@ class NavigatorGUI(
                 client.lang.locale,
                 dataProvider.players(gameType),
                 games,
-            ).apply { addItemFlags(*ItemFlag.values()) }
+            ).apply { addItemFlags(*ItemFlag.entries.toTypedArray()) }
 
             inv.setItem(iconConfig.menuSlot, gameTypeItem)
         }
@@ -68,8 +72,6 @@ class NavigatorGUI(
                 gamesGUIs[gameType]?.open(client)
             }
 
-        } else {
-            client.send("§7Other item : ${item.i18NDisplayName}")
         }
     }
 
@@ -109,28 +111,21 @@ class NavigatorGUI(
         )
 
 
-    private fun survivalNavItem() = ItemStack(Material.STONE_PICKAXE).apply {
-        itemMeta = itemMeta.apply {
-            displayName(text("survival"))
-        }
-    }
-
-
     private fun achievementsMenuItem() = ItemStack(Material.NETHER_STAR).apply {
         itemMeta = itemMeta.apply {
-            displayName(text("achievements"))
+            displayName(text("Achievements"))
         }
     }
 
     private fun shopMenuItem() = ItemStack(Material.EMERALD).apply {
         itemMeta = itemMeta.apply {
-            displayName(text("shop"))
+            displayName(text("Shop"))
         }
     }
 
     private fun statsMenuItem() = ItemStack(Material.BOOK).apply {
         itemMeta = itemMeta.apply {
-            displayName(text("stats"))
+            displayName(text("Stats"))
         }
     }
 }

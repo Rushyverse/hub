@@ -85,7 +85,7 @@ class Hub(
         return YamlFileReader(this, yaml)
     }
 
-    private suspend fun registerCommands() {
+    private fun registerCommands() {
         HubCommand(this).register()
 
     }

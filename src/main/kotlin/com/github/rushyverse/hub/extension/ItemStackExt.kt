@@ -13,12 +13,14 @@ import org.bukkit.inventory.ItemStack
 import java.util.*
 
 /**
- * Utility method to build [ItemStack] from [ItemConfig].
- * @param config Configuration class
+ * Utility method to build [ItemStack] with translation system.
+ * @param type The type of Material.
+ * @param name The name of the item. Can be a translation key in properties files.
+ * @param description The description of the item. Can also be a translation key.
  * @param loreAdd Lore add after the config, optional
  * @return Instance of the item who is created.
  */
-public inline fun ItemStack(
+fun ItemStack(
     type: Material, name: String, description: String,
     vararg loreAdd: Component,
     locale: Locale = SupportedLanguage.ENGLISH.locale
