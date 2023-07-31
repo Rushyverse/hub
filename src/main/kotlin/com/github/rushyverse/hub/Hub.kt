@@ -1,5 +1,6 @@
 package com.github.rushyverse.hub
 
+import com.charleskorn.kaml.Yaml
 import com.github.rushyverse.hub.commannds.*
 import com.github.rushyverse.hub.config.HubConfig
 import com.github.rushyverse.hub.extension.ItemStack
@@ -7,14 +8,19 @@ import com.github.rushyverse.hub.gui.nav.NavigatorGUI
 import com.github.rushyverse.hub.listener.*
 import com.github.shynixn.mccoroutine.bukkit.scope
 import com.github.rushyverse.api.Plugin
+import com.github.rushyverse.api.configuration.reader.IFileReader
+import com.github.rushyverse.api.configuration.reader.YamlFileReader
+import com.github.rushyverse.api.configuration.reader.readConfigurationFile
 import com.github.rushyverse.api.extension.registerListener
 import com.github.rushyverse.api.player.Client
-import com.github.rushyverse.api.player.PluginClientEvents
+import com.github.rushyverse.api.serializer.LocationSerializer
 import com.github.rushyverse.api.translation.*
 import com.github.rushyverse.hub.client.ClientHub
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.job
 import kotlinx.coroutines.plus
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.contextual
 import org.bukkit.GameMode
 import org.bukkit.World
 import org.bukkit.entity.Player
@@ -28,11 +34,9 @@ class Hub(
     companion object {
         const val BUNDLE_HUB = "hub_translate"
 
-        lateinit var translationsProvider: TranslationsProvider
+        lateinit var translationsProvider: TranslationProvider
             private set
     }
-
-    override val clientEvents: PluginClientEvents = HubClientEvents(this)
 
     lateinit var config: HubConfig
         private set
@@ -49,21 +53,36 @@ class Hub(
         modulePlugin<Hub>()
         moduleClients()
 
-        saveDefaultConfig()
-        config = HubConfig.parse(getConfig())
-        world = server.worlds[0]
-        translationsProvider = createTranslationsProvider()
+        val configReader = createYamlReader()
+        config = configReader.readConfigurationFile<HubConfig>("config.yml")
 
-        navigatorGui = NavigatorGUI(config.gamesMenu)
+        world = server.worlds[0]
+        translationsProvider = createTranslationProvider()
+
+        navigatorGui = NavigatorGUI(config.gamesGUI)
 
         logger.info("Hub config summary")
         logger.info("$config")
 
         registerCommands()
 
+        registerListener { AuthenticationListener(this) }
         registerListener { GUIListener(this, setOf(navigatorGui, *navigatorGui.gamesGUIs.values.toTypedArray())) }
         registerListener { HotbarItemsListener(this) }
         registerListener { UndesirableEventListener(this) }
+    }
+
+    /**
+     * Create a new instance of yaml reader.
+     * @return The instance of the yaml reader.
+     */
+    private fun createYamlReader(): IFileReader {
+        val yaml = Yaml(
+            serializersModule = SerializersModule {
+                contextual(LocationSerializer())
+            }
+        )
+        return YamlFileReader(this, yaml)
     }
 
     private suspend fun registerCommands() {
@@ -75,8 +94,8 @@ class Hub(
         super.onDisableAsync()
     }
 
-    override suspend fun createTranslationsProvider(): ResourceBundleTranslationsProvider {
-        return (super.createTranslationsProvider()).apply {
+    override suspend fun createTranslationProvider(): ResourceBundleTranslationProvider {
+        return (super.createTranslationProvider()).apply {
             registerResourceBundleForSupportedLocales(BUNDLE_HUB, ResourceBundle::getBundle)
         }
     }
@@ -89,11 +108,11 @@ class Hub(
         val hotbarConfig = config.hotbar
 
         for (item in hotbarConfig.items) {
-            inv.setItem(item.hotbarSlot, ItemStack(item))
+            inv.setItem(item.hotbarSlot, ItemStack(item.type, item.name, item.description))
         }
     }
 
-    fun teleportHub(client: Client) {
+    suspend fun teleportHub(client: Client) {
         val player = client.requirePlayer()
         player.teleport(world.spawnLocation)
         player.inventory.apply {
@@ -103,6 +122,9 @@ class Hub(
         }
         player.gameMode = GameMode.SURVIVAL
 
-        client.fastBoard.updateLines("Welcome to", "the hub !")
+        client.scoreboard().apply {
+            updateTitle("§D§LRushyverse !")
+            updateLines("Welcome to", "the hub !", "", "play.rushy.space")
+        }
     }
 }
