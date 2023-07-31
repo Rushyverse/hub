@@ -32,6 +32,19 @@ class GUIListener(
         val client = clients.getClient(player) as ClientHub
 
         listOfGui.firstOrNull { it.viewers.contains(client) }?.onClick(client, item, event.click)
+
+        val clickedInv = event.clickedInventory
+        if (clickedInv != null && clickedInv is PlayerInventory) {
+            plugin.server.pluginManager.callEvent(
+                PlayerInteractEvent(
+                    player,
+                    Action.RIGHT_CLICK_AIR,
+                    item,
+                    null,
+                    BlockFace.NORTH
+                )
+            )
+        }
     }
 
     @EventHandler
