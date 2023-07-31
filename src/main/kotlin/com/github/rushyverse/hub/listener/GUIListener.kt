@@ -64,7 +64,6 @@ class GUIListener(
             listOfGui.forEach {
                 if (it.viewers.contains(this)) {
                     it.close(this)
-                    player.sendMessage("removed from §C${it.titleKey}")
                 }
             }
         }
