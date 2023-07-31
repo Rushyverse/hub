@@ -6,8 +6,8 @@ import com.github.rushyverse.hub.extension.ItemStack
 import com.github.rushyverse.hub.config.game.GameIconConfig
 import com.github.rushyverse.hub.config.game.GamesGUIConfig
 import com.github.rushyverse.hub.gui.commons.GUI
-import com.github.rushyverse.api.SharedMemory
 import com.github.rushyverse.api.game.SharedGameData
+import com.github.rushyverse.api.koin.inject
 import com.github.rushyverse.api.player.Client
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.Component.text
@@ -23,20 +23,10 @@ class NavigatorGUI(
     val config: GamesGUIConfig,
 ) : GUI("gui.navigator.title", 54) {
 
-    val dataProvider: SharedGameData
+    val dataProvider: SharedGameData by inject()
     val gamesGUIs = mutableMapOf<String, GameGUI>()
 
     init {
-        val apiMode = config.dataProvider.apiMode
-
-        dataProvider =
-            if (apiMode) {
-                // Subscribe to any changes on the shared memory system
-                SharedMemory.games.apply { subscribeOnChange { sync() } }
-            } else {
-                TODO("not implemented")
-            }
-
         // Register gui for each registered game type
         config.games.forEach {
             gamesGUIs[it.gameType] = GameGUI(it, dataProvider)
@@ -44,8 +34,6 @@ class NavigatorGUI(
     }
 
     override fun applyItems(client: Client, inv: Inventory) {
-        println("Call applyItems")
-
         inv.setItem(2, achievementsMenuItem())
         inv.setItem(4, shopMenuItem())
         inv.setItem(6, statsMenuItem())
@@ -58,7 +46,7 @@ class NavigatorGUI(
             val games = dataProvider.games(gameType)
             val gameTypeItem = buildGameIcon(
                 iconConfig,
-                client.locale,
+                client.lang.locale,
                 dataProvider.players(gameType),
                 games,
             ).apply { addItemFlags(*ItemFlag.values()) }
@@ -74,8 +62,6 @@ class NavigatorGUI(
             val gameType = gameConfig.gameType
             val games = dataProvider.games(gameType)
 
-            client.send("games="+games)
-
             if (games <= 1) {
                 client.requirePlayer().performCommand(gameConfig.clickGameCommand(1))
             } else {
@@ -89,7 +75,9 @@ class NavigatorGUI(
 
     private fun buildGameIcon(iconConfig: GameIconConfig, locale: Locale, players: Int, games: Int) =
         ItemStack(
-            iconConfig,
+            iconConfig.type,
+            iconConfig.name,
+            iconConfig.description,
             Component.empty(),
             text(
                 Hub.translationsProvider.translate(
