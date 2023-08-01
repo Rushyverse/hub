@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     embeddedKotlin("jvm")
     embeddedKotlin("plugin.serialization")
@@ -36,9 +38,33 @@ dependencies {
     testImplementation(kotlin("test"))
 }
 
+val javaVersion get() = JavaVersion.VERSION_17
+val javaVersionString get() = javaVersion.toString()
+val javaVersionInt get() = javaVersionString.toInt()
+
+kotlin {
+    jvmToolchain(javaVersionInt)
+
+    sourceSets {
+        all {
+            languageSettings {
+                optIn("kotlin.RequiresOptIn")
+                optIn("kotlin.ExperimentalStdlibApi")
+                optIn("kotlin.contracts.ExperimentalContracts")
+                optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
+            }
+        }
+    }
+}
+
 tasks {
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
+    withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = javaVersionString
+    }
+
+    withType<JavaCompile> {
+        sourceCompatibility = javaVersionString
+        targetCompatibility = javaVersionString
     }
 
     test {
