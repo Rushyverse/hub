@@ -6,6 +6,7 @@ import dev.jorel.commandapi.kotlindsl.commandAPICommand
 import dev.jorel.commandapi.kotlindsl.playerExecutor
 import com.github.rushyverse.api.koin.inject
 import com.github.rushyverse.api.player.ClientManager
+import com.github.rushyverse.hub.client.ClientHub
 
 class HubCommand(
     private val plugin: Hub,
@@ -14,9 +15,10 @@ class HubCommand(
 
     fun register() {
         commandAPICommand("hub") {
+            aliases = arrayOf("lobby", "l")
             playerExecutor { player, _ ->
                 plugin.launch {
-                    plugin.teleportHub(clients.getClient(player))
+                    plugin.teleportHub(clients.getClient(player) as ClientHub)
                 }
             }
         }
