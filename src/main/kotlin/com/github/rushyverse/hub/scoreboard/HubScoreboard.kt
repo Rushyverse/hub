@@ -15,7 +15,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 object HubScoreboard {
 
-    private val scoreboardEmptyLine = Component.empty() // Je voudrais que le scoreboard commence à 1 et pas à 0
+    private val scoreboardEmptyLine = Component.empty()
     private val scoreboardServerAddress = text("www.rushy.space", TextColor.color(153, 66, 152))
 
     private lateinit var task: SchedulerTask
@@ -23,7 +23,7 @@ object HubScoreboard {
     private lateinit var titleScrolling: ColorTextScroller
 
     fun init(plugin: Hub) {
-        val clients: ClientManager by inject(plugin.id);
+        val clients: ClientManager by inject(plugin.id)
 
         titleScrolling = ColorTextScroller(
             "RUSHYVERSE",
