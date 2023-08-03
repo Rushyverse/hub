@@ -1,12 +1,6 @@
 package com.github.rushyverse.hub
 
 import com.charleskorn.kaml.Yaml
-import com.github.rushyverse.hub.commannds.*
-import com.github.rushyverse.hub.config.HubConfig
-import com.github.rushyverse.hub.extension.ItemStack
-import com.github.rushyverse.hub.gui.nav.NavigatorGUI
-import com.github.rushyverse.hub.listener.*
-import com.github.shynixn.mccoroutine.bukkit.scope
 import com.github.rushyverse.api.Plugin
 import com.github.rushyverse.api.configuration.reader.IFileReader
 import com.github.rushyverse.api.configuration.reader.YamlFileReader
@@ -16,6 +10,14 @@ import com.github.rushyverse.api.player.Client
 import com.github.rushyverse.api.serializer.LocationSerializer
 import com.github.rushyverse.api.translation.*
 import com.github.rushyverse.hub.client.ClientHub
+import com.github.rushyverse.hub.commannds.*
+import com.github.rushyverse.hub.config.HubConfig
+import com.github.rushyverse.hub.extension.ItemStack
+import com.github.rushyverse.hub.gui.LanguageGUI
+import com.github.rushyverse.hub.gui.nav.NavigatorGUI
+import com.github.rushyverse.hub.listener.*
+import com.github.rushyverse.hub.scoreboard.HubScoreboard
+import com.github.shynixn.mccoroutine.bukkit.scope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.job
 import kotlinx.coroutines.plus
@@ -26,6 +28,7 @@ import org.bukkit.World
 import org.bukkit.entity.Player
 import org.bukkit.inventory.PlayerInventory
 import java.util.*
+
 
 class Hub(
     override val id: String = "HubPlugin"
@@ -78,6 +81,8 @@ class Hub(
         }
         registerListener { HotbarItemsListener(this) }
         registerListener { UndesirableEventListener(this) }
+
+        HubScoreboard.init(this)
     }
 
     /**
@@ -93,9 +98,9 @@ class Hub(
         return YamlFileReader(this, yaml)
     }
 
-    private fun registerCommands() {
+    private suspend fun registerCommands() {
         HubCommand(this).register()
-
+        LanguagesCommand().register(this)
     }
 
     override suspend fun onDisableAsync() {
@@ -120,7 +125,7 @@ class Hub(
         }
     }
 
-    suspend fun teleportHub(client: Client) {
+    suspend fun teleportHub(client: ClientHub) {
         val player = client.requirePlayer()
         player.teleport(world.spawnLocation)
         player.inventory.apply {
@@ -130,9 +135,6 @@ class Hub(
         }
         player.gameMode = GameMode.SURVIVAL
 
-        client.scoreboard().apply {
-            updateTitle("§D§LRushyverse !")
-            updateLines("Welcome to", "the hub !", "", "play.rushy.space")
-        }
+        HubScoreboard.send(client)
     }
 }
