@@ -38,14 +38,12 @@ class Hub(
             private set
     }
 
-    lateinit var config: HubConfig
-        private set
+    lateinit var config: HubConfig private set
 
-    lateinit var world: World
-        private set
+    lateinit var world: World private set
 
-    lateinit var navigatorGui: NavigatorGUI
-        private set
+    lateinit var navigatorGui: NavigatorGUI private set
+    lateinit var langGui: LanguageGUI private set
 
     override suspend fun onEnableAsync() {
         super.onEnableAsync()
