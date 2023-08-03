@@ -60,6 +60,7 @@ class Hub(
         translationsProvider = createTranslationProvider()
 
         navigatorGui = NavigatorGUI(config.gamesGUI)
+        langGui = LanguageGUI()
 
         logger.info("Hub config summary")
         logger.info("$config")
@@ -67,7 +68,16 @@ class Hub(
         registerCommands()
 
         registerListener { AuthenticationListener(this) }
-        registerListener { GUIListener(this, setOf(navigatorGui, *navigatorGui.gamesGUIs.values.toTypedArray())) }
+        registerListener {
+            GUIListener(
+                this,
+                setOf(
+                    navigatorGui,
+                    *navigatorGui.gamesGUIs.values.toTypedArray(),
+                    langGui
+                )
+            )
+        }
         registerListener { HotbarItemsListener(this) }
         registerListener { UndesirableEventListener(this) }
     }
