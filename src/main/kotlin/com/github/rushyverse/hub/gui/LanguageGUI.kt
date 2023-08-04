@@ -82,7 +82,7 @@ class LanguageGUI : GUI("menu.lang.title", 9) {
 
         if (client.lang == langClicked) {
             client.send(
-                Hub.translationsProvider.translate("lang.already.set", client.lang.locale, BUNDLE_HUB, langClicked.displayName)
+                Hub.translationsProvider.translate("lang.already.set", client.lang.locale, BUNDLE_HUB, arrayOf(langClicked.displayName))
             )
             return
         }
@@ -93,7 +93,7 @@ class LanguageGUI : GUI("menu.lang.title", 9) {
                 "lang.set.success",
                 client.lang.locale,
                 BUNDLE_HUB,
-                langClicked.displayName
+                arrayOf(langClicked.displayName)
             )
         )
 
