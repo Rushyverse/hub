@@ -84,7 +84,7 @@ class NavigatorGUI(
             text(
                 Hub.translationsProvider.translate(
                     "games.menu.icon.players.info", locale, BUNDLE_HUB,
-                    listOf(players)
+                    arrayOf(players)
                 ),
                 NamedTextColor.GRAY
             ).append {
@@ -93,7 +93,7 @@ class NavigatorGUI(
                         text(
                             Hub.translationsProvider.translate(
                                 "games.menu.icon.players.info.games", locale, BUNDLE_HUB,
-                                listOf(games)
+                                arrayOf(games)
                             ),
                             NamedTextColor.GRAY
                         )
