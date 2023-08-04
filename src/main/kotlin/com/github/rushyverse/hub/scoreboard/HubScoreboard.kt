@@ -66,19 +66,19 @@ object HubScoreboard {
         val locale = client.lang.locale
 
         val rankLine = text(
-            Hub.translationsProvider.translate("scoreboard.rank", locale, Hub.BUNDLE_HUB, listOf(rank))
+            Hub.translationsProvider.translate("scoreboard.rank", locale, Hub.BUNDLE_HUB, arrayOf(rank))
         ).color(NamedTextColor.GRAY)
 
         val shardsLine = text(
-            Hub.translationsProvider.translate("scoreboard.shards", locale, Hub.BUNDLE_HUB, listOf(shards))
+            Hub.translationsProvider.translate("scoreboard.shards", locale, Hub.BUNDLE_HUB, arrayOf(shards))
         ).color(NamedTextColor.GRAY)
 
         val lobbyLine = text(
-            Hub.translationsProvider.translate("scoreboard.lobby", locale, Hub.BUNDLE_HUB, listOf(lobby))
+            Hub.translationsProvider.translate("scoreboard.lobby", locale, Hub.BUNDLE_HUB, arrayOf(lobby))
         ).color(NamedTextColor.GRAY)
 
         val playersLine = text(
-            Hub.translationsProvider.translate("scoreboard.players", locale, Hub.BUNDLE_HUB, listOf(players))
+            Hub.translationsProvider.translate("scoreboard.players", locale, Hub.BUNDLE_HUB, arrayOf(players))
         ).color(NamedTextColor.GRAY)
 
         client.scoreboard().apply {
