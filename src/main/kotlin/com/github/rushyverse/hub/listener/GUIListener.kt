@@ -39,6 +39,7 @@ class GUIListener(
 
         val clickedInv = event.clickedInventory
         if (clickedInv != null && clickedInv is PlayerInventory) {
+            player.inventory.heldItemSlot = event.slot
             plugin.server.pluginManager.callEvent(
                 PlayerInteractEvent(
                     player,
