@@ -6,7 +6,9 @@ import com.github.rushyverse.api.configuration.reader.IFileReader
 import com.github.rushyverse.api.configuration.reader.YamlFileReader
 import com.github.rushyverse.api.configuration.reader.readConfigurationFile
 import com.github.rushyverse.api.extension.registerListener
+import com.github.rushyverse.api.koin.inject
 import com.github.rushyverse.api.player.Client
+import com.github.rushyverse.api.player.ClientManager
 import com.github.rushyverse.api.serializer.LocationSerializer
 import com.github.rushyverse.api.translation.*
 import com.github.rushyverse.hub.client.ClientHub
@@ -48,6 +50,8 @@ class Hub(
     lateinit var navigatorGui: NavigatorGUI private set
     lateinit var langGui: LanguageGUI private set
 
+    private val clientManager: ClientManager by inject()
+
     override suspend fun onEnableAsync() {
         super.onEnableAsync()
 
@@ -57,7 +61,7 @@ class Hub(
         val configReader = createYamlReader()
         config = configReader.readConfigurationFile<HubConfig>("config.yml")
 
-        world = server.worlds[0]
+        world = server.worlds.first()
         translationsProvider = createTranslationProvider()
 
         navigatorGui = NavigatorGUI(config.gamesGUI)
@@ -101,6 +105,7 @@ class Hub(
     private suspend fun registerCommands() {
         HubCommand(this).register()
         LanguagesCommand().register(this)
+        VisibilityCommand().register(this)
     }
 
     override suspend fun onDisableAsync() {
@@ -118,9 +123,7 @@ class Hub(
     }
 
     private fun sendHotbarItems(inv: PlayerInventory) {
-        val hotbarConfig = config.hotbar
-
-        for (item in hotbarConfig.items) {
+        for (item in config.hotbar) {
             inv.setItem(item.hotbarSlot, ItemStack(item.type, item.name, item.description))
         }
     }
@@ -136,5 +139,28 @@ class Hub(
         player.gameMode = GameMode.SURVIVAL
 
         HubScoreboard.send(client)
+
+        updateVisibility(client)
+    }
+
+    private suspend fun updateVisibility(client: ClientHub) {
+        val player = client.requirePlayer()
+        if (client.canSeePlayers){
+            client.showOtherPlayers(this)
+        } else {
+            client.hideOtherPlayers(this)
+        }
+
+        for (otherPlayer in world.players){
+            if (otherPlayer == player) continue
+            val otherClient = clientManager.getClient(otherPlayer) as ClientHub
+
+            // Other players can see the player ?
+            if (otherClient.canSeePlayers){
+                otherPlayer.showPlayer(this, player)
+            } else {
+                otherPlayer.hidePlayer(this, player)
+            }
+        }
     }
 }
