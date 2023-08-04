@@ -34,6 +34,13 @@ hotbar:
     hotbarSlot: 8
     commandOnClick: event
 
+visibilityCommand:
+  item:
+    slot: 7
+    materialOn: LIME_DYE
+    materialOff: GRAY_DYE
+    enabled: true
+
 gamesGUI:
   dataProvider:
     apiSharedMemory: true
