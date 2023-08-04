@@ -56,3 +56,15 @@ gamesGUI:
         # Var args: <gameID> - it is defined by amount of the game icon
         #           <player> - it is defined by the player name
         runCommand: rtf spectate <gameID>
+
+    - !<survival>
+      gameType: survival
+      icon:
+        type: GRASS_BLOCK
+        name: Survival
+        description: games.menu.icon.survival.description
+        menuSlot: 21
+      onClickGame:
+        # Var args: <gameID> - it is defined by amount of the game icon
+        #           <player> - it is defined by the player name
+        runCommand: survival join
