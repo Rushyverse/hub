@@ -1,9 +1,39 @@
 hotbar:
-  navigatorItem:
-     type: COMPASS
-     name: hotbar.navigator.item.name
-     description: hotbar.navigator.item.description
-     hotbarSlot: 4
+  - !<navigatorItem>
+    type: COMPASS
+    name: hotbar.navigator.item.name
+    description: hotbar.navigator.item.description
+    hotbarSlot: 0
+    commandOnClick: menu
+
+  - !<profileItem>
+    type: PLAYER_HEAD
+    name: hotbar.profile.item.name
+    description: hotbar.profile.item.description
+    hotbarSlot: 1
+    commandOnClick: profile
+
+  - !<inventoryItem>
+    type: CHEST
+    name: hotbar.inventory.item.name
+    description: hotbar.inventory.item.description
+    hotbarSlot: 4
+    commandOnClick: inventory
+
+  - !<visibilityItem>
+    type: LIME_DYE
+    name: hotbar.visibility.item.name
+    description: hotbar.visibility.item.description
+    hotbarSlot: 7
+    commandOnClick: visibility
+
+  - !<eventItem>
+    type: CLOCK
+    name: hotbar.event.item.name
+    description: hotbar.event.item.description
+    hotbarSlot: 8
+    commandOnClick: event
+
 gamesGUI:
   dataProvider:
     apiSharedMemory: true
