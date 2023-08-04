@@ -64,22 +64,22 @@ class GameGUI(
 
     private fun stateOfGameLine(state:GameState, locale: Locale) = text(
         Hub.translationsProvider.translate(
-            "state.of.game", locale, BUNDLE_HUB, listOf(
+            "state.of.game", locale, BUNDLE_HUB, arrayOf((
                 Hub.translationsProvider.translate(
                     "state.${state.name.lowercase()}",
                     locale,
                     BUNDLE_HUB
                 )
             )
-        ), NamedTextColor.GRAY,
-    )
+        )
+    ))
 
     private fun playersInGameLine(players:Int, locale: Locale) = text(
         Hub.translationsProvider.translate(
-            "players.in.game", locale, BUNDLE_HUB, listOf(
+            "players.in.game", locale, BUNDLE_HUB, arrayOf(
                 players
             )
-        ), NamedTextColor.GRAY,
+        ), NamedTextColor.GRAY
     )
 
     override fun onClick(client: Client, item: ItemStack, clickType: ClickType) {
@@ -89,6 +89,5 @@ class GameGUI(
 
             client.requirePlayer().performCommand(config.clickGameCommand(gameIndex))
         }
-
     }
 }
