@@ -57,7 +57,6 @@ class ColorTextScroller(
         } else {
             id++
         }
-        println("new type is : $id : " + scrollTypes[id])
         currentTypeId = id
     }
 
