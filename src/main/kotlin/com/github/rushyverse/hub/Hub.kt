@@ -106,6 +106,7 @@ class Hub(
         HubCommand(this).register()
         LanguagesCommand().register(this)
         VisibilityCommand().register(this)
+        MenuCommand().register(this)
     }
 
     override suspend fun onDisableAsync() {
