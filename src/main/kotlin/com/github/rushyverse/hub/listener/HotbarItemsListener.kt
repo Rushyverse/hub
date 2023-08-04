@@ -1,8 +1,6 @@
 package com.github.rushyverse.hub.listener
 
 import com.github.rushyverse.hub.Hub
-import com.github.rushyverse.hub.client.ClientHub
-import com.github.rushyverse.hub.config.HotbarConfig
 import com.github.rushyverse.api.koin.inject
 import com.github.rushyverse.api.player.ClientManager
 import org.bukkit.event.EventHandler
@@ -10,7 +8,6 @@ import org.bukkit.event.player.PlayerInteractEvent
 
 class HotbarItemsListener(
     override val plugin: Hub,
-    private val hotbarConfig: HotbarConfig = plugin.config.hotbar,
 ) : ListenerHub(plugin) {
     val clients: ClientManager by inject(plugin.id)
 
@@ -26,9 +23,10 @@ class HotbarItemsListener(
 
         event.cancelIfNotAllowed(player)
 
-        if (item.type == hotbarConfig.navigatorItem.type) {
-            val client = clients.getClient(player) as ClientHub
-            plugin.navigatorGui.open(client)
-        }
+        val hotbarItem = plugin.config.hotbar.firstOrNull { 
+            it.hotbarSlot == player.inventory.heldItemSlot 
+        } ?: return
+
+        player.performCommand(hotbarItem.commandOnClick)
     }
 }
