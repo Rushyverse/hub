@@ -9,6 +9,12 @@ import org.bukkit.event.inventory.ClickType
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
+/**
+ * Abstract representation of a GUI.
+ * @property titleKey String the translation title key of the GUI.
+ * @property size Int must be mulitple of 9, can't be superior to 54.
+ * @property viewers MutableList<Client>
+ */
 abstract class GUI(
     val titleKey: String,
     val size: Int,
