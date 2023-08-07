@@ -1,7 +1,7 @@
 package com.github.rushyverse.hub.gui.commons
 
 import com.github.rushyverse.hub.Hub.Companion.BUNDLE_HUB
-import com.github.rushyverse.hub.Hub.Companion.translationsProvider
+import com.github.rushyverse.hub.Hub.Companion.translator
 import com.github.rushyverse.api.player.Client
 import net.kyori.adventure.text.Component.text
 import org.bukkit.Bukkit
@@ -22,7 +22,7 @@ abstract class GUI(
 
     val viewers: MutableList<Client> = mutableListOf()
 
-    fun open(client: Client) {
+    suspend fun open(client: Client) {
         val translatedTitle = if (titleKey.contains(".")) {
             translator.translate(titleKey, client.lang.locale, BUNDLE_HUB)
         } else titleKey
@@ -45,5 +45,5 @@ abstract class GUI(
 
     abstract fun applyItems(client: Client, inv: Inventory)
 
-    abstract fun onClick(client: Client, item: ItemStack, clickType: ClickType)
+    abstract suspend fun onClick(client: Client, item: ItemStack, clickType: ClickType)
 }
