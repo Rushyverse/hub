@@ -1,11 +1,14 @@
 package com.github.rushyverse.hub.gui
 
 import com.destroystokyo.paper.profile.ProfileProperty
+import com.github.rushyverse.api.extension.withoutDecorations
 import com.github.rushyverse.api.player.Client
 import com.github.rushyverse.api.translation.SupportedLanguage
 import com.github.rushyverse.hub.Hub
 import com.github.rushyverse.hub.Hub.Companion.BUNDLE_HUB
+import com.github.rushyverse.hub.client.ClientHub
 import com.github.rushyverse.hub.gui.commons.GUI
+import com.github.rushyverse.hub.scoreboard.HubScoreboard
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Bukkit
@@ -21,8 +24,9 @@ data class LangHeadData(
     val item: ItemStack
 )
 
-class LanguageGUI : GUI("menu.lang.title", 9) {
-
+class LanguageGUI(
+    private val plugin: Hub
+) : GUI("menu.lang.title", 9) {
 
     companion object {
         private val headsData = listOf(
@@ -53,10 +57,22 @@ class LanguageGUI : GUI("menu.lang.title", 9) {
             val head = ItemStack(Material.PLAYER_HEAD)
             val skullMeta = head.itemMeta as SkullMeta
 
+            val languageDisplayNames = mapOf(
+                SupportedLanguage.ENGLISH to "English",
+                SupportedLanguage.FRENCH to "French",
+                SupportedLanguage.SPANISH to "Spanish",
+                SupportedLanguage.GERMAN to "German",
+                SupportedLanguage.CHINESE to "Chinese"
+            )
+
+            val displayName = languageDisplayNames[lang] ?: lang.displayName
+            skullMeta.displayName(text(displayName, NamedTextColor.WHITE))
+
+
             skullMeta.displayName()
             skullMeta.lore(
                 listOf(
-                    text("Select $langName language", NamedTextColor.WHITE)
+                    text("Select $langName language", NamedTextColor.WHITE).withoutDecorations()
                 )
             )
             val profile = Bukkit.createProfile(UUID.randomUUID())
@@ -77,6 +93,7 @@ class LanguageGUI : GUI("menu.lang.title", 9) {
         if (item.type != Material.PLAYER_HEAD) {
             return
         }
+        val player = client.requirePlayer()
         val dataHead = headsData.firstOrNull { it.item == item } ?: return
         val langClicked = dataHead.lang
 
@@ -104,5 +121,12 @@ class LanguageGUI : GUI("menu.lang.title", 9) {
 
         client.player?.closeInventory()
 
+        // Update Hotbar
+        player.inventory.apply {
+            clear()
+            plugin.sendHotbarItems(client.lang, this)
+        }
+
+        HubScoreboard.send(client as ClientHub)
     }
 }
