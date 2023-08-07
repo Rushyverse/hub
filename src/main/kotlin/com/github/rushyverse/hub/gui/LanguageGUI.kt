@@ -73,7 +73,7 @@ class LanguageGUI : GUI("menu.lang.title", 9) {
     }
 
 
-    override fun onClick(client: Client, item: ItemStack, clickType: ClickType) {
+    override suspend fun onClick(client: Client, item: ItemStack, clickType: ClickType) {
         if (item.type != Material.PLAYER_HEAD) {
             return
         }
