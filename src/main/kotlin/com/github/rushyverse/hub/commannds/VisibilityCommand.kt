@@ -10,7 +10,6 @@ import dev.jorel.commandapi.kotlindsl.commandAPICommand
 import dev.jorel.commandapi.kotlindsl.playerExecutor
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
-import org.bukkit.entity.Player
 
 class VisibilityCommand {
 
@@ -20,6 +19,7 @@ class VisibilityCommand {
         val itemConfig = commandConfig.item
 
         commandAPICommand("visibility") {
+            aliases = arrayOf("togglevisibility", "tgv")
             playerExecutor { player, _ ->
 
                 val world = player.world
