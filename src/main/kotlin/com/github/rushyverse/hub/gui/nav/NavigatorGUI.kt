@@ -59,7 +59,7 @@ class NavigatorGUI(
         }
     }
 
-    override fun onClick(client: Client, item: ItemStack, clickType: ClickType) {
+    override suspend fun onClick(client: Client, item: ItemStack, clickType: ClickType) {
         val gameConfig = config.games.firstOrNull { it.icon.type == item.type }
 
         if (gameConfig != null) {
