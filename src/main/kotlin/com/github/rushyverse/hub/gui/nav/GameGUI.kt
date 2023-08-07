@@ -63,9 +63,9 @@ class GameGUI(
         }
 
     private fun stateOfGameLine(state:GameState, locale: Locale) = text(
-        Hub.translationsProvider.translate(
+        Hub.translator.translate(
             "state.of.game", locale, BUNDLE_HUB, arrayOf((
-                Hub.translationsProvider.translate(
+                Hub.translator.translate(
                     "state.${state.name.lowercase()}",
                     locale,
                     BUNDLE_HUB
@@ -75,7 +75,7 @@ class GameGUI(
     ))
 
     private fun playersInGameLine(players:Int, locale: Locale) = text(
-        Hub.translationsProvider.translate(
+        Hub.translator.translate(
             "players.in.game", locale, BUNDLE_HUB, arrayOf(
                 players
             )

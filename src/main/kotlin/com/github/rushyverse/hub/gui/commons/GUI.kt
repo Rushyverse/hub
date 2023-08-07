@@ -18,7 +18,7 @@ abstract class GUI(
 
     fun open(client: Client) {
         val translatedTitle = if (titleKey.contains(".")) {
-            translationsProvider.translate(titleKey, client.lang.locale, BUNDLE_HUB)
+            translator.translate(titleKey, client.lang.locale, BUNDLE_HUB)
         } else titleKey
         val inv = Bukkit.createInventory(null, size, text(translatedTitle))
         client.requirePlayer().openInventory(inv)

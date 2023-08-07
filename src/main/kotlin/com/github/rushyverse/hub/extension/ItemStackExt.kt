@@ -5,6 +5,7 @@ import com.github.rushyverse.hub.Hub.Companion.BUNDLE_HUB
 import com.github.rushyverse.api.extension.ItemStack
 import com.github.rushyverse.api.extension.toFormattedLore
 import com.github.rushyverse.api.extension.toLore
+import com.github.rushyverse.api.extension.withoutDecorations
 import com.github.rushyverse.api.translation.SupportedLanguage
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -30,13 +31,13 @@ fun ItemStack(
         itemMeta = itemMeta.apply {
 
             if (itemName.contains(".")) {
-                itemName = Hub.translationsProvider.translate(itemName, locale, BUNDLE_HUB)
+                itemName = Hub.translator.translate(itemName, locale, BUNDLE_HUB)
             }
-            displayName(Component.text(itemName, NamedTextColor.AQUA))
+            displayName(Component.text(itemName, NamedTextColor.LIGHT_PURPLE).withoutDecorations())
 
             var configDescription = description
             if (configDescription.contains(".")) {
-                configDescription = Hub.translationsProvider.translate(configDescription, locale, BUNDLE_HUB)
+                configDescription = Hub.translator.translate(configDescription, locale, BUNDLE_HUB)
             }
 
             lore(

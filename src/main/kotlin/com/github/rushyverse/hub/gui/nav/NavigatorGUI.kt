@@ -82,7 +82,7 @@ class NavigatorGUI(
             iconConfig.description,
             Component.empty(),
             text(
-                Hub.translationsProvider.translate(
+                Hub.translator.translate(
                     "games.menu.icon.players.info", locale, BUNDLE_HUB,
                     arrayOf(players)
                 ),
@@ -91,7 +91,7 @@ class NavigatorGUI(
                 if (games > 1) {
                     text(" ").append(
                         text(
-                            Hub.translationsProvider.translate(
+                            Hub.translator.translate(
                                 "games.menu.icon.players.info.games", locale, BUNDLE_HUB,
                                 arrayOf(games)
                             ),
@@ -104,7 +104,7 @@ class NavigatorGUI(
             },
             Component.empty(),
             text(
-                Hub.translationsProvider.translate(
+                Hub.translator.translate(
                     "games.menu.icon.info.join", locale, BUNDLE_HUB
                 ), NamedTextColor.YELLOW
             )

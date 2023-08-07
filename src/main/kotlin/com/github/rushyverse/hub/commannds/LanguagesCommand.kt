@@ -17,7 +17,21 @@ class LanguagesCommand {
             playerExecutor { player, _ ->
 
                 plugin.launch {
-                   plugin.langGui.open(clients.getClient(player))
+                    val client = clients.getClient(player)
+                    if (player.world != plugin.world){
+                        player.sendMessage(
+                            Component.text(
+                                Hub.translator.translate(
+                                    "not.allowed.outside.hub",
+                                    client.lang.locale,
+                                    BUNDLE_HUB
+                                )
+                            )
+                        )
+                        return@launch
+                    }
+
+                   plugin.langGui.open(client)
                 }
             }
         }

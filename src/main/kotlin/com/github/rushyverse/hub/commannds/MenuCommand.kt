@@ -27,7 +27,7 @@ class MenuCommand {
                     val client = clients.getClient(player) as ClientHub
 
                     if (world != plugin.world) {
-                        val notAllowedMessage = Hub.translationsProvider.translate(
+                        val notAllowedMessage = Hub.translator.translate(
                             "not.allowed.outside.hub",
                             client.lang.locale,
                             BUNDLE_HUB

@@ -28,7 +28,7 @@ class VisibilityCommand {
                     val client = clients.getClient(player) as ClientHub
 
                     if (world != plugin.world) {
-                        val notAllowedMessage = Hub.translationsProvider.translate(
+                        val notAllowedMessage = Hub.translator.translate(
                             "not.allowed.outside.hub",
                             client.lang.locale,
                             BUNDLE_HUB
@@ -41,7 +41,7 @@ class VisibilityCommand {
 
                     client.canSeePlayers(newVisibilityState, plugin)
 
-                    val message = Hub.translationsProvider.translate(
+                    val message = Hub.translator.translate(
                         "visibility.players.$newVisibilityState",
                         client.lang.locale,
                         BUNDLE_HUB

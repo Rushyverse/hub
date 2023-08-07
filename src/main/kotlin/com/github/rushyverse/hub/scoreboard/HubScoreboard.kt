@@ -63,22 +63,23 @@ object HubScoreboard {
         val lobby = "§E0"
         val players =
             "§A${Bukkit.getOnlinePlayers().size}"
+
         val locale = client.lang.locale
 
         val rankLine = text(
-            Hub.translationsProvider.translate("scoreboard.rank", locale, Hub.BUNDLE_HUB, arrayOf(rank))
+            Hub.translator.translate("scoreboard.rank", locale, Hub.BUNDLE_HUB, arrayOf(rank))
         ).color(NamedTextColor.GRAY)
 
         val shardsLine = text(
-            Hub.translationsProvider.translate("scoreboard.shards", locale, Hub.BUNDLE_HUB, arrayOf(shards))
+            Hub.translator.translate("scoreboard.shards", locale, Hub.BUNDLE_HUB, arrayOf(shards))
         ).color(NamedTextColor.GRAY)
 
         val lobbyLine = text(
-            Hub.translationsProvider.translate("scoreboard.lobby", locale, Hub.BUNDLE_HUB, arrayOf(lobby))
+            Hub.translator.translate("scoreboard.lobby", locale, Hub.BUNDLE_HUB, arrayOf(lobby))
         ).color(NamedTextColor.GRAY)
 
         val playersLine = text(
-            Hub.translationsProvider.translate("scoreboard.players", locale, Hub.BUNDLE_HUB, arrayOf(players))
+            Hub.translator.translate("scoreboard.players", locale, Hub.BUNDLE_HUB, arrayOf(players))
         ).color(NamedTextColor.GRAY)
 
         client.scoreboard().apply {

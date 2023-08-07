@@ -39,8 +39,7 @@ class Hub(
     companion object {
         const val BUNDLE_HUB = "hub_translate"
 
-        lateinit var translationsProvider: TranslationProvider
-            private set
+        lateinit var translator: Translator private set
     }
 
     lateinit var config: HubConfig private set
@@ -62,7 +61,7 @@ class Hub(
         config = configReader.readConfigurationFile<HubConfig>("config.yml")
 
         world = server.worlds.first()
-        translationsProvider = createTranslationProvider()
+        translator = createTranslator()
 
         navigatorGui = NavigatorGUI(config.gamesGUI)
         langGui = LanguageGUI()
@@ -113,8 +112,8 @@ class Hub(
         super.onDisableAsync()
     }
 
-    override suspend fun createTranslationProvider(): ResourceBundleTranslationProvider {
-        return (super.createTranslationProvider()).apply {
+    override suspend fun createTranslator(): ResourceBundleTranslator {
+        return (super.createTranslator()).apply {
             registerResourceBundleForSupportedLocales(BUNDLE_HUB, ResourceBundle::getBundle)
         }
     }
