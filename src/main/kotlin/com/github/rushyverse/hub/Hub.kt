@@ -6,9 +6,7 @@ import com.github.rushyverse.api.configuration.reader.IFileReader
 import com.github.rushyverse.api.configuration.reader.YamlFileReader
 import com.github.rushyverse.api.configuration.reader.readConfigurationFile
 import com.github.rushyverse.api.extension.registerListener
-import com.github.rushyverse.api.koin.inject
 import com.github.rushyverse.api.player.Client
-import com.github.rushyverse.api.player.ClientManager
 import com.github.rushyverse.api.serializer.LocationSerializer
 import com.github.rushyverse.api.translation.*
 import com.github.rushyverse.hub.client.ClientHub
@@ -17,6 +15,7 @@ import com.github.rushyverse.hub.config.HubConfig
 import com.github.rushyverse.hub.extension.ItemStack
 import com.github.rushyverse.hub.gui.LanguageGUI
 import com.github.rushyverse.hub.gui.nav.NavigatorGUI
+import com.github.rushyverse.hub.gui.nav.ProfileGUI
 import com.github.rushyverse.hub.listener.*
 import com.github.rushyverse.hub.scoreboard.HubScoreboard
 import com.github.shynixn.mccoroutine.bukkit.scope
@@ -44,9 +43,8 @@ class Hub : Plugin(ID, BUNDLE_HUB) {
     lateinit var world: World private set
 
     lateinit var navigatorGui: NavigatorGUI private set
+    lateinit var profileGui: ProfileGUI private set
     lateinit var langGui: LanguageGUI private set
-
-    private val clientManager: ClientManager by inject()
 
     override suspend fun onEnableAsync() {
         super.onEnableAsync()
@@ -58,10 +56,10 @@ class Hub : Plugin(ID, BUNDLE_HUB) {
         config = configReader.readConfigurationFile<HubConfig>("config.yml")
 
         world = server.worlds.first()
-        translator = createTranslator()
 
         navigatorGui = NavigatorGUI(config.gamesGUI)
-        langGui = LanguageGUI()
+        profileGui = ProfileGUI()
+        langGui = LanguageGUI(this)
 
         logger.info("Hub config summary")
         logger.info("$config")
@@ -75,6 +73,7 @@ class Hub : Plugin(ID, BUNDLE_HUB) {
                 setOf(
                     navigatorGui,
                     *navigatorGui.gamesGUIs.values.toTypedArray(),
+                    profileGui,
                     langGui
                 )
             )
@@ -103,6 +102,7 @@ class Hub : Plugin(ID, BUNDLE_HUB) {
         LanguagesCommand().register(this)
         VisibilityCommand().register(this)
         MenuCommand().register(this)
+        ProfileCommand().register(this)
     }
 
     override suspend fun onDisableAsync() {
@@ -147,18 +147,18 @@ class Hub : Plugin(ID, BUNDLE_HUB) {
 
     private suspend fun updateVisibility(client: ClientHub) {
         val player = client.requirePlayer()
-        if (client.canSeePlayers){
+        if (client.canSeePlayers) {
             client.showOtherPlayers(this)
         } else {
             client.hideOtherPlayers(this)
         }
 
-        for (otherPlayer in world.players){
+        for (otherPlayer in world.players) {
             if (otherPlayer == player) continue
             val otherClient = clientManager.getClient(otherPlayer) as ClientHub
 
             // Other players can see the player ?
-            if (otherClient.canSeePlayers){
+            if (otherClient.canSeePlayers) {
                 otherPlayer.showPlayer(this, player)
             } else {
                 otherPlayer.hidePlayer(this, player)
