@@ -32,14 +32,11 @@ import org.bukkit.inventory.PlayerInventory
 import java.util.*
 
 
-class Hub(
-    override val id: String = "HubPlugin"
-) : Plugin() {
+class Hub : Plugin(ID, BUNDLE_HUB) {
 
     companion object {
         const val BUNDLE_HUB = "hub_translate"
-
-        lateinit var translator: Translator private set
+        const val ID = "HubPlugin"
     }
 
     lateinit var config: HubConfig private set
@@ -112,8 +109,8 @@ class Hub(
         super.onDisableAsync()
     }
 
-    override suspend fun createTranslator(): ResourceBundleTranslator {
-        return (super.createTranslator()).apply {
+    override fun createTranslator(): ResourceBundleTranslator {
+        return super.createTranslator().apply {
             registerResourceBundleForSupportedLocales(BUNDLE_HUB, ResourceBundle::getBundle)
         }
     }
@@ -122,9 +119,14 @@ class Hub(
         return ClientHub(player.uniqueId, scope + SupervisorJob(scope.coroutineContext.job))
     }
 
-    private fun sendHotbarItems(inv: PlayerInventory) {
+    fun sendHotbarItems(lang: SupportedLanguage, inv: PlayerInventory) {
         for (item in config.hotbar) {
-            inv.setItem(item.hotbarSlot, ItemStack(item.type, item.name, item.description))
+            inv.setItem(
+                item.hotbarSlot, ItemStack(
+                    item.type, item.name, item.description, locale = lang.locale,
+                    translator = this.translator
+                )
+            )
         }
     }
 
@@ -134,7 +136,7 @@ class Hub(
         player.inventory.apply {
             clear()
             heldItemSlot = 4
-            sendHotbarItems(this)
+            sendHotbarItems(client.lang(), this)
         }
         player.gameMode = GameMode.SURVIVAL
 
