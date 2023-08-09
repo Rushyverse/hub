@@ -14,7 +14,7 @@ hotbar:
     commandOnClick: profile
 
   - !<inventoryItem>
-    type: CHEST
+    type: ENDER_CHEST
     name: hotbar.inventory.item.name
     description: hotbar.inventory.item.description
     hotbarSlot: 4
@@ -75,7 +75,7 @@ gamesGUI:
         type: GRASS_BLOCK
         name: Survival
         description: games.menu.icon.survival.description
-        menuSlot: 21
+        menuSlot: 23
       onClickGame:
         # Var args: <gameID> - it is defined by amount of the game icon
         #           <player> - it is defined by the player name
