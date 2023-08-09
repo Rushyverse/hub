@@ -3,6 +3,8 @@ package com.github.rushyverse.hub.scoreboard
 import com.github.rushyverse.api.koin.inject
 import com.github.rushyverse.api.player.ClientManager
 import com.github.rushyverse.api.schedule.SchedulerTask
+import com.github.rushyverse.api.translation.Translator
+import com.github.rushyverse.api.translation.getComponent
 import com.github.rushyverse.hub.Hub
 import com.github.rushyverse.hub.client.ClientHub
 import com.github.shynixn.mccoroutine.bukkit.scope
@@ -21,6 +23,8 @@ object HubScoreboard {
     private lateinit var task: SchedulerTask
     private var running = false
     private lateinit var titleScrolling: ColorTextScroller
+
+    private val translator: Translator by inject(Hub.ID)
 
     fun init(plugin: Hub) {
         val clients: ClientManager by inject(plugin.id)
@@ -58,29 +62,24 @@ object HubScoreboard {
     }
 
     suspend fun send(client: ClientHub) {
+        val locale = client.lang().locale
         val rank = "§COWNER"
         val shards = "§D0"
         val lobby = "§E0"
-        val players =
-            "§A${Bukkit.getOnlinePlayers().size}"
+        val players = "§A${Bukkit.getOnlinePlayers().size}"
 
-        val locale = client.lang.locale
-
-        val rankLine = text(
-            Hub.translator.translate("scoreboard.rank", locale, Hub.BUNDLE_HUB, arrayOf(rank))
-        ).color(NamedTextColor.GRAY)
-
-        val shardsLine = text(
-            Hub.translator.translate("scoreboard.shards", locale, Hub.BUNDLE_HUB, arrayOf(shards))
-        ).color(NamedTextColor.GRAY)
-
-        val lobbyLine = text(
-            Hub.translator.translate("scoreboard.lobby", locale, Hub.BUNDLE_HUB, arrayOf(lobby))
-        ).color(NamedTextColor.GRAY)
-
-        val playersLine = text(
-            Hub.translator.translate("scoreboard.players", locale, Hub.BUNDLE_HUB, arrayOf(players))
-        ).color(NamedTextColor.GRAY)
+        val rankLine =
+            translator.getComponent("scoreboard.rank", locale, arrayOf(rank))
+                .color(NamedTextColor.GRAY)
+        val shardsLine =
+            translator.getComponent("scoreboard.shards", locale, arrayOf(shards))
+                .color(NamedTextColor.GRAY)
+        val lobbyLine =
+            translator.getComponent("scoreboard.lobby", locale, arrayOf(lobby))
+                .color(NamedTextColor.GRAY)
+        val playersLine =
+            translator.getComponent("scoreboard.players", locale, arrayOf(players))
+                .color(NamedTextColor.GRAY)
 
         client.scoreboard().apply {
             updateLines(
