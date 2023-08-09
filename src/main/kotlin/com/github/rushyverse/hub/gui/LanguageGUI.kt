@@ -2,10 +2,12 @@ package com.github.rushyverse.hub.gui
 
 import com.destroystokyo.paper.profile.ProfileProperty
 import com.github.rushyverse.api.extension.withoutDecorations
+import com.github.rushyverse.api.koin.inject
 import com.github.rushyverse.api.player.Client
+import com.github.rushyverse.api.player.language.LanguageManager
 import com.github.rushyverse.api.translation.SupportedLanguage
+import com.github.rushyverse.api.translation.getComponent
 import com.github.rushyverse.hub.Hub
-import com.github.rushyverse.hub.Hub.Companion.BUNDLE_HUB
 import com.github.rushyverse.hub.client.ClientHub
 import com.github.rushyverse.hub.gui.commons.GUI
 import com.github.rushyverse.hub.scoreboard.HubScoreboard
@@ -27,6 +29,8 @@ data class LangHeadData(
 class LanguageGUI(
     private val plugin: Hub
 ) : GUI("menu.lang.title", 9) {
+
+    private val langManager: LanguageManager by inject()
 
     companion object {
         private val headsData = listOf(
@@ -84,7 +88,7 @@ class LanguageGUI(
         }
     }
 
-    override fun applyItems(client: Client, inv: Inventory) {
+    override suspend fun applyItems(client: Client, inv: Inventory) {
         headsData.forEach { inv.addItem(it.item) }
     }
 
@@ -96,25 +100,26 @@ class LanguageGUI(
         val player = client.requirePlayer()
         val dataHead = headsData.firstOrNull { it.item == item } ?: return
         val langClicked = dataHead.lang
+        val lang = client.lang()
+        val locale = lang.locale
 
-        if (client.lang == langClicked) {
-            client.send(
-                Hub.translator.translate(
+        if (lang == langClicked) {
+            player.sendMessage(
+                super.translator.getComponent(
                     "lang.already.set",
-                    client.lang.locale,
-                    BUNDLE_HUB,
+                    locale,
                     arrayOf(langClicked.displayName)
                 )
             )
             return
         }
 
-        client.lang = langClicked
-        client.send(
-            Hub.translator.translate(
+        langManager.set(player, langClicked)
+
+        player.sendMessage(
+            super.translator.getComponent(
                 "lang.set.success",
-                client.lang.locale,
-                BUNDLE_HUB,
+                locale,
                 arrayOf(langClicked.displayName)
             )
         )
@@ -124,7 +129,7 @@ class LanguageGUI(
         // Update Hotbar
         player.inventory.apply {
             clear()
-            plugin.sendHotbarItems(client.lang, this)
+            plugin.sendHotbarItems(client.lang(), this)
         }
 
         HubScoreboard.send(client as ClientHub)

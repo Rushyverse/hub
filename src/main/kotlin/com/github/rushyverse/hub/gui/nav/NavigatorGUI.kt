@@ -1,6 +1,5 @@
 package com.github.rushyverse.hub.gui.nav
 
-import com.github.rushyverse.hub.Hub
 import com.github.rushyverse.hub.Hub.Companion.BUNDLE_HUB
 import com.github.rushyverse.hub.extension.ItemStack
 import com.github.rushyverse.hub.config.game.GameIconConfig
@@ -9,6 +8,9 @@ import com.github.rushyverse.hub.gui.commons.GUI
 import com.github.rushyverse.api.game.SharedGameData
 import com.github.rushyverse.api.koin.inject
 import com.github.rushyverse.api.player.Client
+import com.github.rushyverse.api.translation.getComponent
+import com.github.shynixn.mccoroutine.bukkit.SuspendingPlugin
+import com.github.shynixn.mccoroutine.bukkit.launch
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.format.NamedTextColor
@@ -26,18 +28,29 @@ class NavigatorGUI(
     val dataProvider: SharedGameData by inject()
     val gamesGUIs = mutableMapOf<String, GameGUI>()
 
-    init {
-        // Register gui for each registered game type
-        config.games.forEach {
-            gamesGUIs[it.gameType] = GameGUI(it, dataProvider)
+    companion object {
+
+        suspend inline fun of(plugin: SuspendingPlugin, config: GamesGUIConfig): NavigatorGUI {
+            val gui = NavigatorGUI(config)
+            // Register gui for each registered game type
+            config.games.forEach {
+                gui.gamesGUIs[it.gameType] = GameGUI.of(plugin, it)
+            }
+
+            gui.dataProvider.subscribeOnChange {
+                plugin.launch {
+                    gui.sync()
+                }
+
+            }
+            return gui
         }
 
-        dataProvider.subscribeOnChange {
-            super.sync()
-        }
     }
 
-    override fun applyItems(client: Client, inv: Inventory) {
+    override suspend fun applyItems(client: Client, inv: Inventory) {
+
+        val locale = client.lang().locale
         inv.setItem(2, achievementsMenuItem())
         inv.setItem(4, shopMenuItem())
         inv.setItem(6, statsMenuItem())
@@ -46,11 +59,10 @@ class NavigatorGUI(
         config.games.forEach {
             val iconConfig = it.icon
             val gameType = it.gameType
-
             val games = dataProvider.games(gameType)
             val gameTypeItem = buildGameIcon(
                 iconConfig,
-                client.lang.locale,
+                locale,
                 dataProvider.players(gameType),
                 games,
             ).apply { addItemFlags(*ItemFlag.entries.toTypedArray()) }
@@ -81,33 +93,27 @@ class NavigatorGUI(
             iconConfig.name,
             iconConfig.description,
             Component.empty(),
-            text(
-                Hub.translator.translate(
-                    "games.menu.icon.players.info", locale, BUNDLE_HUB,
-                    arrayOf(players)
-                ),
-                NamedTextColor.GRAY
-            ).append {
-                if (games > 1) {
-                    text(" ").append(
-                        text(
-                            Hub.translator.translate(
-                                "games.menu.icon.players.info.games", locale, BUNDLE_HUB,
+            translator.getComponent(
+                "games.menu.icon.players.info", locale,
+                arrayOf(players)
+            ).color(NamedTextColor.GRAY)
+                .append {
+                    if (games > 1) {
+                        text(" ").append(
+                            translator.getComponent(
+                                "games.menu.icon.players.info.games", locale,
                                 arrayOf(games)
-                            ),
-                            NamedTextColor.GRAY
+                            ).color(NamedTextColor.GRAY)
                         )
-                    )
-                } else {
-                    Component.empty()
-                }
-            },
+                    } else {
+                        Component.empty()
+                    }
+                },
             Component.empty(),
-            text(
-                Hub.translator.translate(
-                    "games.menu.icon.info.join", locale, BUNDLE_HUB
-                ), NamedTextColor.YELLOW
-            )
+            translator.getComponent(
+                "games.menu.icon.info.join", locale, BUNDLE_HUB
+            ).color(NamedTextColor.YELLOW),
+            translator = super.translator
         )
 
 
