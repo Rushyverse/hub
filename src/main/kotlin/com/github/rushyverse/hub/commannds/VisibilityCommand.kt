@@ -2,6 +2,7 @@ package com.github.rushyverse.hub.commannds
 
 import com.github.rushyverse.api.koin.inject
 import com.github.rushyverse.api.player.ClientManager
+import com.github.rushyverse.api.translation.getComponent
 import com.github.rushyverse.hub.Hub
 import com.github.rushyverse.hub.Hub.Companion.BUNDLE_HUB
 import com.github.rushyverse.hub.client.ClientHub
@@ -28,12 +29,11 @@ class VisibilityCommand {
                     val client = clients.getClient(player) as ClientHub
 
                     if (world != plugin.world) {
-                        val notAllowedMessage = Hub.translator.translate(
+                        val notAllowedMessage = plugin.translator.getComponent(
                             "not.allowed.outside.hub",
-                            client.lang.locale,
-                            BUNDLE_HUB
-                        )
-                        client.send(Component.text(notAllowedMessage, NamedTextColor.RED))
+                            client.lang().locale
+                        ).color(NamedTextColor.RED)
+                        client.send(notAllowedMessage)
                         return@launch
                     }
 
@@ -41,13 +41,12 @@ class VisibilityCommand {
 
                     client.canSeePlayers(newVisibilityState, plugin)
 
-                    val message = Hub.translator.translate(
+                    val message = plugin.translator.getComponent(
                         "visibility.players.$newVisibilityState",
-                        client.lang.locale,
-                        BUNDLE_HUB
+                        client.lang().locale,
                     )
 
-                    client.send(Component.text(message, NamedTextColor.GREEN))
+                    client.send(message)
 
                     if (itemConfig.enabled) {
                         val item = player.inventory.getItem(itemConfig.slot)

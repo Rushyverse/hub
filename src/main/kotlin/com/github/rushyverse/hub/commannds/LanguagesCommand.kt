@@ -2,12 +2,11 @@ package com.github.rushyverse.hub.commannds
 
 import com.github.rushyverse.api.koin.inject
 import com.github.rushyverse.api.player.ClientManager
+import com.github.rushyverse.api.translation.getComponent
 import com.github.rushyverse.hub.Hub
-import com.github.rushyverse.hub.Hub.Companion.BUNDLE_HUB
 import com.github.shynixn.mccoroutine.bukkit.launch
 import dev.jorel.commandapi.kotlindsl.commandAPICommand
 import dev.jorel.commandapi.kotlindsl.playerExecutor
-import net.kyori.adventure.text.Component
 
 class LanguagesCommand {
 
@@ -20,20 +19,17 @@ class LanguagesCommand {
 
                 plugin.launch {
                     val client = clients.getClient(player)
-                    if (player.world != plugin.world){
+                    if (player.world != plugin.world) {
                         player.sendMessage(
-                            Component.text(
-                                Hub.translator.translate(
-                                    "not.allowed.outside.hub",
-                                    client.lang.locale,
-                                    BUNDLE_HUB
-                                )
+                            plugin.translator.getComponent(
+                                "not.allowed.outside.hub",
+                                client.lang().locale,
                             )
                         )
                         return@launch
                     }
 
-                   plugin.langGui.open(client)
+                    plugin.langGui.open(client)
                 }
             }
         }

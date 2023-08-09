@@ -2,6 +2,7 @@ package com.github.rushyverse.hub.commannds
 
 import com.github.rushyverse.api.koin.inject
 import com.github.rushyverse.api.player.ClientManager
+import com.github.rushyverse.api.translation.getComponent
 import com.github.rushyverse.hub.Hub
 import com.github.rushyverse.hub.Hub.Companion.BUNDLE_HUB
 import com.github.rushyverse.hub.client.ClientHub
@@ -27,12 +28,11 @@ class MenuCommand {
                     val client = clients.getClient(player) as ClientHub
 
                     if (world != plugin.world) {
-                        val notAllowedMessage = Hub.translator.translate(
+                        val notAllowedMessage = plugin.translator.getComponent(
                             "not.allowed.outside.hub",
-                            client.lang.locale,
-                            BUNDLE_HUB
-                        )
-                        client.send(Component.text(notAllowedMessage, NamedTextColor.RED))
+                            client.lang().locale,
+                        ).color(NamedTextColor.RED)
+                        client.send(notAllowedMessage)
                         return@launch
                     }
 
