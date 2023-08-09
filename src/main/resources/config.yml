@@ -57,6 +57,18 @@ gamesGUI:
         #           <player> - it is defined by the player name
         runCommand: rtf spectate <gameID>
 
+    - !<rush>
+      gameType: rush
+      icon:
+        type: RED_BED
+        name: Rush
+        description: games.menu.icon.rush.description
+        menuSlot: 21
+      onClickGame:
+        # Var args: <gameID> - it is defined by amount of the game icon
+        #           <player> - it is defined by the player name
+        runCommand: rush join
+
     - !<survival>
       gameType: survival
       icon:
@@ -68,3 +80,51 @@ gamesGUI:
         # Var args: <gameID> - it is defined by amount of the game icon
         #           <player> - it is defined by the player name
         runCommand: survival join
+
+    - !<practice>
+      gameType: practice
+      icon:
+        type: IRON_SWORD
+        name: Practice
+        description: games.menu.icon.practice.description
+        menuSlot: 24
+      onClickGame:
+        # Var args: <gameID> - it is defined by amount of the game icon
+        #           <player> - it is defined by the player name
+        runCommand: practice join
+
+    - !<blockparty>
+      gameType: blockparty
+      icon:
+        type: MUSIC_DISC_CAT
+        name: Blockparty
+        description: games.menu.icon.blockparty.description
+        menuSlot: 30
+      onClickGame:
+        # Var args: <gameID> - it is defined by amount of the game icon
+        #           <player> - it is defined by the player name
+        runCommand: blockparty join
+
+    - !<laboratory>
+      gameType: laboratory
+      icon:
+        type: BREWING_STAND
+        name: Laboratory
+        description: games.menu.icon.laboratory.description
+        menuSlot: 31
+      onClickGame:
+        # Var args: <gameID> - it is defined by amount of the game icon
+        #           <player> - it is defined by the player name
+        runCommand: laboratory join
+
+    - !<nexus>
+      gameType: nexus
+      icon:
+        type: NETHER_STAR
+        name: Nexus
+        description: games.menu.icon.nexus.description
+        menuSlot: 32
+      onClickGame:
+        # Var args: <gameID> - it is defined by amount of the game icon
+        #           <player> - it is defined by the player name
+        runCommand: nexus join
