@@ -63,10 +63,10 @@ object HubScoreboard {
 
     suspend fun send(client: ClientHub) {
         val locale = client.lang().locale
-        val rank = "§COWNER"
-        val shards = "§D0"
-        val lobby = "§E0"
-        val players = "§A${Bukkit.getOnlinePlayers().size}"
+        val rank = "<red>OWNER"
+        val shards = "<light_purple>0"
+        val lobby = "<yellow>>0"
+        val players = "<green>${Bukkit.getOnlinePlayers().size}"
 
         val rankLine =
             translator.getComponent("scoreboard.rank", locale, arrayOf(rank))
