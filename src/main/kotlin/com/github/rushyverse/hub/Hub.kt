@@ -19,6 +19,7 @@ import com.github.rushyverse.hub.gui.nav.ProfileGUI
 import com.github.rushyverse.hub.listener.*
 import com.github.rushyverse.hub.scoreboard.HubScoreboard
 import com.github.shynixn.mccoroutine.bukkit.scope
+import dev.jorel.commandapi.CommandAPI
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.job
 import kotlinx.coroutines.plus
@@ -48,6 +49,8 @@ class Hub : Plugin(ID, BUNDLE_HUB) {
 
     override suspend fun onEnableAsync() {
         super.onEnableAsync()
+
+        CommandAPI.unregister("msg")
 
         modulePlugin<Hub>()
         moduleClients()
@@ -103,6 +106,7 @@ class Hub : Plugin(ID, BUNDLE_HUB) {
         VisibilityCommand().register(this)
         MenuCommand().register(this)
         ProfileCommand().register(this)
+        MessageCommand().register(this)
     }
 
     override suspend fun onDisableAsync() {
