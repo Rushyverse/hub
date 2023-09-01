@@ -15,7 +15,7 @@ class HubCommand(
 
     fun register() {
         commandAPICommand("hub") {
-            aliases = arrayOf("lobby", "l")
+            withAliases("lobby", "l", "spawn")
             playerExecutor { player, _ ->
                 plugin.launch {
                     plugin.teleportHub(clients.getClient(player) as ClientHub)
