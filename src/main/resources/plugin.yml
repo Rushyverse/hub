@@ -1,7 +1,7 @@
 name: hub
-version: 1.0
-author: Quentixx, Cizetux
-api-version: 1.19
+version: 1.0.0
+author: Rushyverse
+api-version: 1.20
 main: com.github.rushyverse.hub.Hub
 depend:
-  - paper-api
+  - api
