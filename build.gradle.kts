@@ -7,9 +7,6 @@ plugins {
     `java-library`
 }
 
-group = "com.github.rushyverse"
-version = "1.0-SNAPSHOT"
-
 repositories {
     mavenCentral()
     mavenLocal()
@@ -18,16 +15,17 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
 }
 
-val paperVersion: String by project
-
 dependencies {
-    val paperVersion = "1.19-R0.1-SNAPSHOT"
-    val rushyApiVersion = "1.0.0"
-    val commandApiVersion = "9.0.3"
+    val paperVersion = "1.20-R0.1-SNAPSHOT"
+    val rushyApiVersion = "2.1.0"
+    val commandApiVersion = "9.1.0"
 
     compileOnly(kotlin("stdlib"))
 
-    compileOnly("io.papermc.paper:paper-api:$paperVersion")
+    "io.papermc.paper:paper-api:$paperVersion".let {
+        compileOnly(it)
+        testImplementation(it)
+    }
 
     compileOnly("com.github.Rushyverse:api:$rushyApiVersion")
 
