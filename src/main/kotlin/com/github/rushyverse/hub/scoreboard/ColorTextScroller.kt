@@ -60,7 +60,6 @@ class ColorTextScroller(
         currentTypeId = id
     }
 
-
     private fun shiftColor(charIndex: Int, char: Char, offset: Int): TextColor {
         return when (currentType) {
             ScrollTextType.RANDOM -> randomColor()
