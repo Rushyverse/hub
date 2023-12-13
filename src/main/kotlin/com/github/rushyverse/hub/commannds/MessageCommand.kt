@@ -74,10 +74,7 @@ class MessageCommand {
                 val message: String = args[1] as String
 
                 runMessageCommand(plugin, sender, target, message)
-
-
             }
-
         }
 
         commandAPICommand("reply") {
