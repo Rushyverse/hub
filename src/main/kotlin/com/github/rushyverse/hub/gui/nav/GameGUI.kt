@@ -15,7 +15,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Material
-import org.bukkit.event.inventory.ClickType
+import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import java.util.*
@@ -96,7 +96,7 @@ class GameGUI(
             )
         ).color(NamedTextColor.GRAY)
 
-    override suspend fun onClick(client: Client, item: ItemStack, clickType: ClickType) {
+    override suspend fun onClick(client: Client, item: ItemStack, event: InventoryClickEvent) {
 
         if (item.type == config.icon.type) {
             val gameIndex = item.amount

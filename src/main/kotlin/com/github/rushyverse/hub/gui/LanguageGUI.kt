@@ -15,7 +15,7 @@ import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Bukkit
 import org.bukkit.Material
-import org.bukkit.event.inventory.ClickType
+import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
@@ -93,7 +93,7 @@ class LanguageGUI(
     }
 
 
-    override suspend fun onClick(client: Client, item: ItemStack, clickType: ClickType) {
+    override suspend fun onClick(client: Client, item: ItemStack, event: InventoryClickEvent) {
         if (item.type != Material.PLAYER_HEAD) {
             return
         }

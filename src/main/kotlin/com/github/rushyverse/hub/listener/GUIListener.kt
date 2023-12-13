@@ -35,7 +35,7 @@ class GUIListener(
         val item = event.currentItem ?: return
         val client = clients.getClient(player) as ClientHub
 
-        listOfGui.firstOrNull { it.viewers.contains(client) }?.onClick(client, item, event.click)
+        listOfGui.firstOrNull { it.viewers.contains(client) }?.onClick(client, item, event)
 
         val clickedInv = event.clickedInventory
         if (clickedInv != null && clickedInv is PlayerInventory) {

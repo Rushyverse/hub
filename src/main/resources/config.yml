@@ -13,12 +13,12 @@ hotbar:
     hotbarSlot: 1
     commandOnClick: profile
 
-  - !<inventoryItem>
+  - !<shopItem>
     type: ENDER_CHEST
-    name: hotbar.inventory.item.name
-    description: hotbar.inventory.item.description
+    name: hotbar.shop.item.name
+    description: hotbar.shop.item.description
     hotbarSlot: 4
-    commandOnClick: inventory
+    commandOnClick: shop
 
   - !<visibilityItem>
     type: LIME_DYE
@@ -128,3 +128,15 @@ gamesGUI:
         # Var args: <gameID> - it is defined by amount of the game icon
         #           <player> - it is defined by the player name
         runCommand: nexus join
+
+    - !<openbuild>
+      gameType: openbuild
+      icon:
+        type: GRASS_BLOCK
+        name: Openbuild
+        description: games.menu.icon.openbuild.description
+        menuSlot: 33
+      onClickGame:
+        # Var args: <gameID> - it is defined by amount of the game icon
+        #           <player> - it is defined by the player name
+        runCommand: openbuild join

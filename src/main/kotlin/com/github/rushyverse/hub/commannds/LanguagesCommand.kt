@@ -29,7 +29,7 @@ class LanguagesCommand {
                         return@launch
                     }
 
-                    plugin.langGui.open(client)
+                    plugin.languageGui.open(client)
                 }
             }
         }

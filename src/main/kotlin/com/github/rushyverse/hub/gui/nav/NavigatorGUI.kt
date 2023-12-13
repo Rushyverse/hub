@@ -15,7 +15,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Material
-import org.bukkit.event.inventory.ClickType
+import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
@@ -71,7 +71,7 @@ class NavigatorGUI(
         }
     }
 
-    override suspend fun onClick(client: Client, item: ItemStack, clickType: ClickType) {
+    override suspend fun onClick(client: Client, item: ItemStack, event: InventoryClickEvent) {
         val gameConfig = config.games.firstOrNull { it.icon.type == item.type }
 
         if (gameConfig != null) {

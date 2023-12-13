@@ -14,6 +14,7 @@ import com.github.rushyverse.hub.commannds.*
 import com.github.rushyverse.hub.config.HubConfig
 import com.github.rushyverse.hub.extension.ItemStack
 import com.github.rushyverse.hub.gui.LanguageGUI
+import com.github.rushyverse.hub.gui.collectible.ShopGUI
 import com.github.rushyverse.hub.gui.nav.NavigatorGUI
 import com.github.rushyverse.hub.gui.nav.ProfileGUI
 import com.github.rushyverse.hub.listener.*
@@ -40,12 +41,11 @@ class Hub : Plugin(ID, BUNDLE_HUB) {
     }
 
     lateinit var config: HubConfig private set
-
     lateinit var world: World private set
-
     lateinit var navigatorGui: NavigatorGUI private set
     lateinit var profileGui: ProfileGUI private set
-    lateinit var langGui: LanguageGUI private set
+    lateinit var shopGui: ShopGUI private set
+    lateinit var languageGui: LanguageGUI private set
 
     override suspend fun onEnableAsync() {
         super.onEnableAsync()
@@ -62,7 +62,8 @@ class Hub : Plugin(ID, BUNDLE_HUB) {
 
         navigatorGui = NavigatorGUI(config.gamesGUI)
         profileGui = ProfileGUI()
-        langGui = LanguageGUI(this)
+        shopGui = ShopGUI()
+        languageGui = LanguageGUI(this)
 
         logger.info("Hub config summary")
         logger.info("$config")
@@ -77,7 +78,11 @@ class Hub : Plugin(ID, BUNDLE_HUB) {
                     navigatorGui,
                     *navigatorGui.gamesGUIs.values.toTypedArray(),
                     profileGui,
-                    langGui
+                    shopGui,
+                    languageGui,
+                    ShopGUI.gadgets,
+                    ShopGUI.hats,
+                    ShopGUI.particles
                 )
             )
         }
@@ -104,9 +109,10 @@ class Hub : Plugin(ID, BUNDLE_HUB) {
         HubCommand(this).register()
         LanguagesCommand().register(this)
         VisibilityCommand().register(this)
-        MenuCommand().register(this)
+        NavigatorCommand().register(this)
         ProfileCommand().register(this)
         MessageCommand().register(this)
+        ShopCommand().register(this)
     }
 
     override suspend fun onDisableAsync() {

@@ -9,18 +9,13 @@ import com.github.shynixn.mccoroutine.bukkit.launch
 import dev.jorel.commandapi.kotlindsl.commandAPICommand
 import dev.jorel.commandapi.kotlindsl.playerExecutor
 import net.kyori.adventure.text.format.NamedTextColor
-import org.bukkit.Material
-import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.SkullMeta
-import org.bukkit.Bukkit
 
-class ProfileCommand {
+class ShopCommand {
 
     fun register(plugin: Hub) {
-
         val clients: ClientManager by inject(plugin.id)
 
-        commandAPICommand("profile") {
+        commandAPICommand("shop") {
             playerExecutor { player, _ ->
 
                 val world = player.world
@@ -36,17 +31,10 @@ class ProfileCommand {
                         client.send(notAllowedMessage)
                         return@launch
                     }
-
-//                    val head = ItemStack(Material.PLAYER_HEAD).apply {
-//                        itemMeta = (itemMeta as SkullMeta).apply {
-//                            owningPlayer = Bukkit.getOfflinePlayer(player.uniqueId)
-//                        }
-//                    }
-
-                    plugin.profileGui.open(client)
+                    plugin.shopGui.open(client)
                 }
-
             }
         }
     }
+
 }

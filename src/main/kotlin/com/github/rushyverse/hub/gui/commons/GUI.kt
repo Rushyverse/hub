@@ -7,7 +7,7 @@ import com.github.rushyverse.api.translation.Translator
 import com.github.rushyverse.api.translation.getComponent
 import com.github.rushyverse.hub.Hub
 import org.bukkit.Bukkit
-import org.bukkit.event.inventory.ClickType
+import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
@@ -48,5 +48,5 @@ abstract class GUI(
 
     abstract suspend fun applyItems(client: Client, inv: Inventory)
 
-    abstract suspend fun onClick(client: Client, item: ItemStack, clickType: ClickType)
+    abstract suspend fun onClick(client: Client, item: ItemStack, event: InventoryClickEvent)
 }
