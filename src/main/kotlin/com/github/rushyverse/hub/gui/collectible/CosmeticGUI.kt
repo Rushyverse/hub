@@ -6,10 +6,8 @@ import com.github.rushyverse.hub.data.Cosmetic
 import com.github.rushyverse.hub.extension.GUIUtils
 import com.github.rushyverse.hub.extension.ItemStack
 import com.github.rushyverse.hub.gui.commons.GUI
-import org.bukkit.enchantments.Enchantment
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
-import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
 import java.util.*
@@ -46,15 +44,28 @@ abstract class CosmeticGUI(titleKey: String, guiSize: Int) : GUI(titleKey, guiSi
         val locale = client.lang().locale
 
         val cosmeticItem = createCosmeticItem(cosmetic, locale)
-        player.closeInventory()
 
         val itemName = item.displayName()
+
+        if (isAlreadyEquipped(player.inventory, cosmetic)) {
+            client.send(translator.getComponent(
+                "shop.item.already.selected", client.lang().locale).append(itemName)
+            )
+            player.closeInventory()
+            return
+        }
+
+        player.closeInventory()
 
         setItem(cosmeticItem, player.inventory, event)
 
         client.send(translator.getComponent(
             "shop.selected", client.lang().locale).append(itemName)
         )
+    }
+
+    private fun isAlreadyEquipped(inventory: PlayerInventory, cosmetic: Cosmetic): Boolean {
+        return inventory.contents.any { it?.type == cosmetic.material }
     }
 
     private fun createCosmeticItem(cosmetic: Cosmetic, locale: Locale): ItemStack {
