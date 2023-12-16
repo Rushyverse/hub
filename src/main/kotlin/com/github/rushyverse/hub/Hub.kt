@@ -62,7 +62,7 @@ class Hub : Plugin(ID, BUNDLE_HUB) {
 
         navigatorGui = NavigatorGUI(config.gamesGUI)
         profileGui = ProfileGUI()
-        shopGui = ShopGUI()
+        shopGui = ShopGUI(this)
         languageGui = LanguageGUI(this)
 
         logger.info("Hub config summary")
@@ -71,23 +71,9 @@ class Hub : Plugin(ID, BUNDLE_HUB) {
         registerCommands()
 
         registerListener { AuthenticationListener(this) }
-        registerListener {
-            GUIListener(
-                this,
-                setOf(
-                    navigatorGui,
-                    *navigatorGui.gamesGUIs.values.toTypedArray(),
-                    profileGui,
-                    shopGui,
-                    languageGui,
-                    ShopGUI.gadgets,
-                    ShopGUI.hats,
-                    ShopGUI.particles
-                )
-            )
-        }
         registerListener { HotbarItemsListener(this) }
         registerListener { UndesirableEventListener(this) }
+        registerListener { CosmeticListener(this) }
 
         HubScoreboard.init(this)
     }
