@@ -62,7 +62,7 @@ class Hub : Plugin(ID, BUNDLE_HUB) {
 
         navigatorGui = NavigatorGUI(config.gamesGUI)
         profileGui = ProfileGUI()
-        shopGui = ShopGUI(this)
+        shopGui = ShopGUI(this, translator).apply { register() }
         languageGui = LanguageGUI(this)
 
         logger.info("Hub config summary")
