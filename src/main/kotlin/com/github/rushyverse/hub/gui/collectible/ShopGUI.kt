@@ -1,25 +1,43 @@
 package com.github.rushyverse.hub.gui.collectible
 
-import com.github.rushyverse.api.koin.inject
+import com.github.rushyverse.api.Plugin
+import com.github.rushyverse.api.gui.ItemStackIndex
+import com.github.rushyverse.api.gui.PlayerGUI
 import com.github.rushyverse.api.player.Client
-import com.github.rushyverse.hub.Hub
+import com.github.rushyverse.api.translation.Translator
+import com.github.rushyverse.api.translation.getComponent
 import com.github.rushyverse.hub.extension.ItemStack
 import com.github.rushyverse.hub.gui.commons.GUI
 import org.bukkit.Material
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
+import org.bukkit.inventory.InventoryHolder
 import org.bukkit.inventory.ItemStack
-import org.bukkit.plugin.Plugin
 import java.util.*
 
-class ShopGUI : GUI("gui.shop.title", 27) {
+class ShopGUI(plugin: Plugin, private val translator: Translator) : PlayerGUI() {
 
-    val plugin: Plugin by inject(Hub.ID)
+    private val hatGUI = HatGUI(plugin, translator)
+    private val particleGUI = ParticleGUI(plugin, translator)
+    private val gadgetGUI = GadgetGUI(plugin, translator)
 
-    companion object {
-        val hats = HatGUI()
-        val particles = ParticleGUI()
-        val gadgets = GadgetGUI()
+    override suspend fun register(): Boolean {
+        return super.register().also {
+            hatGUI.register()
+            particleGUI.register()
+            gadgetGUI.register()
+        }
+    }
+
+    override suspend fun close() {
+        hatGUI.close()
+        particleGUI.close()
+        gadgetGUI.close()
+        super.close()
+    }
+
+    override suspend fun createInventory(owner: InventoryHolder, client: Client): Inventory {
+        return server.createInventory(owner, 27, translator.getComponent("gui.shop.title", client.lang().locale))
     }
 
     override suspend fun applyItems(client: Client, inv: Inventory) {
