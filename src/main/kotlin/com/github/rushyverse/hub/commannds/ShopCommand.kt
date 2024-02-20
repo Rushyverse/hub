@@ -31,10 +31,9 @@ class ShopCommand {
                         client.send(notAllowedMessage)
                         return@launch
                     }
-                    plugin.shopGui.open(client)
+                    plugin.shopGui.openClient(client)
                 }
             }
         }
     }
-
 }
