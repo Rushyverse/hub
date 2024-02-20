@@ -7,7 +7,8 @@ import com.github.rushyverse.api.player.Client
 import com.github.rushyverse.api.translation.Translator
 import com.github.rushyverse.api.translation.getComponent
 import com.github.rushyverse.hub.extension.ItemStack
-import com.github.rushyverse.hub.gui.commons.GUI
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import org.bukkit.Material
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
@@ -40,12 +41,14 @@ class ShopGUI(plugin: Plugin, private val translator: Translator) : PlayerGUI() 
         return server.createInventory(owner, 27, translator.getComponent("gui.shop.title", client.lang().locale))
     }
 
-    override suspend fun applyItems(client: Client, inv: Inventory) {
-        val locale = client.lang().locale
-        inv.setItem(10, createHatsGroup(locale))
-        inv.setItem(12, createParticlesGroup(locale))
-        inv.setItem(14, createGadgetsGroup(locale))
-        inv.setItem(16, createSpecialGroup(locale))
+    override fun getItems(key: Client, size: Int): Flow<ItemStackIndex> {
+        return flow {
+            val locale = key.lang().locale
+            emit(10 to createHatsGroup(locale))
+            emit(12 to createParticlesGroup(locale))
+            emit(14 to createGadgetsGroup(locale))
+            emit(16 to createSpecialGroup(locale))
+        }
     }
 
     override suspend fun onClick(client: Client, item: ItemStack, event: InventoryClickEvent) {
