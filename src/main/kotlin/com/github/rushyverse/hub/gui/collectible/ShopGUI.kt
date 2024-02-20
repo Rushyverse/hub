@@ -51,19 +51,24 @@ class ShopGUI(plugin: Plugin, private val translator: Translator) : PlayerGUI() 
         }
     }
 
-    override suspend fun onClick(client: Client, item: ItemStack, event: InventoryClickEvent) {
+    override suspend fun onClick(
+        client: Client,
+        clickedInventory: Inventory,
+        clickedItem: ItemStack,
+        event: InventoryClickEvent
+    ) {
         client.lang().locale
 
-        when (item.type) {
+        when (clickedItem.type) {
             Material.IRON_HELMET ->
-                hats.open(client)
+                hatGUI.openClient(client)
 
             Material.NETHER_STAR -> {
-                particles.open(client)
+                particleGUI.openClient(client)
             }
 
             Material.COMPARATOR -> {
-                gadgets.open(client)
+                gadgetGUI.openClient(client)
             }
 
             Material.LEATHER -> {
