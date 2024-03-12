@@ -1,4 +1,4 @@
-package com.github.rushyverse.hub.commannds
+package com.github.rushyverse.hub.commands
 
 import com.github.rushyverse.api.koin.inject
 import com.github.rushyverse.api.player.ClientManager
@@ -9,10 +9,6 @@ import com.github.shynixn.mccoroutine.bukkit.launch
 import dev.jorel.commandapi.kotlindsl.commandAPICommand
 import dev.jorel.commandapi.kotlindsl.playerExecutor
 import net.kyori.adventure.text.format.NamedTextColor
-import org.bukkit.Material
-import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.SkullMeta
-import org.bukkit.Bukkit
 
 class ProfileCommand {
 

@@ -1,4 +1,4 @@
-package com.github.rushyverse.hub.commannds
+package com.github.rushyverse.hub.commands
 
 import com.github.rushyverse.api.koin.inject
 import com.github.rushyverse.api.player.ClientManager
