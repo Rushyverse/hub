@@ -4,6 +4,8 @@ import com.github.rushyverse.api.koin.inject
 import com.github.rushyverse.hub.Hub
 import com.github.rushyverse.api.player.*
 import com.github.rushyverse.hub.client.ClientHub
+import kotlinx.coroutines.flow.count
+import net.kyori.adventure.text.Component.text
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent

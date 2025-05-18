@@ -8,6 +8,7 @@ hotbar:
 
   - !<profileItem>
     type: PLAYER_HEAD
+    applySkinHeadOfPlayer: true
     name: hotbar.profile.item.name
     description: hotbar.profile.item.description
     hotbarSlot: 1
@@ -41,6 +42,7 @@ visibilityCommand:
     materialOff: GRAY_DYE
     enabled: true
 
+# games
 gamesGUI:
   dataProvider:
     apiSharedMemory: true
@@ -52,10 +54,10 @@ gamesGUI:
         name: RushTheFlag
         description: games.menu.icon.rtf.description
         menuSlot: 20
-      onClickGame:
-        # Var args: <gameID> - it is defined by amount of the game icon
-        #           <player> - it is defined by the player name
-        runCommand: rtf spectate <gameID>
+      joinCommand: rtf spectate <gameID>
+      createCommand: rtf create <gameID>
+      deleteCommand: rtf end <gameID>
+      games: 3
 
     - !<rush>
       gameType: rush
@@ -64,10 +66,9 @@ gamesGUI:
         name: Rush
         description: games.menu.icon.rush.description
         menuSlot: 21
-      onClickGame:
-        # Var args: <gameID> - it is defined by amount of the game icon
-        #           <player> - it is defined by the player name
-        runCommand: rush join
+      joinCommand: rush spectate <gameID>
+      createCommand: rush create <gameID>
+      deleteCommand: rush end <gameID>
 
     - !<survival>
       gameType: survival
@@ -76,10 +77,9 @@ gamesGUI:
         name: Survival
         description: games.menu.icon.survival.description
         menuSlot: 23
-      onClickGame:
-        # Var args: <gameID> - it is defined by amount of the game icon
-        #           <player> - it is defined by the player name
-        runCommand: survival join
+      joinCommand: survival spectate <gameID>
+      createCommand: survival create <gameID>
+      deleteCommand: survival end <gameID>
 
     - !<practice>
       gameType: practice
@@ -88,10 +88,9 @@ gamesGUI:
         name: Practice
         description: games.menu.icon.practice.description
         menuSlot: 24
-      onClickGame:
-        # Var args: <gameID> - it is defined by amount of the game icon
-        #           <player> - it is defined by the player name
-        runCommand: practice join
+      joinCommand: practice spectate <gameID>
+      createCommand: practice create <gameID>
+      deleteCommand: practice end <gameID>
 
     - !<blockparty>
       gameType: blockparty
@@ -100,10 +99,9 @@ gamesGUI:
         name: Blockparty
         description: games.menu.icon.blockparty.description
         menuSlot: 30
-      onClickGame:
-        # Var args: <gameID> - it is defined by amount of the game icon
-        #           <player> - it is defined by the player name
-        runCommand: blockparty join
+      joinCommand: blockparty spectate <gameID>
+      createCommand: blockparty create <gameID>
+      deleteCommand: blockparty end <gameID>
 
     - !<laboratory>
       gameType: laboratory
@@ -112,10 +110,9 @@ gamesGUI:
         name: Laboratory
         description: games.menu.icon.laboratory.description
         menuSlot: 31
-      onClickGame:
-        # Var args: <gameID> - it is defined by amount of the game icon
-        #           <player> - it is defined by the player name
-        runCommand: laboratory join
+      joinCommand: laboratory spectate <gameID>
+      createCommand: laboratory create <gameID>
+      deleteCommand: laboratory end <gameID>
 
     - !<nexus>
       gameType: nexus
@@ -124,19 +121,17 @@ gamesGUI:
         name: Nexus
         description: games.menu.icon.nexus.description
         menuSlot: 32
-      onClickGame:
-        # Var args: <gameID> - it is defined by amount of the game icon
-        #           <player> - it is defined by the player name
-        runCommand: nexus join
+      joinCommand: nexus spectate <gameID>
+      createCommand: nexus create <gameID>
+      deleteCommand: nexus end <gameID>
 
     - !<openbuild>
       gameType: openbuild
       icon:
-        type: GRASS_BLOCK
+        type: CRAFTING_TABLE
         name: Openbuild
         description: games.menu.icon.openbuild.description
-        menuSlot: 33
-      onClickGame:
-        # Var args: <gameID> - it is defined by amount of the game icon
-        #           <player> - it is defined by the player name
-        runCommand: openbuild join
+        menuSlot: 40
+      joinCommand: openbuild spectate <gameID>
+      createCommand: openbuild create <gameID>
+      deleteCommand: openbuild end <gameID>

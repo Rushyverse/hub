@@ -1,74 +1,94 @@
 package com.github.rushyverse.hub.gui.nav
 
-import com.github.rushyverse.hub.config.game.GameGUIConfig
-import com.github.rushyverse.hub.gui.commons.GUI
+import com.github.rushyverse.api.extension.BukkitRunnable
+import com.github.rushyverse.api.extension.withItalic
+import com.github.rushyverse.api.extension.withoutItalic
 import com.github.rushyverse.api.game.GameData
 import com.github.rushyverse.api.game.GameState
 import com.github.rushyverse.api.game.SharedGameData
+import com.github.rushyverse.api.gui.ItemStackIndex
+import com.github.rushyverse.api.gui.LocaleGUI
 import com.github.rushyverse.api.koin.inject
 import com.github.rushyverse.api.player.Client
 import com.github.rushyverse.api.translation.SupportedLanguage
+import com.github.rushyverse.api.translation.Translator
 import com.github.rushyverse.api.translation.getComponent
-import com.github.shynixn.mccoroutine.bukkit.SuspendingPlugin
+import com.github.rushyverse.hub.Hub
+import com.github.rushyverse.hub.config.game.GameGUIConfig
 import com.github.shynixn.mccoroutine.bukkit.launch
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.format.NamedTextColor
-import org.bukkit.Material
+import org.bukkit.Bukkit
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import java.util.*
+import javax.inject.Named
 
-/**
- * Recommended to use GameGUI#of(plugin, config, dataProvider)
- * @property config GameGUIConfig the config of the game GUI.
- * @property dataProvider SharedGameData the provider of game data.
- */
-class GameGUI(
-    val config: GameGUIConfig,
-    val dataProvider: SharedGameData
-) : GUI(config.gameType, 54) {
+class GameGUI(plugin: Hub, val config: GameGUIConfig) : LocaleGUI(plugin) {
+    private val translator: Translator by inject(plugin.id)
+    private val dataProvider: SharedGameData by inject<SharedGameData>()
 
-    companion object {
-        suspend inline fun of(
-            plugin: SuspendingPlugin,
-            config: GameGUIConfig,
-        ): GameGUI {
-            val dataProvider : SharedGameData by inject()
-            val gui = GameGUI(config, dataProvider)
-           dataProvider.subscribeOnChange {
+    init {
+        dataProvider.subscribeOnChange {
+            for (locale in Locale.getAvailableLocales()) {
                 plugin.launch {
-                    gui.sync()
+                    update(locale, false)
                 }
             }
-            return gui
         }
     }
 
-    override suspend fun applyItems(client: Client, inv: Inventory) {
+    override suspend fun createInventory(locale: Locale) = Bukkit.createInventory(
+        null, 27, text(config.gameType)
+    )
 
-        inv.setItem(1, leaderBoardItem())
-        inv.setItem(4, proposalItem())
-        inv.setItem(7, prestigeItem())
+    override fun getItems(key: Locale, size: Int): Flow<ItemStackIndex> {
+        return flow {
+            val startSlot = 10
+            dataProvider.games.forEachIndexed { index, data ->
+                emit(startSlot + index to buildGameIcon(data))
+            }
+        }
+    } // Mais du coup comme avant si la game est terminée ça kick tout le monde ça reload la map (le wool est en noir et y a écrit patientez)
 
-        val startSlot = 19
-        dataProvider.games.forEachIndexed { index, data ->
-            inv.setItem(startSlot + index, buildGameIcon(data))
+
+    override suspend fun onClick(
+        client: Client,
+        clickedInventory: Inventory,
+        clickedItem: ItemStack,
+        event: InventoryClickEvent
+    ) {
+        if (clickedItem.type == config.icon.type) {
+            if (config.games > 0) {
+                val gameId = clickedItem.amount
+                val game = dataProvider.games.find { it.id == gameId }
+                if (game != null && game.state == GameState.NOT_STARTED) {
+                    Bukkit.dispatchCommand(
+                        Bukkit.getConsoleSender(),
+                        config.createGameCommand(gameId)
+                    )
+                }
+            }
+            BukkitRunnable {
+                client.requirePlayer().performCommand(config.joinGameCommand(clickedItem.amount))
+            }.runTaskLater(plugin, 20L)
+
         }
     }
 
-    fun leaderBoardItem() = ItemStack(Material.TOTEM_OF_UNDYING)
-
-    fun proposalItem() = ItemStack(Material.BOOK)
-
-    fun prestigeItem() = ItemStack(Material.EMERALD)
 
     fun buildGameIcon(data: GameData, locale: Locale = SupportedLanguage.ENGLISH.locale) =
         ItemStack(config.icon.type).apply {
             itemMeta = itemMeta.apply {
                 val lore = mutableListOf<Component>()
-                displayName(text(config.icon.name).append(text(" #${data.id}")))
+                displayName(text(config.icon.name)
+                    .append(text(" #${data.id}"))
+                    .withoutItalic()
+                    .color(NamedTextColor.LIGHT_PURPLE))
 
                 lore.add(stateOfGameLine(data.state, locale))
                 lore.add(playersInGameLine(data.players, locale))
@@ -80,28 +100,19 @@ class GameGUI(
         }
 
     private fun stateOfGameLine(state: GameState, locale: Locale) =
-        super.translator.getComponent(
+        translator.getComponent(
             "state.of.game", locale, arrayOf(
-                translator.get(
+                "${state.miniColor}${translator.get(
                     "state.${state.name.lowercase()}",
                     locale
-                )
+                )}"
             )
-        )
+        ).color(NamedTextColor.GRAY).withoutItalic()
 
     private fun playersInGameLine(players: Int, locale: Locale) =
-        super.translator.getComponent(
+        translator.getComponent(
             "players.in.game", locale, arrayOf(
                 players
             )
-        ).color(NamedTextColor.GRAY)
-
-    override suspend fun onClick(client: Client, item: ItemStack, event: InventoryClickEvent) {
-
-        if (item.type == config.icon.type) {
-            val gameIndex = item.amount
-
-            client.requirePlayer().performCommand(config.clickGameCommand(gameIndex))
-        }
-    }
+        ).color(NamedTextColor.GRAY).withoutItalic()
 }

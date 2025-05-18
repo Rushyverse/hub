@@ -129,7 +129,7 @@ class LanguageGUI(
         // Update Hotbar
         player.inventory.apply {
             clear()
-            plugin.sendHotbarItems(client.lang(), this)
+            plugin.sendHotbarItems(client.lang(), player)
         }
 
         HubScoreboard.send(client as ClientHub)

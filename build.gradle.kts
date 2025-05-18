@@ -27,7 +27,11 @@ dependencies {
         testImplementation(it)
     }
 
-    compileOnly("com.github.Rushyverse:api:$rushyApiVersion")
+    implementation("com.github.Rushyverse:api:$rushyApiVersion")
+
+    implementation("org.komapper:komapper-dialect-postgresql-jdbc:1.12.0")
+    implementation("io.r2dbc:r2dbc-postgresql:0.8.11.RELEASE")
+
 
     // CommandAPI framework
     compileOnly("dev.jorel:commandapi-bukkit-core:$commandApiVersion")
@@ -71,5 +75,12 @@ tasks {
 
     shadowJar {
         archiveClassifier.set("")
+    }
+}
+
+// found some bugs
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(18))
     }
 }

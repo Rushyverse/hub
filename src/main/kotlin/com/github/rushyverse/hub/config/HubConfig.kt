@@ -20,7 +20,9 @@ data class HotbarItemConfig(
     val description: String,
     val hotbarSlot: Int,
     val commandOnClick: String
-)
+) {
+    val applySkinHeadOfPlayer: Boolean = false
+}
 
 @Suppress("PROVIDED_RUNTIME_TOO_LOW")
 @Serializable

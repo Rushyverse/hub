@@ -34,7 +34,7 @@ class NavigatorCommand {
                         return@launch
                     }
 
-                    plugin.navigatorGui.open(client)
+                    plugin.navigatorGui.openClient(client)
                 }
 
             }

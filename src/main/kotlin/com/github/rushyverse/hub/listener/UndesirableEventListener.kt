@@ -27,17 +27,17 @@ class UndesirableEventListener(
     fun onEntityDamage(event: EntityDamageEvent) = event.cancelIf { entity.world == world }
 
     @EventHandler
-    fun onBlockBreak(event: BlockBreakEvent) = event.cancelIfNotAllowed(event.player)
+    fun onBlockBreak(event: BlockBreakEvent) = event.cancelIf { event.block.world == world  || isNotAllowed(event.player)}
 
     @EventHandler
-    fun onBlockPlace(event: BlockPlaceEvent) = event.cancelIfNotAllowed(event.player)
+    fun onBlockPlace(event: BlockPlaceEvent) = event.cancelIf { event.block.world == world  || isNotAllowed(event.player)}
 
     @EventHandler
-    fun onDropItem(event: PlayerDropItemEvent) = event.cancelIfNotAllowed(event.player)
+    fun onDropItem(event: PlayerDropItemEvent) = event.cancelIf { event.player.world == world  || isNotAllowed(event.player)}
 
     @EventHandler
-    fun onPickupItem(event: PlayerAttemptPickupItemEvent) = event.cancelIfNotAllowed(event.player)
+    fun onPickupItem(event: PlayerAttemptPickupItemEvent) = event.cancelIf { event.player.world == world  || isNotAllowed(event.player)}
 
     @EventHandler
-    fun onSwapHandItem(event: PlayerSwapHandItemsEvent) = event.cancelIfNotAllowed(event.player)
+    fun onSwapHandItem(event: PlayerSwapHandItemsEvent) = event.cancelIf { event.player.world == world  || isNotAllowed(event.player)}
 }

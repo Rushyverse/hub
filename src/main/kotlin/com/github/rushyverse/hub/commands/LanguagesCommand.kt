@@ -13,7 +13,7 @@ class LanguagesCommand {
     suspend fun register(plugin: Hub) {
         val clients: ClientManager by inject(plugin.id)
 
-        commandAPICommand("languages") {
+        commandAPICommand("language") {
             aliases = arrayOf("lang")
             playerExecutor { player, _ ->
 

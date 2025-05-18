@@ -1,11 +1,11 @@
 package com.github.rushyverse.hub.gui.collectible
 
-import com.github.rushyverse.api.Plugin
 import com.github.rushyverse.api.gui.ItemStackIndex
 import com.github.rushyverse.api.gui.PlayerGUI
 import com.github.rushyverse.api.player.Client
 import com.github.rushyverse.api.translation.Translator
 import com.github.rushyverse.api.translation.getComponent
+import com.github.rushyverse.hub.Hub
 import com.github.rushyverse.hub.extension.ItemStack
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -16,11 +16,12 @@ import org.bukkit.inventory.InventoryHolder
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-class ShopGUI(plugin: Plugin, private val translator: Translator) : PlayerGUI() {
+class ShopGUI(plugin: Hub, private val translator: Translator) : PlayerGUI() {
 
     private val hatGUI = HatGUI(plugin, translator)
     private val particleGUI = ParticleGUI(plugin, translator)
     private val gadgetGUI = GadgetGUI(plugin, translator)
+    private val rtfCosmeticsGUI = rtfCosmeticsGUI(plugin, translator)
 
     override suspend fun register(): Boolean {
         return super.register().also {
@@ -70,6 +71,9 @@ class ShopGUI(plugin: Plugin, private val translator: Translator) : PlayerGUI() 
             Material.COMPARATOR -> {
                 gadgetGUI.openClient(client)
             }
+
+            Material.SMOOTH_SANDSTONE ->
+                rtfCosmeticsGUI.openClient(client)
 
             Material.LEATHER -> {
                 client.player?.closeInventory()

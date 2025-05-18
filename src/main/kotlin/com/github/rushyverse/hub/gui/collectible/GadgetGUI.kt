@@ -3,7 +3,8 @@ package com.github.rushyverse.hub.gui.collectible
 import com.github.rushyverse.hub.extension.SimpleCooldown
 import com.github.rushyverse.api.Plugin
 import com.github.rushyverse.api.translation.Translator
-import com.github.rushyverse.hub.data.Cosmetic
+import com.github.rushyverse.hub.client.ClientHub
+import com.github.rushyverse.hub.data.CosmeticData
 import org.bukkit.Color
 import org.bukkit.FireworkEffect
 import org.bukkit.Material
@@ -17,6 +18,7 @@ import org.bukkit.event.entity.ProjectileLaunchEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.PlayerFishEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.player.PlayerToggleSneakEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
 import org.bukkit.scheduler.BukkitRunnable
@@ -32,20 +34,25 @@ class GadgetGUI(plugin: Plugin, translator: Translator) : CosmeticGUI(plugin, tr
         KnockbackStick()
     )
 
-    override fun setItem(cosmeticItem: ItemStack, inventory: PlayerInventory, event: InventoryClickEvent) {
+    override fun setItem(
+        cosmeticItem: ItemStack,
+        cosmetic: CosmeticDataInventory?,
+        inventory: PlayerInventory,
+        event: InventoryClickEvent
+    ) {
         inventory.setItem(COSMETIC_PLAYER_INV_SLOT, cosmeticItem)
     }
 
-    override fun removeItem(inventory: PlayerInventory) {
+    override fun onUnselect(inventory: PlayerInventory, client: ClientHub) {
         inventory.setItem(COSMETIC_PLAYER_INV_SLOT, null)
     }
 
-    override fun isSetItem(inventory: PlayerInventory, cosmeticItem: ItemStack): Boolean {
+    override fun isAlreadySelected(inventory: PlayerInventory, cosmeticItem: ItemStack): Boolean {
         return inventory.getItem(COSMETIC_PLAYER_INV_SLOT) == cosmeticItem
     }
 }
 
-class GrapplingHook : CosmeticDataInventory(10, Cosmetic.Gadgets.GrapplingHook), Listener {
+class GrapplingHook : CosmeticDataInventory(10, CosmeticData.Gadgets.GrapplingHook), Listener {
 
     @EventHandler
     fun onFish(event: PlayerFishEvent) {
@@ -68,51 +75,58 @@ class GrapplingHook : CosmeticDataInventory(10, Cosmetic.Gadgets.GrapplingHook),
     }
 }
 
-class SnowWand : CosmeticDataInventory(11, Cosmetic.Gadgets.SnowWand), Listener {
+class SnowWand : CosmeticDataInventory(11, CosmeticData.Gadgets.SnowWand), Listener {
 
 }
 
-class FireworkBow(private val plugin: Plugin) : CosmeticDataInventory(12, Cosmetic.Gadgets.FireworkBow), Listener {
+class FireworkBow(private val plugin: Plugin) : CosmeticDataInventory(12, CosmeticData.Gadgets.FireworkBow), Listener {
 
     @EventHandler
     fun onBowShoot(event: EntityShootBowEvent) {
         val shooter = event.entity as? Player ?: return
 
-        // Verify if the item used is in the cosmetic slot
-        if (shooter.inventory.heldItemSlot != CosmeticGUI.COSMETIC_PLAYER_INV_SLOT) return // non on peut pas puisque ça vient d'event specifique :/ ahh
+        // Vérifier si l'objet utilisé est dans le slot cosmétique
+        if (shooter.inventory.heldItemSlot != CosmeticGUI.COSMETIC_PLAYER_INV_SLOT) {
+            shooter.sendMessage("Slot incorrect")
+            return
+        }
 
-        val arrow = event.projectile as? Arrow ?: return
+        val arrow = event.projectile as? Arrow ?: run {
+            shooter.sendMessage("Projectile n'est pas une flèche!")
+            return
+        }
 
-        // Generate random firework colors
+        // Générer des couleurs aléatoires
         val randomColor1 = getRandomColor()
         val randomColor2 = getRandomColor()
         val randomColor3 = getRandomColor()
 
-        // Create a firework effect with random colors
+        // Créer un effet de feu d'artifice avec des couleurs aléatoires
         val fireworkEffect = createRandomFireworkEffect(randomColor1, randomColor2, randomColor3)
 
-        // Schedule a task to create the firework after a longer delay
+        // Planifier une tâche pour créer le feu d'artifice après un délai
         object : BukkitRunnable() {
             override fun run() {
-                // Create a firework and launch it from the arrow's location
+                // Créer et lancer un feu d'artifice à l'emplacement de la flèche
                 val firework = arrow.world.spawn(arrow.location, Firework::class.java)
                 val meta = firework.fireworkMeta
                 meta.addEffect(fireworkEffect)
                 meta.power = 1
                 firework.fireworkMeta = meta
 
+                shooter.sendMessage("Feu d'artifice lancé")
                 arrow.remove()
             }
-        }.runTaskLater(plugin, 40L) // Adjust the delay (in ticks) as needed
+        }.runTaskLater(plugin, 40L) // Ajuster le délai (en ticks) si nécessaire
     }
 
-    // Function to generate a random color
+    // Fonction pour générer une couleur aléatoire
     private fun getRandomColor(): Color {
         val random = ThreadLocalRandom.current()
         return Color.fromRGB(random.nextInt(256), random.nextInt(256), random.nextInt(256))
     }
 
-    // Function to create a random firework effect
+    // Fonction pour créer un effet de feu d'artifice aléatoire
     private fun createRandomFireworkEffect(color1: Color, color2: Color, color3: Color): FireworkEffect {
         val types = arrayOf(
             FireworkEffect.Type.BALL,
@@ -124,7 +138,7 @@ class FireworkBow(private val plugin: Plugin) : CosmeticDataInventory(12, Cosmet
 
         val randomType = types.random()
 
-        // Customize firework effect with random colors
+        // Personnaliser l'effet de feu d'artifice avec des couleurs aléatoires
         return FireworkEffect.builder()
             .flicker(false)
             .trail(true)
@@ -134,15 +148,16 @@ class FireworkBow(private val plugin: Plugin) : CosmeticDataInventory(12, Cosmet
     }
 }
 
-class EnderButt(private val plugin: Plugin) : CosmeticDataInventory(13, Cosmetic.Gadgets.EnderButt), Listener {
+class EnderButt(private val plugin: Plugin) : CosmeticDataInventory(13, CosmeticData.Gadgets.EnderButt), Listener {
 
     private val launchedPearls: MutableMap<Player, EnderPearl> = mutableMapOf()
+
     @EventHandler
     fun onPearlLaunch(event: ProjectileLaunchEvent) {
         if (event.entityType == EntityType.ENDER_PEARL && event.entity.shooter is Player) {
             val player = event.entity.shooter as Player
-            if (player.inventory.heldItemSlot != CosmeticGUI.COSMETIC_PLAYER_INV_SLOT) return
             launchedPearls[player] = event.entity as EnderPearl
+            event.entity.addPassenger(player)
         }
     }
 
@@ -159,35 +174,33 @@ class EnderButt(private val plugin: Plugin) : CosmeticDataInventory(13, Cosmetic
 
     @EventHandler
     fun onPearlThrow(event: PlayerInteractEvent) {
-        if (event.item?.type != Material.ENDER_PEARL || event.action != Action.RIGHT_CLICK_AIR) return
+        if (event.item?.type != Material.ENDER_PEARL || event.action != org.bukkit.event.block.Action.RIGHT_CLICK_AIR) return
 
         val player = event.player
 
-        if (player.inventory.heldItemSlot != CosmeticGUI.COSMETIC_PLAYER_INV_SLOT) return
-
-        val target = event.player.getTargetBlock(null, 5).location.add(0.5, 1.0, 0.5)
-
-        // Check if the player has already thrown a pearl
         if (launchedPearls.containsKey(player)) {
             return
         }
 
         val pearl = player.launchProjectile(EnderPearl::class.java)
-
-        // Set the player as a passenger of the launched pearl
-        pearl.setPassenger(player)
-
-        object : BukkitRunnable() {
-            override fun run() {
-                player.teleport(target)
-            }
-        }.runTaskLater(plugin, 10L)
-
+        pearl.addPassenger(player)
         launchedPearls[player] = pearl
+    }
+
+    @EventHandler
+    fun onPlayerSneak(event: PlayerToggleSneakEvent) {
+        val player = event.player
+        if (event.isSneaking) {
+            val pearl = launchedPearls.remove(player)
+            if (pearl != null) {
+                player.leaveVehicle()
+                pearl.remove()
+            }
+        }
     }
 }
 
-class KnockbackStick : CosmeticDataInventory(14, Cosmetic.Gadgets.KnockbackStick), Listener {
+class KnockbackStick : CosmeticDataInventory(14, CosmeticData.Gadgets.KnockbackStick), Listener {
 
     @EventHandler
     fun onStickUse(event: PlayerInteractEvent) {

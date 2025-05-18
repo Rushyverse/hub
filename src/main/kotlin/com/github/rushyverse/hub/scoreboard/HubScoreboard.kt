@@ -30,14 +30,14 @@ object HubScoreboard {
         val clients: ClientManager by inject(plugin.id)
 
         titleScrolling = ColorTextScroller(
-            "RUSHYVERSE",
+            "RUSHY",
             titleColor = NamedTextColor.LIGHT_PURPLE,
             scrollColor = NamedTextColor.DARK_PURPLE,
             bold = true,
             ScrollTextType.WAVE_RIGHT,
             ScrollTextType.WAVE_LEFT,
-            ScrollTextType.RANDOM,
-            ScrollTextType.FLASH,
+            // ScrollTextType.RANDOM,
+            // ScrollTextType.FLASH,
         )
 
         task = SchedulerTask(
@@ -62,9 +62,11 @@ object HubScoreboard {
     }
 
     suspend fun send(client: ClientHub) {
+        val shardsValue = 0 // TODO: Init the get method
+
         val locale = client.lang().locale
         val rank = "<red>OWNER"
-        val shards = "<light_purple>0"
+        val shards = "<light_purple>$shardsValue"
         val lobby = "<yellow>0"
         val players = "<green>${Bukkit.getOnlinePlayers().size}"
 

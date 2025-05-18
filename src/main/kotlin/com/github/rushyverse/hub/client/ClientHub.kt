@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
 class ClientHub(
@@ -12,12 +13,13 @@ class ClientHub(
     CoroutineScope
 ) : Client(uuid, scope) {
 
+    var particleTask: BukkitRunnable? = null
     var canSeePlayers: Boolean = true
         private set
 
     fun canSeePlayers(canSee: Boolean, plugin: JavaPlugin) {
         canSeePlayers = canSee
-        if(canSee) {
+        if (canSee) {
             showOtherPlayers(plugin)
         } else {
             hideOtherPlayers(plugin)

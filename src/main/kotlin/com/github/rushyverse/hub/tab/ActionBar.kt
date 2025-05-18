@@ -14,7 +14,7 @@ import org.bukkit.plugin.Plugin
 
 class ActionBar(val plugin: Hub) : Listener {
 
-    private val timeBetweenMessage = 10
+    private val timeBetweenMessage = 5
     private var actionBarPaused = false
     private val highlightColor = NamedTextColor.YELLOW
 
@@ -23,9 +23,9 @@ class ActionBar(val plugin: Hub) : Listener {
 
     private var direction = 1 // 1: forward, -1: backward
     private val listOfComponents = listOf(
-        text("Welcome to the hub!", NamedTextColor.GOLD),
-        text("Enjoy your stay!", NamedTextColor.GOLD),
-        text("Goooooooo !!!!", NamedTextColor.GOLD)
+        text("Welcome to Rushy", NamedTextColor.LIGHT_PURPLE),
+        text("Enjoy your stay", NamedTextColor.RED),
+        text("Store at www.rushy.space", NamedTextColor.YELLOW)
     )
 
     init {

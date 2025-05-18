@@ -21,13 +21,21 @@ data class DataProviderConfig(
 data class GameGUIConfig(
     val gameType: String,
     val icon: GameIconConfig,
-    val onClickGame: OnClickGameConfig
+    val joinCommand: String,
+    val createCommand: String,
+    val deleteCommand: String,
+    val games: Int = 0,
 ) {
 
-    fun clickGameCommand(gameIndex: Int) =
-        onClickGame.runCommand.replace(
-            "<gameID>", "$gameIndex"
-        )
+    fun joinGameCommand(gameIndex: Int) =
+        joinCommand.replace("<gameID>", "$gameIndex")
+
+    fun createGameCommand(gameIndex: Int) =
+        createCommand
+            .replace("<gameID>", "$gameIndex")
+
+    fun deleteGameCommand(gameIndex: Int) =
+        deleteCommand.replace("<gameID>", "$gameIndex")
 }
 
 @Suppress("PROVIDED_RUNTIME_TOO_LOW")
@@ -37,10 +45,4 @@ data class GameIconConfig(
     val name: String,
     val description: String,
     val menuSlot: Int
-)
-
-@Suppress("PROVIDED_RUNTIME_TOO_LOW")
-@Serializable
-data class OnClickGameConfig(
-    val runCommand: String,
 )

@@ -1,5 +1,6 @@
 package com.github.rushyverse.hub.gui.nav
 
+import com.github.rushyverse.api.extension.ItemStack
 import com.github.rushyverse.api.extension.asComponent
 import com.github.rushyverse.api.extension.withoutDecorations
 import com.github.rushyverse.api.player.Client
@@ -15,24 +16,30 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
 import java.util.Locale
 
-class ProfileGUI : GUI("gui.profile.title", 27) {
+class ProfileGUI : GUI("gui.profile.title", 54) {
+
+   // val plugin = Hub()
+   // private val languageGUI = LanguageGUI(plugin)
 
     override suspend fun applyItems(client: Client, inv: Inventory) {
         val locale = client.lang().locale
-        inv.setItem(12, createStatsItem(locale))
         inv.setItem(13, createPlayerHeadItem(client as ClientHub))
-        inv.setItem(14, createSettingsItem(locale))
-        inv.setItem(15, createSelectLangItem(locale))
+        inv.setItem(21, createStatsItem(locale))
+        inv.setItem(22, createSettingsItem(locale))
+        inv.setItem(23, createSelectLangItem(locale))
+        inv.setItem(30, createAchivementItem(locale))
+        inv.setItem(31, createFriendlistItem(locale))
     }
 
     override suspend fun onClick(client: Client, item: ItemStack, event: InventoryClickEvent) {
 
     }
 
+
     private fun createPlayerHeadItem(client: ClientHub): ItemStack {
         val player = client.requirePlayer()
 
-        val rank = "<yellow>Rank</yellow>"
+        val rank = "Owner"
         val shards = 0
         val friends = 0
         val wonEvents = 0
@@ -41,14 +48,16 @@ class ProfileGUI : GUI("gui.profile.title", 27) {
         val playerHead = ItemStack(Material.PLAYER_HEAD).apply {
             itemMeta = (itemMeta as SkullMeta).apply {
                 owningPlayer = Bukkit.getOfflinePlayer(client.playerUUID)
-                displayName(player.name().withoutDecorations().color(NamedTextColor.GOLD))
+                displayName(
+                    player.name().withoutDecorations().color(NamedTextColor.LIGHT_PURPLE)
+                )
                 lore(
                     listOf(
-                        "$rank: Owner".asComponent().withoutDecorations(),
+                        "<yellow>Rank<gray>:<yellow> $rank".asComponent().withoutDecorations(),
                         "<aqua>Shards<gray>:<blue> $shards".asComponent().withoutDecorations(),
                         "<green>Friends<gray>:<dark_green> $friends".asComponent().withoutDecorations(),
                         "<yellow>Won Events<gray>:<gold> $wonEvents".asComponent().withoutDecorations(),
-                        "<light_purple>Joined<gray>: <dark_purple>$joined".asComponent().withoutDecorations(),
+                        "<light_purple>Joined<gray>:<dark_red> $joined".asComponent().withoutDecorations(),
                     )
                 )
             }
@@ -57,7 +66,7 @@ class ProfileGUI : GUI("gui.profile.title", 27) {
     }
 
     private fun createSettingsItem(locale: Locale): ItemStack {
-        val settings = ItemStack(Material.REDSTONE_BLOCK).apply {
+        val settings = ItemStack(Material.REPEATER).apply {
             itemMeta = itemMeta.apply {
                 displayName(
                     translator.getComponent(
@@ -96,7 +105,8 @@ class ProfileGUI : GUI("gui.profile.title", 27) {
 
     private fun createSelectLangItem(locale: Locale): ItemStack {
         val selectLang = ItemStack(Material.PLAYER_HEAD).apply {
-            itemMeta = itemMeta.apply {
+            itemMeta = (itemMeta as SkullMeta).apply {
+                owningPlayer = Bukkit.getOfflinePlayer("xHue")
                 displayName(
                     translator.getComponent(
                         "profile.selectlang.name", locale, arrayOf("")
@@ -110,5 +120,41 @@ class ProfileGUI : GUI("gui.profile.title", 27) {
             }
         }
         return selectLang
+    }
+
+    private fun createAchivementItem(locale : Locale): ItemStack {
+        val achievementItem = ItemStack(Material.EMERALD) {
+            itemMeta = itemMeta.apply {
+                displayName(
+                    translator.getComponent(
+                        "profile.achievement.name", locale, arrayOf()
+                    ).withoutDecorations().color(NamedTextColor.GOLD)
+                )
+                lore(
+                    listOf(
+                        "Take a look at your very good achievements".asComponent().withoutDecorations()
+                    )
+                )
+            }
+        }
+        return achievementItem
+    }
+
+    private fun createFriendlistItem(locale : Locale): ItemStack {
+        val friendListItem = ItemStack(Material.TROPICAL_FISH) {
+            itemMeta = itemMeta.apply {
+                displayName(
+                    translator.getComponent(
+                        "profile.friendlist.name", locale, arrayOf()
+                    ).withoutDecorations().color(NamedTextColor.GOLD)
+                )
+                lore(
+                    listOf(
+                        "Your friendlist".asComponent().withoutDecorations()
+                    )
+                )
+            }
+        }
+        return friendListItem
     }
 }
