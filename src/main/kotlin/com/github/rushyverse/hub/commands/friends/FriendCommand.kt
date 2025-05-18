@@ -50,7 +50,7 @@ class FriendCommand(private val friendService: FriendService) {
 
                     plugin.launch {
                         try {
-                        al    v friendsList: List<*>? = friendService.getFriends(playerUUID) as? List<*>
+                            val friendsList: List<*>? = friendService.getFriends(playerUUID) as? List<*>
                             if (!friendsList.isNullOrEmpty()) {
                                 val friendsString = friendsList.joinToString(", ")
                                 player.sendMessage("Your friends: $friendsString")
