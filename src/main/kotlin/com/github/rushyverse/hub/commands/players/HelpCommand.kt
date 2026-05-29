@@ -1,4 +1,4 @@
-package com.github.rushyverse.hub.commands
+package com.github.rushyverse.hub.commands.players
 
 import dev.jorel.commandapi.kotlindsl.commandAPICommand
 import dev.jorel.commandapi.kotlindsl.playerExecutor

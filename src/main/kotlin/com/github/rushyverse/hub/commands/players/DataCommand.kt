@@ -1,4 +1,4 @@
-package com.github.rushyverse.hub.commands
+package com.github.rushyverse.hub.commands.players
 
 import com.github.rushyverse.api.game.SharedGameData
 import com.github.rushyverse.api.koin.inject

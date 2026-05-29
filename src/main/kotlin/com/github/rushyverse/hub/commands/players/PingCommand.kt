@@ -1,9 +1,9 @@
-package com.github.rushyverse.hub.commands
+package com.github.rushyverse.hub.commands.players
 
 import com.github.rushyverse.api.extension.asComponent
 import com.github.rushyverse.api.extension.toText
 import dev.jorel.commandapi.kotlindsl.commandTree
-import dev.jorel.commandapi.kotlindsl.playerArgument
+import dev.jorel.commandapi.kotlindsl.entitySelectorArgumentOnePlayer
 import dev.jorel.commandapi.kotlindsl.playerExecutor
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.format.NamedTextColor
@@ -19,7 +19,7 @@ class PingCommand {
                 )
                 player.sendMessage(message)
             }
-            playerArgument("target") {
+            entitySelectorArgumentOnePlayer("target") {
                 playerExecutor { player, args ->
                     val target: Player = args["target"] as Player
                     val targetName = target.name().toText()

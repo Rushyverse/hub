@@ -1,4 +1,4 @@
-package com.github.rushyverse.hub.commands
+package com.github.rushyverse.hub.commands.players
 
 import com.github.rushyverse.api.koin.inject
 import com.github.rushyverse.api.player.ClientManager
@@ -10,12 +10,15 @@ import dev.jorel.commandapi.kotlindsl.commandAPICommand
 import dev.jorel.commandapi.kotlindsl.playerExecutor
 import net.kyori.adventure.text.format.NamedTextColor
 
-class ShopCommand {
+class VisibilityCommand {
 
     fun register(plugin: Hub) {
         val clients: ClientManager by inject(plugin.id)
+        val commandConfig = plugin.config.visibilityCommand
+        val itemConfig = commandConfig.item
 
-        commandAPICommand("shop") {
+        commandAPICommand("visibility") {
+            aliases = arrayOf("togglevisibility", "tgv")
             playerExecutor { player, _ ->
 
                 val world = player.world
@@ -31,8 +34,31 @@ class ShopCommand {
                         client.send(notAllowedMessage)
                         return@launch
                     }
-                    plugin.shopGui.openClient(client)
+
+                    val newVisibilityState = !client.canSeePlayers
+
+                    client.canSeePlayers(newVisibilityState, plugin)
+
+                    val message = plugin.translator.getComponent(
+                        "visibility.players.$newVisibilityState",
+                        client.lang().locale,
+                    )
+
+                    client.send(message)
+
+                    if (itemConfig.enabled) {
+                        val item = player.inventory.getItem(itemConfig.slot)
+                        player.inventory.setItem(itemConfig.slot,
+                            item?.apply {
+                                type = if (newVisibilityState)
+                                    itemConfig.materialOn
+                                else itemConfig.materialOff
+                            }
+                        )
+
+                    }
                 }
+
             }
         }
     }

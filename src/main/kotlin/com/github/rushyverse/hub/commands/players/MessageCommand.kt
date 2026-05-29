@@ -1,4 +1,4 @@
-package com.github.rushyverse.hub.commands
+package com.github.rushyverse.hub.commands.players
 
 import com.github.rushyverse.api.extension.asComponent
 import com.github.rushyverse.api.koin.inject
@@ -67,7 +67,7 @@ class MessageCommand {
                 sender.sendMessage("You ran /message")
             }
 
-            playerArgument("player") // Defines a new PlayerArgument("player")
+            entitySelectorArgumentOnePlayer("player") // Defines a new PlayerArgument("player")
             greedyStringArgument("message") // Defines a new GreedyStringArgument("msg")
             playerExecutor { sender, args -> // Command can be executed by anyone and anything (such as entities, the console, etc.)
                 val target: Player = args[0] as Player

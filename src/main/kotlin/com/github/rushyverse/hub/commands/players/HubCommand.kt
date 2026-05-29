@@ -1,4 +1,4 @@
-package com.github.rushyverse.hub.commands
+package com.github.rushyverse.hub.commands.players
 
 import com.github.rushyverse.hub.Hub
 import com.github.shynixn.mccoroutine.bukkit.launch

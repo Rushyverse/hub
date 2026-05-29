@@ -1,4 +1,4 @@
-package com.github.rushyverse.hub.commands
+package com.github.rushyverse.hub.commands.players
 
 import com.github.rushyverse.api.koin.inject
 import com.github.rushyverse.api.player.ClientManager
@@ -10,14 +10,12 @@ import dev.jorel.commandapi.kotlindsl.commandAPICommand
 import dev.jorel.commandapi.kotlindsl.playerExecutor
 import net.kyori.adventure.text.format.NamedTextColor
 
-class NavigatorCommand {
+class ShopCommand {
 
     fun register(plugin: Hub) {
         val clients: ClientManager by inject(plugin.id)
-        val commandConfig = plugin.config.visibilityCommand
-        val itemConfig = commandConfig.item
 
-        commandAPICommand("menu") {
+        commandAPICommand("shop") {
             playerExecutor { player, _ ->
 
                 val world = player.world
@@ -28,15 +26,13 @@ class NavigatorCommand {
                     if (world != plugin.world) {
                         val notAllowedMessage = plugin.translator.getComponent(
                             "not.allowed.outside.hub",
-                            client.lang().locale,
+                            client.lang().locale
                         ).color(NamedTextColor.RED)
                         client.send(notAllowedMessage)
                         return@launch
                     }
-
-                    plugin.navigatorGui.openClient(client)
+                    plugin.shopGui.openClient(client)
                 }
-
             }
         }
     }
